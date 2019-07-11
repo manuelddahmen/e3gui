@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+  <entry key="classpath1" value="Empty3/lib" />
+  <entry key="classpath2" value="G:/Apps/IdeaProjects/Empty3/target/empty3-library-3d-73.jar" />
+  <entry key="classpath3" value="target/classes" />
+  <entry key="sourcefolders1" value="src" />
+  <node name="javacodegenerator">
+    <entry key="_generalSettingsEnabled" value="true" />
+    <entry key="membervariablethis" value="true" />
+    <entry key="sourcecompatibility" value="8" />
+  </node>
+</project>
+
