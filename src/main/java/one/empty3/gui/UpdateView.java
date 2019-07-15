@@ -6,12 +6,17 @@ import javax.swing.*;
  * Created by manue on 26-06-19.
  */
 public class UpdateView extends JPanel {
+    private FormFunction ff;
+
     public UpdateView() {
-        super();
         setView(new FunctionView());
         setzRunner(new ZRunner());
     }
-
+    public void setFF(FormFunction ff )
+    {
+        this.ff = ff;
+        this.getzRunner().setUpdateView(ff);
+    }
 
     private FunctionView view;
 
@@ -37,7 +42,6 @@ public class UpdateView extends JPanel {
     public void setzRunner(ZRunner zRunner) {
         ZRunner old = this.zRunner;
         this.zRunner = zRunner;
-        zRunner.setUpdateView(this);
         getView().addPropertyChangeListener(getzRunner());
         addPropertyChangeListener(getzRunner());
         firePropertyChange("zRunner", old, zRunner);

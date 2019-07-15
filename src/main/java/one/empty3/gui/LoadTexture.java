@@ -25,6 +25,7 @@ public class LoadTexture extends JDialog {
 
     public void setTexture(ITexture texture) {
         this.texture = texture;
+        RepresentableClassList.initTextValues(texture, comboBox1, fileChooser1, new JTextField[] { textFieldR, textFieldG, textFieldB});
     }
 
     public LoadTexture(Window owner, FormFunction parent)

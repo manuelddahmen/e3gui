@@ -1,6 +1,7 @@
 package one.empty3.gui;
 
 import one.empty3.library.*;
+import one.empty3.library.Polygon;
 import one.empty3.library.core.nurbs.CourbeParametriquePolynomialeBezier;
 import one.empty3.library.core.nurbs.ParametricCurve;
 import one.empty3.library.core.nurbs.ParametricSurface;
@@ -14,6 +15,7 @@ import one.empty3.library.core.script.InterpretePoint3D;
 import one.empty3.library.core.tribase.TubulaireN2cc;
 
 import javax.swing.*;
+import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -138,5 +140,29 @@ public class RepresentableClassList {
         jTextFields[18].setText("" + camera.angleX());
         jTextFields[19].setText("" + camera.angleY());
         jTextFields[20].setText("1.0");
+    }
+
+    public static void initTextValues(ITexture texture, JComboBox<String> comboBox1, JFileChooser fileChooser1, JTextField[] jTextFields) {
+        if(texture!=null)
+        {
+            if(texture instanceof TextureCol)
+            {
+                comboBox1.setSelectedIndex(0);
+                float[] comps;
+                Color color = new Color(((TextureCol) texture).color());
+                jTextFields[0].setText(""+color.getRed());
+                jTextFields[1].setText(""+color.getGreen());
+                jTextFields[2].setText(""+color.getBlue());
+                //jTextFields[3].setText(""+color.getAlpha());
+            }
+            else if(texture instanceof TextureMov)
+            {
+
+            }else if(texture instanceof TextureImg)
+            {
+
+            }
+        }
+
     }
 }

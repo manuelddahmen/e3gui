@@ -20,7 +20,7 @@ import java.util.logging.Logger;
 public class ZRunner extends Thread implements PropertyChangeListener {
     private final Logger log;
     private UpdateView updateView = null;
-    private boolean running;
+    private boolean running = true;
     private Image lastImage;
     private ITexture iTexture;
     private Camera camera = new Camera(Point3D.Z.mult(-100), Point3D.O0);
@@ -29,16 +29,22 @@ public class ZRunner extends Thread implements PropertyChangeListener {
     private ZBufferImpl zBuffer;
     private boolean propertyChanged = false;
     private boolean updateGraphics = false;
+    private FormFunction ff;
+
 
     public ZRunner() {
         log = Logger.getAnonymousLogger();
         log.setLevel(Level.ALL);
         running = true;
         zBuffer = null;
+        System.out.println("ZRunner new instance");
+        setUpdateView(ff);
+        start();
     }
 
-    public void setUpdateView(UpdateView updateView) {
-        this.updateView = updateView;
+    public void setUpdateView(FormFunction ff) {
+
+        this.ff = ff;
     }
 
     public LineSegment getClick(int x, int y) {
@@ -67,11 +73,11 @@ public class ZRunner extends Thread implements PropertyChangeListener {
             hashMap.put("u", 0d);
             hashMap.put("v", 0d);
             setStartU(u0);
-            setIncrU(0.01);
             setEndU(u1);
+            setIncrU((u1-u0)/10);
             setStartV(v0);
-            setIncrV(0.01);
             setEndV(v1);
+            setIncrV((v1-v0)/10);
             try {
                 treeX = new AlgebraicTree(x);
                 treeX.setParametersValues(hashMap);
@@ -91,7 +97,7 @@ public class ZRunner extends Thread implements PropertyChangeListener {
 
         public Point3D calculerPoint3D(double u, double v) {
             try {
-                System.out.println("+");
+                //System.out.println("+");
                 hashMap.put("u", u);
                 hashMap.put("v", v);
                 double evalX = treeX.eval();
@@ -112,6 +118,17 @@ public class ZRunner extends Thread implements PropertyChangeListener {
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
+        //updateView = ff.getPanelView3D();
+        if (ff == null)
+            log.warning("Form :: null");
+        else {
+            updateView = ff.getPanelView3D();
+            if (updateView == null) {
+                log.warning("updateView :: null");
+            } else {
+                System.out.printf("UpdateView" + updateView.getWidth() + ", " + updateView.getHeight() + "" + updateView.hashCode());
+            }
+        }
         String propertyName = evt.getPropertyName();
         log.info("Property changed: " + propertyName);
         switch (propertyName) {
@@ -155,16 +172,12 @@ public class ZRunner extends Thread implements PropertyChangeListener {
                 camera = updateView.getView().getCamera();
                 log.info("camera update");
                 break;
-            case "zbuffer":
-                this.zBuffer = updateView.getView().getzBuffer();
-                log.info("zbuffer dim update ()");
-                break;
             case "zDisplayType":
                 zBuffer.setDisplayType(updateView.getView().getzDiplayType());
                 log.info("zDisplay display : " + updateView.getView().getzDiplayType());
                 break;
             case "zRunner":
-                start();
+                log.info("zRunner start : ");
                 break;
             default:
                 log.log(Level.WARNING, "Property not found");
@@ -177,33 +190,44 @@ public class ZRunner extends Thread implements PropertyChangeListener {
     public void run() {
         log.info("running renderer loop....");
         while (isRunning()) {
-            try {
+                if (ff != null)
+                    updateView = ff.getPanelView3D();
                 if (updateView != null && updateView.getWidth() > 0 && updateView.getHeight() > 0) {
-                    while (!propertyChanged && !updateGraphics) {
+                    System.out.printf("UpdateView"+updateView.getWidth()+", "+updateView.getHeight()+" "+updateView.hashCode());
+                    //while (!propertyChanged && !updateGraphics) {
                         Graphics updateViewGraphics = updateView.getGraphics();
-                        if(lastImage!=null) {
+                        if (lastImage != null) {
                             updateViewGraphics.drawImage(lastImage, 0, 0, updateView.getWidth(), updateView.getHeight(), null);
                         }
-                    }
+
+                    //}
                     log.info("start rendering");
                     if (zBuffer == null || zBuffer.largeur() != updateView.getWidth() || updateView.getHeight() != zBuffer.hauteur()) {
-                        updateView.getView().setzBuffer(new ZBufferImpl(updateView.getWidth(), updateView.getHeight()));
-                        log.info("Zbbuffer dim" + zBuffer.largeur() + ", " + zBuffer.hauteur());
+                        zBuffer = new ZBufferImpl(updateView.getWidth(), updateView.getHeight());
+                        log.info("Zbuffer dim" + zBuffer.largeur() + ", " + zBuffer.hauteur());
                     }
-                    zBuffer = updateView.getView().getzBuffer();
                     //zBuffer.setDimension(updateView.getWidth(), updateView.getHeight());
                     zBuffer.scene(new Scene());
-                    zBuffer.scene().add(new FunctionSurface());
+                    try {
+                        zBuffer.scene().add(new FunctionSurface());
+                    } catch (Exception ex)
+                    {
+                        log.warning("error surface rendering");
+                    }
                     addRepere(zBuffer);
                     zBuffer.camera(camera);
                     zBuffer.next();
                     zBuffer.draw();
                     lastImage = zBuffer.image();
+
+
                     log.info("image rendered");
                     propertyChanged = false;
                     updateGraphics = false;
                 }
-            } catch (Exception e) {
+            try {
+                Thread.sleep(20);
+            } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }

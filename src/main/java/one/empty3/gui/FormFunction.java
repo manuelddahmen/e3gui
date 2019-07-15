@@ -22,20 +22,18 @@ import java.beans.PropertyChangeEvent;
 /**
  * @author Manuel Dahmen
  */
-public class FormFunction  extends JFrame {
+public class FormFunction {
     public static void main(String ... args)
     {
         FormFunction ff = new FormFunction();
         ff.initAll();
     }
 
-    public FormFunction()
-    {
-    }
     public void initAll()
     {
         initComponents();
-
+        getPanelView3D().setFF(this);
+        ScriptPanel.setVisible(true);
     }
     private void CreateRepresentableObjectActionPerformed(ActionEvent e) {
         one.empty3.gui.ObjectsView objectsView = new one.empty3.gui.ObjectsView();
@@ -78,7 +76,7 @@ public class FormFunction  extends JFrame {
                 text = vMax;
                 break;
             default:
-                System.out.println("Personal Binding Error");
+                System.out.println("Binding Error");
         }
         if(text!=null) {
             one.empty3.gui.Calculatrice calculatrice = new one.empty3.gui.Calculatrice(ScriptPanel, text);
@@ -121,6 +119,7 @@ public class FormFunction  extends JFrame {
 
     private void buttonAddTextureActionPerformed(ActionEvent e) {
         one.empty3.gui.LoadTexture loadTexture = new one.empty3.gui.LoadTexture(ScriptPanel, this);
+        loadTexture.setTexture(getPanelView3D().getView().getTexture());
         loadTexture.setVisible(true);
 
     }
@@ -186,6 +185,9 @@ public class FormFunction  extends JFrame {
         // TODO: add custom component creation code here
     }
 
+    private void panelView3DPropertyChange(PropertyChangeEvent e) {
+    }
+
 
 
 	private void initComponents() {
@@ -230,6 +232,7 @@ public class FormFunction  extends JFrame {
             this.ScriptPanel.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
             this.ScriptPanel.setBackground(new Color(204, 255, 255));
             this.ScriptPanel.setVisible(true);
+            this.ScriptPanel.setResizable(false);
             this.ScriptPanel.addPropertyChangeListener("fieldFunctionsPropertyChanged", e -> ScriptPanelPropertyChange(e));
             Container ScriptPanelContentPane = this.ScriptPanel.getContentPane();
             ScriptPanelContentPane.setLayout(new MigLayout(
@@ -335,6 +338,7 @@ public class FormFunction  extends JFrame {
                                 panelView3DComponentShown(e);
                             }
                         });
+                        this.panelView3D.addPropertyChangeListener(e -> panelView3DPropertyChange(e));
                         this.panel1.add(this.panelView3D, "cell 1 0 1 20,dock center,wmin 600,hmin 600");
 
                         //---- label2 ----

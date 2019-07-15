@@ -19,6 +19,7 @@ new FormModel {
 			"background": new java.awt.Color( 204, 255, 255, 255 )
 			"visible": true
 			"$sizePolicy": 1
+			"resizable": false
 			addEvent( new FormEvent( "java.beans.PropertyChangeListener", "propertyChange", "ScriptPanelPropertyChange", true, "fieldFunctionsPropertyChanged" ) )
 			add( new FormContainer( "javax.swing.JMenuBar", new FormLayoutManager( class javax.swing.JMenuBar ) ) {
 				name: "menuBar1"
@@ -115,6 +116,7 @@ new FormModel {
 							}
 							addEvent( new FormEvent( "java.awt.event.ComponentListener", "componentShown", "panelView3DComponentShown", true ) )
 							addEvent( new FormEvent( "java.awt.event.ComponentListener", "componentResized", "panelView3DComponentResized", true ) )
+							addEvent( new FormEvent( "java.beans.PropertyChangeListener", "propertyChange", "panelView3DPropertyChange", true ) )
 						}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
 							"value": "cell 1 0 1 20,dock center,wmin 600,hmin 600"
 						} )

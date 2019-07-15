@@ -27,13 +27,12 @@ public class FunctionView {
     private Camera camera =new Camera(Point3D.Z.mult(-100), Point3D.O0);
     private int zDiplayType;
     private ITexture texture = new TextureCol(Colors.random());
-    private ZBufferImpl zBuffer;
     private boolean refresh = true;
     {
-        camera.calculerMatrice(null);
     }
     public FunctionView()
     {
+        camera.calculerMatrice(Point3D.Y);
     }
 
     public static int getRendererE3() {
@@ -184,14 +183,6 @@ public class FunctionView {
         this.texture = texture;
     }
 
-    public ZBufferImpl getzBuffer() {
-        return zBuffer;
-    }
-
-    public void setzBuffer(ZBufferImpl zBuffer) {
-        changeSupport.firePropertyChange("zbuffer", this.zBuffer, zBuffer);
-        this.zBuffer = zBuffer;
-    }
 
     public boolean isOk() {
         return ok;

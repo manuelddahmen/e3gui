@@ -8,6 +8,7 @@ import net.miginfocom.swing.MigLayout;
 import one.empty3.library.Matrix33;
 import one.empty3.library.Point3D;
 import one.empty3.library.Representable;
+import one.empty3.library.Rotation;
 import one.empty3.library.core.raytracer.tree.AlgebraicFormulaSyntaxException;
 import one.empty3.library.core.raytracer.tree.TreeNodeEvalException;
 import one.empty3.library.core.script.InterpreteException;
@@ -33,38 +34,69 @@ public class ObjectEditorBase extends JDialog {
         super(owner);
         initComponents();
         initValue  =false;
-        setVisible(true);
         initValues(classR);
+        setVisible(true);
 
     }
-    public void initValues(Representable representable)
-    {
-        this.r = representable;
-        // TODO init fields
-        RepresentableClassList.setObjectFields(
-                    point3D,
-                    textAreaPoint3D,
-                    new JTextField[]{textFieldX,textFieldY,textFieldZ},
-                matrix33,
-                textAreaMatrix33,
-                    new JTextField[]{textField00, textField01, textField02,
-                            textField10, textField11, textField12,
-                            textField20, textField21, textField22},
-                scale,
-                textFieldScaleX,textFieldScaleY,textFieldScaleZ
-            );
-    }
+
     public void initValues(Class <? extends Representable> representable)
     {
         try {
             this.r = representable.newInstance();
-            initValues(r);
+            initValues(r,
+
+                    new JTextField[]{
+                        textFieldX, textFieldY, textFieldZ
+                    },
+                            new JTextField[]{
+                    textField00, textField01, textField02,
+                    textField10,textField11,textField12,
+                    textField20,textField21,textField22},
+                    textAreaPoint3D,
+                    textAreaMatrix33,
+                    new JTextField[]{
+                            textFieldScaleX, textFieldScaleY, textFieldScaleZ
+                    }
+                    );
             initValue = true;
         } catch (InstantiationException e) {
             e.printStackTrace();
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
+    }
+
+    private void initValues(Representable r, JTextField[] point3d, JTextField[] jTextFieldMatrix, JTextArea textAreaPoint3D,
+                            JTextArea textAreaMatrix33,
+                            JTextField[] jTextFieldsScale) {
+        Rotation rotation = r.rotation;
+        Point3D centreRot = rotation.getCentreRot();
+        Matrix33 rot = rotation.getRot();
+
+        textAreaMatrix33.setText(rot.toString());
+        for(int i = 0; i<3; i++)
+            point3d[i].setText(""+centreRot.get(i));
+        for(int i=0; i<9; i++)
+            jTextFieldMatrix[i].setText(""+rot.get((i/3), (i%3)));
+        textAreaPoint3D.setText(""+centreRot.toString());
+        for(int i = 0; i<3; i++)
+            jTextFieldsScale[i].setText("1.0");
+    }
+    private void saveValues(Representable r, JTextField[] point3d, JTextField[] jTextFieldMatrix, JTextArea textAreaPoint3D,
+                            JTextArea textAreaMatrix33,
+                            JTextField[] jTextFieldsScale) {
+        Rotation rotation = r.rotation;
+        Point3D centreRot = rotation.getCentreRot();
+        Matrix33 rot = rotation.getRot();
+
+        textAreaMatrix33.setText(rot.toString());
+        for(int i = 0; i<3; i++)
+            centreRot.set(i, Double.parseDouble(point3d[i].getText()));
+        for(int i=0; i<9; i++)
+            rot.set((i/3), (i%3), Double.parseDouble(jTextFieldMatrix[i].getText()));
+        //textAreaPoint3D.setText(""+centreRot.toString());
+        //for(int i = 0; i<3; i++)
+        //    jTextFieldsScale[i].setText("1.0");
     }
 
     private void textFieldXYZActionPerformed(ActionEvent e) {
@@ -94,10 +126,25 @@ public class ObjectEditorBase extends JDialog {
     }
 
     private void textFieldZActionPerformed(ActionEvent e) {
-        // TODO add your code here
     }
 
     private void okButtonActionPerformed(ActionEvent e) {
+        saveValues(r,
+
+                new JTextField[]{
+                        textFieldX, textFieldY, textFieldZ
+                },
+                new JTextField[]{
+                        textField00, textField01, textField02,
+                        textField10,textField11,textField12,
+                        textField20,textField21,textField22},
+                textAreaPoint3D,
+                textAreaMatrix33,
+                new JTextField[]{
+                        textFieldScaleX, textFieldScaleY, textFieldScaleZ
+                }
+        );
+
 
     }
 
@@ -387,7 +434,10 @@ public class ObjectEditorBase extends JDialog {
 
                 //---- okButton ----
                 okButton.setText(bundle.getString("ObjectEditorBase.okButton.text"));
-                okButton.addActionListener(e -> okButtonActionPerformed(e));
+                okButton.addActionListener(e -> {
+			okButtonActionPerformed(e);
+			okButtonActionPerformed(e);
+		});
                 buttonBar.add(okButton, "cell 0 0");
 
                 //---- cancelButton ----
