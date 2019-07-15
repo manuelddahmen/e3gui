@@ -17,23 +17,26 @@ import javax.swing.*;
 import javax.swing.event.CaretEvent;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.beans.PropertyChangeEvent;
 import java.util.ResourceBundle;
 
 /**
  * @author Manuel Dahmen
  */
 public class ObjectEditorBase extends JDialog {
-    private boolean initValue;
+    private final Class<? extends Representable> representableclass;
+    private boolean initValues;
     Representable r = null;
     private Point3D point3D = new Point3D();
     private Matrix33 matrix33 = new Matrix33(Matrix33.I);
-    private Point3D scale = new Point3D();
+    private Point3D scale = new Point3D(1,1,1);
 
     public ObjectEditorBase(Window owner,
                             Class<? extends Representable> classR) {
         super(owner);
         initComponents();
-        initValue  =false;
+        initValues =false;
+        this.representableclass = classR;
         initValues(classR);
         setVisible(true);
 
@@ -58,7 +61,7 @@ public class ObjectEditorBase extends JDialog {
                             textFieldScaleX, textFieldScaleY, textFieldScaleZ
                     }
                     );
-            initValue = true;
+            initValues = true;
         } catch (InstantiationException e) {
             e.printStackTrace();
         } catch (IllegalAccessException e) {
@@ -80,7 +83,7 @@ public class ObjectEditorBase extends JDialog {
             jTextFieldMatrix[i].setText(""+rot.get((i/3), (i%3)));
         textAreaPoint3D.setText(""+centreRot.toString());
         for(int i = 0; i<3; i++)
-            jTextFieldsScale[i].setText("1.0");
+            jTextFieldsScale[i].setText(""+scale.get(i));
     }
     private void saveValues(Representable r, JTextField[] point3d, JTextField[] jTextFieldMatrix, JTextArea textAreaPoint3D,
                             JTextArea textAreaMatrix33,
@@ -90,17 +93,18 @@ public class ObjectEditorBase extends JDialog {
         Matrix33 rot = rotation.getRot();
 
         textAreaMatrix33.setText(rot.toString());
-        for(int i = 0; i<3; i++)
+        for(int i = 0; i<3; i++) {
             centreRot.set(i, Double.parseDouble(point3d[i].getText()));
+        }
         for(int i=0; i<9; i++)
             rot.set((i/3), (i%3), Double.parseDouble(jTextFieldMatrix[i].getText()));
         //textAreaPoint3D.setText(""+centreRot.toString());
-        //for(int i = 0; i<3; i++)
-        //    jTextFieldsScale[i].setText("1.0");
+        for(int i = 0; i<3; i++)
+            scale.set(i, Double.parseDouble(jTextFieldsScale[i].getText()));
     }
 
     private void textFieldXYZActionPerformed(ActionEvent e) {
-        if(initValue) {
+        if(initValues) {
             try {
                 this.point3D = RepresentableClassList.pointParse(textFieldX.getText(), textFieldY.getText(), textFieldZ.getText());
                 textAreaPoint3D.setText(point3D.toString());
@@ -113,7 +117,7 @@ public class ObjectEditorBase extends JDialog {
     }
 
     private void buttonOK1ActionPerformed(ActionEvent e) {
-        if(initValue) {
+        if(initValues) {
             try {
                 this.point3D = RepresentableClassList.pointParse(textAreaPoint3D.getText());
                 // TODO COULEUR NOIRE textAreaPoint3D.getFont()
@@ -149,7 +153,7 @@ public class ObjectEditorBase extends JDialog {
     }
 
     private void textAreaMatrix33CaretUpdate(CaretEvent e) {
-        if(initValue) {
+        if(initValues) {
             try {
                 this.matrix33 = RepresentableClassList.loadMatrix(matrix33,
                         new JTextField[]{textField00, textField01, textField02,
@@ -169,7 +173,7 @@ public class ObjectEditorBase extends JDialog {
     }
 
     private void textFieldsMatrixActionPerformed(ActionEvent e) {
-        if(initValue) {
+        if(initValues) {
             try {
                 this.matrix33 = RepresentableClassList.matrixParse(textAreaMatrix33.getText());
                 textAreaPoint3D.setText(matrix33.toString());
@@ -177,6 +181,15 @@ public class ObjectEditorBase extends JDialog {
                 e1.printStackTrace();
             }
         }
+    }
+
+    private void textAreaPoint3DPropertyChange(PropertyChangeEvent e) {
+    }
+
+    private void button2ActionPerformed(ActionEvent e) {
+        RPropertyList rPropertyList = new RPropertyList(getOwner(), r);
+        rPropertyList.setVisible(true);
+
     }
 
     private void initComponents() {
@@ -277,6 +290,8 @@ public class ObjectEditorBase extends JDialog {
 
                         //---- textAreaPoint3D ----
                         textAreaPoint3D.setFont(new Font("Tahoma", Font.BOLD, 12));
+                        textAreaPoint3D.setEnabled(false);
+                        textAreaPoint3D.addPropertyChangeListener(e -> textAreaPoint3DPropertyChange(e));
                         scrollPane1.setViewportView(textAreaPoint3D);
                     }
                     scrollPane2.setViewportView(scrollPane1);
@@ -323,6 +338,7 @@ public class ObjectEditorBase extends JDialog {
 
                     //---- textAreaMatrix33 ----
                     textAreaMatrix33.setRows(3);
+                    textAreaMatrix33.setEnabled(false);
                     scrollPane3.setViewportView(textAreaMatrix33);
                 }
                 contentPanel.add(scrollPane3, "cell 0 5 3 3");
@@ -389,6 +405,8 @@ public class ObjectEditorBase extends JDialog {
 
                 //---- buttonDataPoints ----
                 buttonDataPoints.setText("Data Points");
+                buttonDataPoints.addPropertyChangeListener(e -> textAreaPoint3DPropertyChange(e));
+                buttonDataPoints.addActionListener(e -> button2ActionPerformed(e));
                 contentPanel.add(buttonDataPoints, "cell 0 13");
 
                 //---- labelDataDoubles ----
@@ -397,6 +415,8 @@ public class ObjectEditorBase extends JDialog {
 
                 //---- buttonDataDoubles ----
                 buttonDataDoubles.setText("Data Doubles");
+                buttonDataDoubles.addPropertyChangeListener(e -> textAreaPoint3DPropertyChange(e));
+                buttonDataDoubles.addActionListener(e -> button2ActionPerformed(e));
                 contentPanel.add(buttonDataDoubles, "cell 1 13");
 
                 //---- label6 ----
@@ -405,18 +425,26 @@ public class ObjectEditorBase extends JDialog {
 
                 //---- button2 ----
                 button2.setText("Texture");
+                button2.addPropertyChangeListener(e -> textAreaPoint3DPropertyChange(e));
+                button2.addActionListener(e -> button2ActionPerformed(e));
                 contentPanel.add(button2, "cell 2 13");
 
                 //---- button4 ----
                 button4.setText("Representable");
+                button4.addPropertyChangeListener(e -> textAreaPoint3DPropertyChange(e));
+                button4.addActionListener(e -> button2ActionPerformed(e));
                 contentPanel.add(button4, "cell 0 14");
 
                 //---- button1 ----
                 button1.setText("Double Array");
+                button1.addPropertyChangeListener(e -> textAreaPoint3DPropertyChange(e));
+                button1.addActionListener(e -> button2ActionPerformed(e));
                 contentPanel.add(button1, "cell 1 14");
 
                 //---- button3 ----
                 button3.setText("Double Matrix");
+                button3.addPropertyChangeListener(e -> textAreaPoint3DPropertyChange(e));
+                button3.addActionListener(e -> button2ActionPerformed(e));
                 contentPanel.add(button3, "cell 1 14");
             }
             dialogPane.add(contentPanel, BorderLayout.CENTER);

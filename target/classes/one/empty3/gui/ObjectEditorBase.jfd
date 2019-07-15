@@ -41,9 +41,11 @@ new FormModel {
 							add( new FormComponent( "javax.swing.JTextArea" ) {
 								name: "textAreaPoint3D"
 								"font": #Font0
+								"enabled": false
 								auxiliary() {
 									"JavaCodeGenerator.customCreateCode": "new JTextArea(new Point3D().toString());"
 								}
+								addEvent( new FormEvent( "java.beans.PropertyChangeListener", "propertyChange", "textAreaPoint3DPropertyChange", true ) )
 							} )
 						} )
 					}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
@@ -103,6 +105,7 @@ new FormModel {
 						add( new FormComponent( "javax.swing.JTextArea" ) {
 							name: "textAreaMatrix33"
 							"rows": 3
+							"enabled": false
 						} )
 					}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
 						"value": "cell 0 5 3 3"
@@ -204,6 +207,8 @@ new FormModel {
 					add( new FormComponent( "javax.swing.JButton" ) {
 						name: "buttonDataPoints"
 						"text": "Data Points"
+						addEvent( new FormEvent( "java.beans.PropertyChangeListener", "propertyChange", "textAreaPoint3DPropertyChange", true ) )
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "button2ActionPerformed", true ) )
 					}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
 						"value": "cell 0 13"
 					} )
@@ -216,6 +221,8 @@ new FormModel {
 					add( new FormComponent( "javax.swing.JButton" ) {
 						name: "buttonDataDoubles"
 						"text": "Data Doubles"
+						addEvent( new FormEvent( "java.beans.PropertyChangeListener", "propertyChange", "textAreaPoint3DPropertyChange", true ) )
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "button2ActionPerformed", true ) )
 					}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
 						"value": "cell 1 13"
 					} )
@@ -228,24 +235,32 @@ new FormModel {
 					add( new FormComponent( "javax.swing.JButton" ) {
 						name: "button2"
 						"text": "Texture"
+						addEvent( new FormEvent( "java.beans.PropertyChangeListener", "propertyChange", "textAreaPoint3DPropertyChange", true ) )
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "button2ActionPerformed", true ) )
 					}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
 						"value": "cell 2 13"
 					} )
 					add( new FormComponent( "javax.swing.JButton" ) {
 						name: "button4"
 						"text": "Representable"
+						addEvent( new FormEvent( "java.beans.PropertyChangeListener", "propertyChange", "textAreaPoint3DPropertyChange", true ) )
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "button2ActionPerformed", true ) )
 					}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
 						"value": "cell 0 14"
 					} )
 					add( new FormComponent( "javax.swing.JButton" ) {
 						name: "button1"
 						"text": "Double Array"
+						addEvent( new FormEvent( "java.beans.PropertyChangeListener", "propertyChange", "textAreaPoint3DPropertyChange", true ) )
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "button2ActionPerformed", true ) )
 					}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
 						"value": "cell 1 14"
 					} )
 					add( new FormComponent( "javax.swing.JButton" ) {
 						name: "button3"
 						"text": "Double Matrix"
+						addEvent( new FormEvent( "java.beans.PropertyChangeListener", "propertyChange", "textAreaPoint3DPropertyChange", true ) )
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "button2ActionPerformed", true ) )
 					}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
 						"value": "cell 1 14"
 					} )
