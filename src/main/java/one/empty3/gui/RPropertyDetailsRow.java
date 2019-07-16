@@ -6,6 +6,8 @@ import one.empty3.library.Representable;
 
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -14,6 +16,7 @@ import java.util.function.Consumer;
  * Created by manue on 15-07-19.
  */
 public class RPropertyDetailsRow implements TableModel {
+    public List<ObjectDetailDescription> objectDetailDescriptions = new ArrayList<>();
     public static final int ARRAYTYPE_SINGLE = 0;
     public static final int ARRAYTYPE_1D = 1;
     public static final int ARRAYTYPE_2D = 2;
@@ -21,7 +24,8 @@ public class RPropertyDetailsRow implements TableModel {
     public static final int TYPE_DOUBLE = 1;
     public static final int TYPE_TEXTURE = 2;
     private Representable representable;
-    String[] columnNames = {"Detail name", "Dim", "Indices", "ObjectType", "Data"};
+    String[] columnNames = {"Formal Name", "Description" , "Dim", "Indices", "ObjectType", "Data"};
+    Class<?>[] columnClass = {String.class, String.class, String.class, String.class, Class.class, Object.class};
 
     public RPropertyDetailsRow(Representable representable) {
         this.representable = representable;
@@ -30,17 +34,25 @@ public class RPropertyDetailsRow implements TableModel {
 
     int index = 0;
 
+
+    protected String[] split(String entryKey) { return entryKey.split("/"); }
+
+
     private void initTable() {
         if (representable.getDeclaredRepresentables().size() > 0)
             representable.getDeclaredRepresentables().entrySet().forEach(new Consumer<Map.Entry<String, Representable>>() {
                 @Override
                 public void accept(Map.Entry<String, Representable> stringRepresentableEntry) {
                     Representable value = stringRepresentableEntry.getValue();
-                    setValueAt(stringRepresentableEntry.getKey(), index, 0);
-                    setValueAt(0, index, 1);
+                    String[] split = split(stringRepresentableEntry.getKey());
+                    setValueAt(split[0], index, 0);
+                    setValueAt(split[1], index, 1);
                     setValueAt(0, index, 2);
-                    setValueAt(value.getClass(), index, 3);
-                    setValueAt(value.toString(), index, 4);
+                    setValueAt(0, index, 3);
+                    setValueAt(value.getClass(), index, 4);
+                    setValueAt(value.toString(), index, 5);
+                    objectDetailDescriptions.add(new ObjectDetailDescription(
+                            split[0], split[1], 0, "0", value.getClass(), value.toString()));
                     index++;
 
                 }
@@ -50,11 +62,15 @@ public class RPropertyDetailsRow implements TableModel {
                 @Override
                 public void accept(Map.Entry<String, ITexture> entry) {
                     ITexture value = entry.getValue();
-                    setValueAt(entry.getKey(), index, 0);
-                    setValueAt(0, index, 1);
+                    String[] split = split(entry.getKey());
+                    setValueAt(split(entry.getKey())[0], index, 0);
+                    setValueAt(split(entry.getKey())[1], index, 1);
                     setValueAt(0, index, 2);
-                    setValueAt(value.getClass(), index, 3);
-                    setValueAt(value.toString(), index, 4);
+                    setValueAt(0, index, 3);
+                    setValueAt(value.getClass(), index, 4);
+                    setValueAt(value.toString(), index, 5);
+                    objectDetailDescriptions.add(new ObjectDetailDescription(
+                            split[0], split[1], 0, "0", value.getClass(), value.toString()));
                     index++;
 
 
@@ -66,13 +82,15 @@ public class RPropertyDetailsRow implements TableModel {
                 public void accept(String s, Point3D[] point3DS) {
                     int i = 0;
                     for (Point3D p : point3DS) {
-
+                        String[] split = split(s);
                         Representable value = p;
-                        setValueAt(s, index, 0);
-                        setValueAt(1, index, 1);
-                        setValueAt(i, index, 2);
-                        setValueAt(value.getClass(), index, 3);
-                        setValueAt(value.toString(), index, 4);
+                        setValueAt(split[0], index, 0);
+                        setValueAt(split[1], index, 1);
+                        setValueAt(1, index, 2);
+                        setValueAt(i, index, 3);
+                        setValueAt(value.getClass(), index, 4);
+                        setValueAt(value.toString(), index, 5);
+                        new ObjectDetailDescription(split[0], split[1], 1, ""+i, value.getClass(), value.toString());
                         index++;
                         i++;
                     }
@@ -88,11 +106,14 @@ public class RPropertyDetailsRow implements TableModel {
                         int j = 0;
                         for (Point3D p : ps) {
                             Representable value = p;
-                            setValueAt(s, index, 0);
-                            setValueAt(1, index, 1);
-                            setValueAt(i, index, 2);
-                            setValueAt(value.getClass(), index, 3);
-                            setValueAt(value.toString(), index, 4);
+                            setValueAt(split(s)[0], index, 0);
+                            setValueAt(split(s)[1], index, 1);
+                            setValueAt(1, index, 2);
+                            setValueAt(i, index, 3);
+                            setValueAt(value.getClass(), index, 4);
+                            setValueAt(value.toString(), index, 5);
+                            objectDetailDescriptions.add(new ObjectDetailDescription(
+                                    split(s)[0], split(s)[1], 1, ""+i, value.getClass(), value.toString()));
                             index++;
 
 
@@ -108,37 +129,44 @@ public class RPropertyDetailsRow implements TableModel {
                 @Override
                 public void accept(String s, Double aDouble) {
                     Double value = aDouble;
-                    setValueAt(s, index, 0);
-                    setValueAt(0, index, 1);
+                    setValueAt(split(s)[0], index, 0);
+                    setValueAt(split(s)[1], index, 1);
                     setValueAt(0, index, 2);
-                    setValueAt(value.getClass(), index, 3);
-                    setValueAt(value, index, 4);
+                    setValueAt(0, index, 3);
+                    setValueAt(value.getClass(), index, 4);
+                    setValueAt(value, index, 5);
+                    objectDetailDescriptions.add(new ObjectDetailDescription(
+                            split(s)[0], split(s)[1], 0, "0", value.getClass(),value)
+                    );
                     index++;
 
                 }
             });
-        if (representable.getDeclaredArrays().size() > 0)
-            representable.getDeclaredArrays().forEach(new BiConsumer<String, Double[]>() {
+        if (representable.getDeclaredArray1dDouble().size() > 0)
+            representable.getDeclaredArray1dDouble().forEach(new BiConsumer<String, Double[]>() {
                 @Override
                 public void accept(String s, Double[] doubles) {
                     int i = 0;
                     for (double d : doubles) {
 
                         Object value = d;
-                        setValueAt(s, index, 0);
-                        setValueAt(1, index, 1);
-                        setValueAt(i, index, 2);
-                        setValueAt(value.getClass(), index, 3);
-                        setValueAt(value, index, 4);
+                        setValueAt(split(s)[0], index, 0);
+                        setValueAt(split(s)[1], index, 1);
+                        setValueAt(1, index, 2);
+                        setValueAt(i, index, 3);
+                        setValueAt(value.getClass(), index, 4);
+                        setValueAt(value, index, 5);
+                        objectDetailDescriptions.add(new ObjectDetailDescription(
+                                split(s)[0],split(s)[1], 1, ""+i, value.getClass(), value));
                         index++;
                         i++;
                     }
 
                 }
             });
-        if (representable.getDeclaredMatrix().size() > 0)
+        if (representable.getDeclaredArrays2dDouble().size() > 0)
 
-            representable.getDeclaredMatrix().forEach(new BiConsumer<String, Double[][]>() {
+            representable.getDeclaredArrays2dDouble().forEach(new BiConsumer<String, Double[][]>() {
                 @Override
                 public void accept(String s, Double[][] doubles) {
                     int i = 0;
@@ -147,11 +175,15 @@ public class RPropertyDetailsRow implements TableModel {
                             int j = 0;
                             for (Double p : ds) {
                                 Double value = p;
-                                setValueAt(s, index, 0);
-                                setValueAt(1, index, 1);
-                                setValueAt(i, index, 2);
-                                setValueAt(value.getClass(), index, 3);
-                                setValueAt(value.toString(), index, 4);
+                                setValueAt(split(s)[0], index, 0);
+                                setValueAt(split(s)[1], index, 1);
+                                setValueAt(1, index, 2);
+                                setValueAt(""+i+","+j, index, 3);
+                                setValueAt(value.getClass(), index, 4);
+                                setValueAt(value.toString(), index, 5);
+                                objectDetailDescriptions.add(new ObjectDetailDescription(
+                                        split(s)[0],split(s)[1], 1, ""+i+","+j, value.getClass(), value));
+
                                 index++;
 
 
@@ -168,7 +200,7 @@ public class RPropertyDetailsRow implements TableModel {
 
     @Override
     public int getRowCount() {
-        return 0;
+        return objectDetailDescriptions.size();
     }
 
     @Override
@@ -183,31 +215,35 @@ public class RPropertyDetailsRow implements TableModel {
 
     @Override
     public Class<?> getColumnClass(int columnIndex) {
-        return null;
+        return columnClass[columnIndex];
     }
 
     @Override
     public boolean isCellEditable(int rowIndex, int columnIndex) {
-        return false;
+        return columnIndex==4;
     }
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
+        if(rowIndex<objectDetailDescriptions.size()&&rowIndex>=0)
+            return objectDetailDescriptions.get(rowIndex).get(columnIndex);
         return null;
     }
 
     @Override
     public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
+        if(rowIndex<objectDetailDescriptions.size()&&rowIndex>=0)
+            objectDetailDescriptions.get(rowIndex).set(columnIndex, aValue);
 
     }
 
     @Override
     public void addTableModelListener(TableModelListener l) {
-
     }
 
     @Override
     public void removeTableModelListener(TableModelListener l) {
 
     }
+
 }

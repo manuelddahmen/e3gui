@@ -25,9 +25,9 @@ public class RPropertyList extends JDialog {
 
     public RPropertyList(Window owner, Representable re) {
         super(owner);
-        this.tableModel = new RPropertyDetailsRow(re);
         initComponents();
-
+        this.tableModel = new RPropertyDetailsRow(re);
+        tableObjectDetails.setModel(tableModel);
     }
 
     private void initComponents() {
@@ -43,6 +43,7 @@ public class RPropertyList extends JDialog {
         helpButton = new JButton();
 
         //======== this ========
+        setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
         Container contentPane = getContentPane();
         contentPane.setLayout(new BorderLayout());
 
@@ -108,13 +109,6 @@ public class RPropertyList extends JDialog {
         contentPane.add(dialogPane, BorderLayout.CENTER);
         pack();
         setLocationRelativeTo(getOwner());
-
-        //---- bindings ----
-        bindingGroup = new BindingGroup();
-        bindingGroup.addBinding(Bindings.createAutoBinding(UpdateStrategy.READ_WRITE,
-            tableObjectDetails, ELProperty.create("${model}"),
-            this, BeanProperty.create("tableModel")));
-        bindingGroup.bind();
         // JFormDesigner - End of component initialization  //GEN-END:initComponents
     }
 
@@ -127,6 +121,5 @@ public class RPropertyList extends JDialog {
     private JPanel buttonBar;
     private JButton okButton;
     private JButton helpButton;
-    private BindingGroup bindingGroup;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
 }

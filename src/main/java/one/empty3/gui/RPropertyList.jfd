@@ -9,6 +9,7 @@ new FormModel {
 	root: new FormRoot {
 		add( new FormWindow( "javax.swing.JDialog", new FormLayoutManager( class java.awt.BorderLayout ) ) {
 			name: "this"
+			"modalityType": enum java.awt.Dialog$ModalityType APPLICATION_MODAL
 			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.BorderLayout ) ) {
 				name: "dialogPane"
 				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class net.miginfocom.swing.MigLayout ) {
@@ -100,10 +101,6 @@ new FormModel {
 		}, new FormLayoutConstraints( null ) {
 			"location": new java.awt.Point( 0, 0 )
 			"size": new java.awt.Dimension( 850, 545 )
-		} )
-		addBindingGroup( new FormBindingGroup( class org.jdesktop.beansbinding.BindingGroup ) {
-			"name": "bindingGroup"
-			addBinding( new FormBinding( "tableObjectDetails", "${model}", "this", "tableModel" ) )
 		} )
 	}
 }
