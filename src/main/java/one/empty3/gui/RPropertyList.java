@@ -6,11 +6,6 @@ package one.empty3.gui;
 
 import net.miginfocom.swing.MigLayout;
 import one.empty3.library.Representable;
-import org.jdesktop.beansbinding.AutoBinding.UpdateStrategy;
-import org.jdesktop.beansbinding.BeanProperty;
-import org.jdesktop.beansbinding.BindingGroup;
-import org.jdesktop.beansbinding.Bindings;
-import org.jdesktop.beansbinding.ELProperty;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -35,7 +30,13 @@ public class RPropertyList extends JDialog {
         ResourceBundle bundle = ResourceBundle.getBundle("one.empty3.gui.gui");
         dialogPane = new JPanel();
         contentPanel = new JPanel();
+        labelBreadCumbs = new JLabel();
         scrollPane1 = new JScrollPane();
+        toolBar1 = new JToolBar();
+        buttonBack = new JButton();
+        buttonNext = new JButton();
+        buttonRefresh = new JButton();
+        buttonHome = new JButton();
         scrollPane2 = new JScrollPane();
         tableObjectDetails = new JTable();
         buttonBar = new JPanel();
@@ -65,6 +66,35 @@ public class RPropertyList extends JDialog {
                     "[]" +
                     "[]" +
                     "[]"));
+
+                //---- labelBreadCumbs ----
+                labelBreadCumbs.setText("BreadCumbs Scene");
+                contentPanel.add(labelBreadCumbs, "cell 0 0 3 2");
+
+                //======== scrollPane1 ========
+                {
+
+                    //======== toolBar1 ========
+                    {
+
+                        //---- buttonBack ----
+                        buttonBack.setText(bundle.getString("RPropertyList.buttonBack.text"));
+                        toolBar1.add(buttonBack);
+
+                        //---- buttonNext ----
+                        buttonNext.setText(bundle.getString("RPropertyList.buttonNext.text"));
+                        toolBar1.add(buttonNext);
+
+                        //---- buttonRefresh ----
+                        buttonRefresh.setText(bundle.getString("RPropertyList.buttonRefresh.text"));
+                        toolBar1.add(buttonRefresh);
+
+                        //---- buttonHome ----
+                        buttonHome.setText(bundle.getString("RPropertyList.buttonHome.text"));
+                        toolBar1.add(buttonHome);
+                    }
+                    scrollPane1.setViewportView(toolBar1);
+                }
                 contentPanel.add(scrollPane1, "cell 0 0 3 2");
 
                 //======== scrollPane2 ========
@@ -115,7 +145,13 @@ public class RPropertyList extends JDialog {
     // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
     private JPanel dialogPane;
     private JPanel contentPanel;
+    private JLabel labelBreadCumbs;
     private JScrollPane scrollPane1;
+    private JToolBar toolBar1;
+    private JButton buttonBack;
+    private JButton buttonNext;
+    private JButton buttonRefresh;
+    private JButton buttonHome;
     private JScrollPane scrollPane2;
     private JTable tableObjectDetails;
     private JPanel buttonBar;

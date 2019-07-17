@@ -1,0 +1,49 @@
+
+
+Save/load
+
+
+Global parameters
+c:\Users\{CurrentUser}\.empty3\conf
+
+
+File zip .moo
+
+.moop based on properties files.
+
+
+Entries or directory (choice on load/save:
+
+    r.properties
+
+
+
+    linearization of all scene objects properties
+
+    renderings.properties
+        baseDirectory=
+            zip (extra)
+            "current(.)" directory(relative to zip or
+            absolute based on GP or on-render-save-file
+
+
+    parts/
+        name/
+            r.properties
+    files/img
+    textures {name}.{image extension}.{refid}
+
+    files/mov
+    textures {name}..{movie extension}.{refid}
+
+    files/models3d/obj
+    models imported {name}.obj.{refid}
+
+    files/models3d/stl
+    models imported {name}.stl.{refid}
+
+
+Extern of zip based on renderings.properties
+    files/extra/renderedImage
+    files/extra/renderedMov
+    files/extra/exportedModels

@@ -18,8 +18,33 @@ new FormModel {
 					"$rowConstraints": "[][][][][]"
 				} ) {
 					name: "contentPanel"
+					add( new FormComponent( "javax.swing.JLabel" ) {
+						name: "labelBreadCumbs"
+						"text": "BreadCumbs Scene"
+					}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+						"value": "cell 0 0 3 2"
+					} )
 					add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
 						name: "scrollPane1"
+						add( new FormContainer( "javax.swing.JToolBar", new FormLayoutManager( class javax.swing.JToolBar ) ) {
+							name: "toolBar1"
+							add( new FormComponent( "javax.swing.JButton" ) {
+								name: "buttonBack"
+								"text": new FormMessage( null, "RPropertyList.buttonBack.text" )
+							} )
+							add( new FormComponent( "javax.swing.JButton" ) {
+								name: "buttonNext"
+								"text": new FormMessage( null, "RPropertyList.buttonNext.text" )
+							} )
+							add( new FormComponent( "javax.swing.JButton" ) {
+								name: "buttonRefresh"
+								"text": new FormMessage( null, "RPropertyList.buttonRefresh.text" )
+							} )
+							add( new FormComponent( "javax.swing.JButton" ) {
+								name: "buttonHome"
+								"text": new FormMessage( null, "RPropertyList.buttonHome.text" )
+							} )
+						} )
 					}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
 						"value": "cell 0 0 3 2"
 					} )

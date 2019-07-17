@@ -53,7 +53,7 @@ public class Camera3dControl extends JDialog {
             Camera camera = new Camera();
             camera.setEye(new Point3D(getD(textFieldE0), getD(textFieldE1), getD(textFieldE2)));
             camera.setLookat(new Point3D(getD(textFieldL0), getD(textFieldL1), getD(textFieldL2)));
-            camera.setMatrice(new Matrix33(new double[]{
+            camera.setMatrice(new Matrix33(new Double[]{
                     getD(textFieldMX0), getD(textFieldMX1), getD(textFieldMX2),
                     getD(textFieldMY0), getD(textFieldMY1), getD(textFieldMY2),
                     getD(textFieldMZ0), getD(textFieldMZ1), getD(textFieldMZ2)
@@ -61,7 +61,14 @@ public class Camera3dControl extends JDialog {
             camera.angleXY(getD(textFieldAX), getD(textFieldAY));
             if(radioButtonCOMPMAT.isSelected())
             {
-
+                if(textFieldV0.getText().equals("")||textFieldV1.getText().equals("")||textFieldV2.getText().equals(""))
+                {
+                    camera.calculerMatrice(new Point3D(getD(textFieldMY0), getD(textFieldMY1), getD(textFieldMY2)));
+                }
+                else
+                {
+                    camera.calculerMatrice(new Point3D(getD(textFieldV0), getD(textFieldV1), getD(textFieldV2)));
+                }
             }
             else
             {

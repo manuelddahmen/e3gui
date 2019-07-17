@@ -105,7 +105,6 @@
     <orderEntry type="library" name="Maven: com.jhlabs:filters:2.0.235-1" level="project" />
     <orderEntry type="library" name="Maven: com.nativelibs4java:bridj:0.6.2" level="project" />
     <orderEntry type="library" name="Maven: com.google.android.tools:dx:1.7" level="project" />
-    <orderEntry type="library" name="Maven: one.empty3:empty3-library-3d:2019.1" level="project" />
     <orderEntry type="library" name="Maven: org.jetbrains.kotlin:kotlin-stdlib-jre8:1.1.2" level="project" />
     <orderEntry type="library" name="Maven: org.jetbrains.kotlin:kotlin-stdlib-jre7:1.1.2" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.jetbrains.kotlin:kotlin-test:1.1.2" level="project" />

@@ -4,7 +4,7 @@ import one.empty3.library.*;
 import one.empty3.library.core.lighting.Colors;
 import one.empty3.library.core.nurbs.ParametricSurface;
 import one.empty3.library.core.raytracer.tree.AlgebraicFormulaSyntaxException;
-import one.empty3.library.core.raytracer.tree.AlgebraicTree;
+import one.empty3.library.core.raytracer.tree.AlgebricTree;
 import one.empty3.library.core.raytracer.tree.TreeNodeEvalException;
 
 import java.awt.*;
@@ -34,7 +34,7 @@ public class ZRunner extends Thread implements PropertyChangeListener {
 
     public ZRunner() {
         log = Logger.getAnonymousLogger();
-        log.setLevel(Level.ALL);
+        log.setLevel(Level.FINEST);
         running = true;
         zBuffer = null;
         System.out.println("ZRunner new instance");
@@ -64,51 +64,43 @@ public class ZRunner extends Thread implements PropertyChangeListener {
     }
 
     class FunctionSurface extends ParametricSurface {
-        private AlgebraicTree treeX;
-        private AlgebraicTree treeY;
-        private AlgebraicTree treeZ;
-        HashMap hashMap = new HashMap(2);
+        private AlgebricTree treeX;
+        private AlgebricTree treeY;
+        private AlgebricTree treeZ;
+        HashMap<String, Double> hashMap = new HashMap<>(2);
 
-        public FunctionSurface() {
+        FunctionSurface() throws AlgebraicFormulaSyntaxException {
             hashMap.put("u", 0d);
             hashMap.put("v", 0d);
             setStartU(u0);
             setEndU(u1);
-            setIncrU((u1-u0)/10);
+            setIncrU((u1 - u0) / 10);
             setStartV(v0);
             setEndV(v1);
-            setIncrV((v1-v0)/10);
-            try {
-                treeX = new AlgebraicTree(x);
-                treeX.setParametersValues(hashMap);
-                treeX.construct();
-                treeY = new AlgebraicTree(y);
-                treeY.setParametersValues(hashMap);
-                treeY.construct();
-                treeZ = new AlgebraicTree(z);
-                treeZ.setParametersValues(hashMap);
-                treeZ.construct();
+            setIncrV((v1 - v0) / 10);
+            treeX = new AlgebricTree(x);
+            treeX.getParametersValues().putAll(hashMap);
+            treeX.construct();
+            treeY = new AlgebricTree(y);
+            treeY.getParametersValues().putAll(hashMap);
+            treeY.construct();
+            treeZ = new AlgebricTree(z);
+            treeZ.getParametersValues().putAll(hashMap);
+            treeZ.construct();
 
-            } catch (AlgebraicFormulaSyntaxException e) {
-                e.printStackTrace();
-            }
             texture(iTexture == null ? new TextureCol(Colors.random()) : texture);
         }
 
         public Point3D calculerPoint3D(double u, double v) {
             try {
-                //System.out.println("+");
                 hashMap.put("u", u);
                 hashMap.put("v", v);
                 double evalX = treeX.eval();
                 double evalY = treeY.eval();
                 double evalZ = treeZ.eval();
-                Point3D point3D = new Point3D(evalX, evalY, evalZ);
-                return point3D;
-            } catch (TreeNodeEvalException | AlgebraicFormulaSyntaxException e) {
-                e.printStackTrace();
-                System.out.println("null");
-                e.printStackTrace();
+                return new Point3D(evalX, evalY, evalZ);
+            } catch (TreeNodeEvalException | AlgebraicFormulaSyntaxException | NullPointerException exceptione) {
+                log.warning("Error evaluate Tree eval()");
                 return null;
             }
 
@@ -122,11 +114,12 @@ public class ZRunner extends Thread implements PropertyChangeListener {
         if (ff == null)
             log.warning("Form :: null");
         else {
-            updateView = ff.getPanelView3D();
-            if (updateView == null) {
+            if(updateView==null || updateView!=ff.getPanelView3D()) {
+                updateView = ff.getPanelView3D();
+                log.log(Level.WARNING, "UpdateVie instancié");
+            }if (updateView == null) {
                 log.warning("updateView :: null");
             } else {
-                System.out.printf("UpdateView" + updateView.getWidth() + ", " + updateView.getHeight() + "" + updateView.hashCode());
             }
         }
         String propertyName = evt.getPropertyName();
@@ -190,41 +183,48 @@ public class ZRunner extends Thread implements PropertyChangeListener {
     public void run() {
         log.info("running renderer loop....");
         while (isRunning()) {
-                if (ff != null)
-                    updateView = ff.getPanelView3D();
-                if (updateView != null && updateView.getWidth() > 0 && updateView.getHeight() > 0) {
-                    System.out.printf("UpdateView"+updateView.getWidth()+", "+updateView.getHeight()+" "+updateView.hashCode());
-                    //while (!propertyChanged && !updateGraphics) {
-                        Graphics updateViewGraphics = updateView.getGraphics();
-                        if (lastImage != null) {
-                            updateViewGraphics.drawImage(lastImage, 0, 0, updateView.getWidth(), updateView.getHeight(), null);
-                        }
-
-                    //}
-                    log.info("start rendering");
-                    if (zBuffer == null || zBuffer.largeur() != updateView.getWidth() || updateView.getHeight() != zBuffer.hauteur()) {
-                        zBuffer = new ZBufferImpl(updateView.getWidth(), updateView.getHeight());
-                        log.info("Zbuffer dim" + zBuffer.largeur() + ", " + zBuffer.hauteur());
+            if (ff != null)
+                updateView = ff.getPanelView3D();
+            if (updateView != null && updateView.getWidth() > 0 && updateView.getHeight() > 0) {
+               // log.log(Level.WARNING, "UpdateView" + updateView.getWidth() + ", " + updateView.getHeight() + " " + updateView.hashCode());
+                while (!propertyChanged && !updateGraphics) {
+                    Graphics updateViewGraphics = updateView.getGraphics();
+                    if (lastImage != null) {
+                        updateViewGraphics.drawImage(lastImage, 0, 0, updateView.getWidth(), updateView.getHeight(), null);
                     }
-                    //zBuffer.setDimension(updateView.getWidth(), updateView.getHeight());
-                    zBuffer.scene(new Scene());
                     try {
-                        zBuffer.scene().add(new FunctionSurface());
-                    } catch (Exception ex)
-                    {
-                        log.warning("error surface rendering");
+                        Thread.sleep(20);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
                     }
-                    addRepere(zBuffer);
-                    zBuffer.camera(camera);
-                    zBuffer.next();
+                }
+                log.log(Level.WARNING, "start rendering");
+                if (zBuffer == null || zBuffer.largeur() != updateView.getWidth() || updateView.getHeight() != zBuffer.hauteur()) {
+                    zBuffer = new ZBufferImpl(updateView.getWidth(), updateView.getHeight());
+                    log.log(Level.WARNING, "Zbuffer dim" + zBuffer.largeur() + ", " + zBuffer.hauteur());
+                }
+                //zBuffer.setDimension(updateView.getWidth(), updateView.getHeight());
+                zBuffer.scene(new Scene());
+                try {
+                    FunctionSurface functionSurface = new FunctionSurface();
+                    zBuffer.scene().add(functionSurface);
+                } catch (AlgebraicFormulaSyntaxException | NullPointerException e) {
+                    log.log(Level.WARNING, e.getLocalizedMessage(), e.getLocalizedMessage());
+                    log.info("Error adding function");
+                }
+                addRepere(zBuffer);
+                zBuffer.camera(camera);
+                zBuffer.next();
+                try {
                     zBuffer.draw();
                     lastImage = zBuffer.image();
-
-
-                    log.info("image rendered");
+                    log.info("Draw OK");
                     propertyChanged = false;
                     updateGraphics = false;
+                } catch (NullPointerException t) {
+                    log.info("function drawing error");
                 }
+            }
             try {
                 Thread.sleep(20);
             } catch (InterruptedException e) {
