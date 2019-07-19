@@ -5,24 +5,124 @@
 package one.empty3.gui;
 
 import net.miginfocom.swing.MigLayout;
+import one.empty3.library.ITexture;
 import one.empty3.library.Representable;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ResourceBundle;
 
 /**
  * @author Manuel Dahmen
  */
-public class RPropertyList extends JDialog {
-    private final RPropertyDetailsRow tableModel;
+public class RPropertyList extends JDialog implements PropertyChangeListener {
+    History history = new History();
+
+    private RPropertyDetailsRow tableModel;
+
 
     public RPropertyList(Window owner, Representable re) {
         super(owner);
         initComponents();
-        this.tableModel = new RPropertyDetailsRow(re);
-        tableObjectDetails.setModel(tableModel);
+        init(re);
+        history.getHistory().add(tableModel);
+    }
+
+    public void init(Object re) {
+        if (re instanceof Representable) {
+            labelBreadCumbs.setText(re.getClass().getCanonicalName());
+            this.tableModel = new RPropertyDetailsRow((Representable) re);
+            tableObjectDetails.setModel(tableModel);
+
+            System.out.println("init");
+            System.out.println("history size = " + history.getHistory().size());
+            System.out.println("history index = " + history.getCurrent());
+        } else if (re instanceof RPropertyDetailsRow) {
+            RPropertyDetailsRow model = (RPropertyDetailsRow) re;
+            this.tableModel = model;
+            tableObjectDetails.setModel(model);
+        }
+
+    }
+
+    private void buttonRefreshActionPerformed(ActionEvent e) {
+        tableModel.initTable();
+    }
+
+    private void scrollPane2MouseClicked(MouseEvent e) {
+        // TODO add your code here
+    }
+
+    private void tableObjectDetailsMouseClicked(MouseEvent e) {
+        int selectedRow = tableObjectDetails.getSelectedRow();
+        if (tableModel.getItemList(selectedRow) != null) {
+            if (tableModel.getItemList(selectedRow) instanceof Representable) {
+                init(tableModel.getItemList(selectedRow));
+                history.setCurrent(history.getCurrent() + 1);
+                history.getHistory().add(history.getCurrent(), tableModel);
+                System.out.println("add to history = 1");
+            } else if (tableModel.getItemList(selectedRow) instanceof ITexture) {
+                ITexture tex = ((ITexture) tableModel.getItemList(selectedRow));
+                LoadTexture loadTexture = new LoadTexture(this, tex);
+                loadTexture.addPropertyChangeListener(this);
+            } else if (tableObjectDetails.isCellEditable(selectedRow, 5))
+                tableObjectDetails.editCellAt(selectedRow, 5);
+            }
+
+    }
+
+    private void objectType(Class<?> aClass) {
+
+    }
+
+    public void historyBack() {
+        history.back();
+        refreshTable();
+
+    }
+
+    public void historyNext() {
+        history.next();
+        refreshTable();
+
+    }
+
+    public void refreshTable() {
+        init(history.getHistory().get(history.getCurrent()));
+    }
+
+    private void buttonNextActionPerformed(ActionEvent e) {
+        historyNext();
+    }
+
+    private void buttonBackActionPerformed(ActionEvent e) {
+        historyBack();
+    }
+
+    private void buttonPrevActionPerformed(ActionEvent e) {
+        // TODO add your code here
+    }
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        if (evt.getNewValue() instanceof ITexture) {
+            try {
+                tableModel.getRepresentable().setProperty(evt.getPropertyName(), evt.getNewValue());
+            } catch (InvocationTargetException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (NoSuchMethodException e) {
+                e.printStackTrace();
+            }
+        }
+
     }
 
     private void initComponents() {
@@ -33,10 +133,14 @@ public class RPropertyList extends JDialog {
         labelBreadCumbs = new JLabel();
         scrollPane1 = new JScrollPane();
         toolBar1 = new JToolBar();
-        buttonBack = new JButton();
+        buttonPrev = new JButton();
+        button1 = new JButton();
+        button2 = new JButton();
+        button3 = new JButton();
+        button4 = new JButton();
+        button6 = new JButton();
+        button7 = new JButton();
         buttonNext = new JButton();
-        buttonRefresh = new JButton();
-        buttonHome = new JButton();
         scrollPane2 = new JScrollPane();
         tableObjectDetails = new JTable();
         buttonBar = new JPanel();
@@ -68,7 +172,7 @@ public class RPropertyList extends JDialog {
                     "[]"));
 
                 //---- labelBreadCumbs ----
-                labelBreadCumbs.setText("BreadCumbs Scene");
+                labelBreadCumbs.setText("Navigation history");
                 contentPanel.add(labelBreadCumbs, "cell 0 0 3 2");
 
                 //======== scrollPane1 ========
@@ -77,21 +181,57 @@ public class RPropertyList extends JDialog {
                     //======== toolBar1 ========
                     {
 
-                        //---- buttonBack ----
-                        buttonBack.setText(bundle.getString("RPropertyList.buttonBack.text"));
-                        toolBar1.add(buttonBack);
+                        //---- buttonPrev ----
+                        buttonPrev.setText("<<");
+                        buttonPrev.addActionListener(e -> {
+			buttonPrevActionPerformed(e);
+			buttonPrevActionPerformed(e);
+			buttonPrevActionPerformed(e);
+			buttonBackActionPerformed(e);
+		});
+                        toolBar1.add(buttonPrev);
+
+                        //---- button1 ----
+                        button1.setText("1");
+                        button1.addActionListener(e -> {
+			buttonRefreshActionPerformed(e);
+			buttonPrevActionPerformed(e);
+		});
+                        toolBar1.add(button1);
+
+                        //---- button2 ----
+                        button2.setText("2");
+                        button2.addActionListener(e -> buttonPrevActionPerformed(e));
+                        toolBar1.add(button2);
+
+                        //---- button3 ----
+                        button3.setText("3");
+                        button3.addActionListener(e -> buttonPrevActionPerformed(e));
+                        toolBar1.add(button3);
+
+                        //---- button4 ----
+                        button4.setText("4");
+                        button4.addActionListener(e -> buttonPrevActionPerformed(e));
+                        toolBar1.add(button4);
+
+                        //---- button6 ----
+                        button6.setText("5");
+                        button6.addActionListener(e -> buttonPrevActionPerformed(e));
+                        toolBar1.add(button6);
+
+                        //---- button7 ----
+                        button7.setText("6");
+                        button7.addActionListener(e -> buttonPrevActionPerformed(e));
+                        toolBar1.add(button7);
 
                         //---- buttonNext ----
-                        buttonNext.setText(bundle.getString("RPropertyList.buttonNext.text"));
+                        buttonNext.setText(">>");
+                        buttonNext.addActionListener(e -> {
+			buttonPrevActionPerformed(e);
+			buttonNextActionPerformed(e);
+			buttonNextActionPerformed(e);
+		});
                         toolBar1.add(buttonNext);
-
-                        //---- buttonRefresh ----
-                        buttonRefresh.setText(bundle.getString("RPropertyList.buttonRefresh.text"));
-                        toolBar1.add(buttonRefresh);
-
-                        //---- buttonHome ----
-                        buttonHome.setText(bundle.getString("RPropertyList.buttonHome.text"));
-                        toolBar1.add(buttonHome);
                     }
                     scrollPane1.setViewportView(toolBar1);
                 }
@@ -99,6 +239,12 @@ public class RPropertyList extends JDialog {
 
                 //======== scrollPane2 ========
                 {
+                    scrollPane2.addMouseListener(new MouseAdapter() {
+                        @Override
+                        public void mouseClicked(MouseEvent e) {
+                            scrollPane2MouseClicked(e);
+                        }
+                    });
 
                     //---- tableObjectDetails ----
                     tableObjectDetails.setModel(new DefaultTableModel(
@@ -110,6 +256,13 @@ public class RPropertyList extends JDialog {
                             "Detail name", "Dim", "Indices", "objectType", "object"
                         }
                     ));
+                    tableObjectDetails.setColumnSelectionAllowed(true);
+                    tableObjectDetails.addMouseListener(new MouseAdapter() {
+                        @Override
+                        public void mouseClicked(MouseEvent e) {
+                            tableObjectDetailsMouseClicked(e);
+                        }
+                    });
                     scrollPane2.setViewportView(tableObjectDetails);
                 }
                 contentPanel.add(scrollPane2, "cell 0 2 3 1");
@@ -148,10 +301,14 @@ public class RPropertyList extends JDialog {
     private JLabel labelBreadCumbs;
     private JScrollPane scrollPane1;
     private JToolBar toolBar1;
-    private JButton buttonBack;
+    private JButton buttonPrev;
+    private JButton button1;
+    private JButton button2;
+    private JButton button3;
+    private JButton button4;
+    private JButton button6;
+    private JButton button7;
     private JButton buttonNext;
-    private JButton buttonRefresh;
-    private JButton buttonHome;
     private JScrollPane scrollPane2;
     private JTable tableObjectDetails;
     private JPanel buttonBar;

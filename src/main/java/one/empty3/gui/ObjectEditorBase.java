@@ -31,9 +31,8 @@ public class ObjectEditorBase extends JDialog {
     private Matrix33 matrix33 = new Matrix33(Matrix33.I);
     private Point3D scale = new Point3D(1,1,1);
 
-    public ObjectEditorBase(Window owner,
-                            Class<? extends Representable> classR) {
-        super(owner);
+    public ObjectEditorBase(Class<? extends Representable> classR) {
+        super();
         initComponents();
         initValues =false;
         this.representableclass = classR;

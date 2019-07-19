@@ -1,5 +1,7 @@
 package one.empty3.gui;
 
+import one.empty3.library.Scene;
+
 import javax.swing.*;
 
 /**
@@ -7,6 +9,7 @@ import javax.swing.*;
  */
 public class UpdateView extends JPanel {
     private FormFunction ff;
+    private Scene scene;
 
     public UpdateView() {
         setView(new FunctionView());

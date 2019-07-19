@@ -7,7 +7,7 @@ import one.empty3.library.core.nurbs.ParametricCurve;
 import one.empty3.library.core.nurbs.ParametricSurface;
 import one.empty3.library.core.nurbs.SurfaceParametriquePolynomialeBezier;
 import one.empty3.library.core.raytracer.tree.AlgebraicFormulaSyntaxException;
-import one.empty3.library.core.raytracer.tree.AlgebraicTree;
+import one.empty3.library.core.raytracer.tree.AlgebricTree;
 import one.empty3.library.core.raytracer.tree.TreeNodeEvalException;
 import one.empty3.library.core.script.InterpreteException;
 import one.empty3.library.core.script.InterpreteMatrix33;
@@ -37,6 +37,7 @@ public class RepresentableClassList {
 
     public MyObservableList<ObjectDescription> myList()
     {
+        add("scene", Scene.class);
         add("p", Point3D.class);
         add("r", Representable.class);
         add("rContainer", RepresentableConteneur.class);
@@ -69,21 +70,18 @@ public class RepresentableClassList {
     public static Point3D pointParse(String x, String y, String z) throws AlgebraicFormulaSyntaxException, TreeNodeEvalException {
             Map<String, Double> hashMap = new HashMap<String, Double>();
 
-            AlgebraicTree treeX = new AlgebraicTree(x);
-            treeX.setParametersValues(hashMap);
+            AlgebricTree treeX = new AlgebricTree(x, hashMap);
             treeX.construct();
-            AlgebraicTree treeY = new AlgebraicTree(y);
-            treeY.setParametersValues(hashMap);
+            AlgebricTree treeY = new AlgebricTree(y, hashMap);
             treeY.construct();
-            AlgebraicTree treeZ = new AlgebraicTree(z);
-            treeZ.setParametersValues(hashMap);
+            AlgebricTree treeZ = new AlgebricTree(z, hashMap);
             treeZ.construct();
 
             return new Point3D((Double)treeX.eval(), (Double)treeY.eval(), (Double)treeZ.eval());
     }
     public static Matrix33 loadMatrix(Matrix33 m, JTextField[] strings, JTextArea text) throws AlgebraicFormulaSyntaxException, TreeNodeEvalException {
         for(int i=0; i<strings.length; i++) {
-            AlgebraicTree treeI = new AlgebraicTree(strings[i].getText());
+            AlgebricTree treeI = new AlgebricTree(strings[i].getText());
             treeI.construct();
             m.set(i/3, i%3, (double)treeI.eval());
             strings[i].setText(""+m.get(i/3, i%3));
@@ -106,7 +104,7 @@ public class RepresentableClassList {
     public static Matrix33 matrixParse(JTextField[] strings) throws AlgebraicFormulaSyntaxException, TreeNodeEvalException {
         Matrix33 matrix = new Matrix33();
         for(int i=0; i<strings.length; i++) {
-            AlgebraicTree treeI = new AlgebraicTree(strings[i].getText());
+            AlgebricTree treeI = new AlgebricTree(strings[i].getText());
             treeI.construct();
             matrix.set(i/3, i%3, (double)treeI.eval());
             strings[i].setText(""+matrix.get(i/3, i%3));

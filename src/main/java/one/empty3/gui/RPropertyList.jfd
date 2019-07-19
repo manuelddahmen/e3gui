@@ -20,7 +20,7 @@ new FormModel {
 					name: "contentPanel"
 					add( new FormComponent( "javax.swing.JLabel" ) {
 						name: "labelBreadCumbs"
-						"text": "BreadCumbs Scene"
+						"text": "Navigation history"
 					}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
 						"value": "cell 0 0 3 2"
 					} )
@@ -29,20 +29,50 @@ new FormModel {
 						add( new FormContainer( "javax.swing.JToolBar", new FormLayoutManager( class javax.swing.JToolBar ) ) {
 							name: "toolBar1"
 							add( new FormComponent( "javax.swing.JButton" ) {
-								name: "buttonBack"
-								"text": new FormMessage( null, "RPropertyList.buttonBack.text" )
+								name: "buttonPrev"
+								"text": "<<"
+								addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "buttonPrevActionPerformed", true ) )
+								addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "buttonPrevActionPerformed", true ) )
+								addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "buttonPrevActionPerformed", true ) )
+								addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "buttonBackActionPerformed", true ) )
+							} )
+							add( new FormComponent( "javax.swing.JButton" ) {
+								name: "button1"
+								"text": "1"
+								addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "buttonRefreshActionPerformed", true ) )
+								addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "buttonPrevActionPerformed", true ) )
+							} )
+							add( new FormComponent( "javax.swing.JButton" ) {
+								name: "button2"
+								"text": "2"
+								addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "buttonPrevActionPerformed", true ) )
+							} )
+							add( new FormComponent( "javax.swing.JButton" ) {
+								name: "button3"
+								"text": "3"
+								addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "buttonPrevActionPerformed", true ) )
+							} )
+							add( new FormComponent( "javax.swing.JButton" ) {
+								name: "button4"
+								"text": "4"
+								addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "buttonPrevActionPerformed", true ) )
+							} )
+							add( new FormComponent( "javax.swing.JButton" ) {
+								name: "button6"
+								"text": "5"
+								addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "buttonPrevActionPerformed", true ) )
+							} )
+							add( new FormComponent( "javax.swing.JButton" ) {
+								name: "button7"
+								"text": "6"
+								addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "buttonPrevActionPerformed", true ) )
 							} )
 							add( new FormComponent( "javax.swing.JButton" ) {
 								name: "buttonNext"
-								"text": new FormMessage( null, "RPropertyList.buttonNext.text" )
-							} )
-							add( new FormComponent( "javax.swing.JButton" ) {
-								name: "buttonRefresh"
-								"text": new FormMessage( null, "RPropertyList.buttonRefresh.text" )
-							} )
-							add( new FormComponent( "javax.swing.JButton" ) {
-								name: "buttonHome"
-								"text": new FormMessage( null, "RPropertyList.buttonHome.text" )
+								"text": ">>"
+								addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "buttonPrevActionPerformed", true ) )
+								addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "buttonNextActionPerformed", true ) )
+								addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "buttonNextActionPerformed", true ) )
 							} )
 						} )
 					}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
@@ -50,6 +80,7 @@ new FormModel {
 					} )
 					add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
 						name: "scrollPane2"
+						addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseClicked", "scrollPane2MouseClicked", true ) )
 						add( new FormComponent( "javax.swing.JTable" ) {
 							name: "tableObjectDetails"
 							"model": new com.jformdesigner.model.SwingTableModel( new java.util.Vector {
@@ -92,6 +123,8 @@ new FormModel {
 								add( null )
 								add( null )
 							} )
+							"columnSelectionAllowed": true
+							addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseClicked", "tableObjectDetailsMouseClicked", true ) )
 						} )
 					}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
 						"value": "cell 0 2 3 1"

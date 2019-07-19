@@ -1,63 +1,39 @@
 package one.empty3.gui;
 
-import javafx.beans.InvalidationListener;
-import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableList;
-
 import java.util.ArrayList;
 import java.util.Collection;
+
+import javax.swing.event.ListDataListener;
+
+import com.jgoodies.common.collect.ObservableList;
 
 /**
  * Created by manue on 01-07-19.
  */
 public class MyObservableList<T> extends ArrayList<T> implements ObservableList<T> {
-    @Override
-    public void addListener(ListChangeListener<? super T> listener) {
 
-    }
+	@Override
+	public int getSize() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 
-    @Override
-    public void removeListener(ListChangeListener<? super T> listener) {
+	@Override
+	public Object getElementAt(int index) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
-    }
+	@Override
+	public void addListDataListener(ListDataListener l) {
+		// TODO Auto-generated method stub
+		
+	}
 
-    @Override
-    public boolean addAll(T[] elements) {
-        return false;
-    }
+	@Override
+	public void removeListDataListener(ListDataListener l) {
+		// TODO Auto-generated method stub
+		
+	}
 
-    @Override
-    public boolean setAll(T[] elements) {
-        return false;
-    }
-
-    @Override
-    public boolean setAll(Collection<? extends T> col) {
-        return false;
-    }
-
-    @Override
-    public boolean removeAll(T[] elements) {
-        return false;
-    }
-
-    @Override
-    public boolean retainAll(T[] elements) {
-        return false;
-    }
-
-    @Override
-    public void remove(int from, int to) {
-
-    }
-
-    @Override
-    public void addListener(InvalidationListener listener) {
-
-    }
-
-    @Override
-    public void removeListener(InvalidationListener listener) {
-
-    }
 }

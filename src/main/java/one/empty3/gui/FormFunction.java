@@ -22,7 +22,7 @@ import java.beans.PropertyChangeEvent;
 /**
  * @author Manuel Dahmen
  */
-public class FormFunction {
+public class FormFunction extends JFrame {
     public static void main(String ... args)
     {
         FormFunction ff = new FormFunction();
@@ -37,7 +37,6 @@ public class FormFunction {
     }
     private void CreateRepresentableObjectActionPerformed(ActionEvent e) {
         one.empty3.gui.ObjectsView objectsView = new one.empty3.gui.ObjectsView();
-        objectsView.setVisible(true);
 
     }
 
@@ -197,8 +196,6 @@ public class FormFunction {
         this.scrollPane1 = new JPanel();
         this.layeredPane1 = new JLayeredPane();
         this.panel1 = new JPanel();
-        this.scrollPane3 = new JScrollPane();
-        this.tree1 = new JTree();
         this.xLabel = new JButton();
         this.textFctX = new JTextField();
         this.yLabel = new JButton();
@@ -287,12 +284,6 @@ public class FormFunction {
                             "[]" +
                             "[]"));
 
-                        //======== scrollPane3 ========
-                        {
-                            this.scrollPane3.setViewportView(this.tree1);
-                        }
-                        this.panel1.add(this.scrollPane3, "cell 0 0");
-
                         //---- xLabel ----
                         this.xLabel.setText("x=");
                         this.xLabel.addActionListener(e -> xyzLabelActionPerformed(e));
@@ -380,7 +371,11 @@ public class FormFunction {
 
                         //---- AddRepresentableObject ----
                         this.AddRepresentableObject.setText("Add Representable Object");
-                        this.AddRepresentableObject.addActionListener(e -> AddRepresentableObjectActionPerformed(e));
+                        this.AddRepresentableObject.addActionListener(e -> {
+			AddRepresentableObjectActionPerformed(e);
+			AddRepresentableObjectActionPerformed(e);
+			AddRepresentableObjectActionPerformed(e);
+		});
                         this.panel1.add(this.AddRepresentableObject, "cell 0 11");
 
                         //---- DeleteRepresentableObject ----
@@ -471,8 +466,6 @@ public class FormFunction {
     private JPanel scrollPane1;
     private JLayeredPane layeredPane1;
     private JPanel panel1;
-    private JScrollPane scrollPane3;
-    private JTree tree1;
     private JButton xLabel;
     private JTextField textFctX;
     private JButton yLabel;

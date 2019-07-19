@@ -1,7 +1,5 @@
 package one.empty3.gui;
 
-import one.empty3.library.Representable;
-
 /**
  * Created by manue on 15-07-19.
  */
@@ -10,12 +8,12 @@ public class ObjectDetailDescription {
     private String descrition;
     private int dim;
     private String indexes;
-    private Class<? extends Representable> clazz;
+    private String clazz;
     private Object value;
     String[] columnNames = {"Formal Name", "Description", "Dim", "Indices", "ObjectType", "Data"};
     Class<?>[] columnClass = {String.class, String.class, String.class, Class.class, Object.class};
 
-    public ObjectDetailDescription(String name, String descrition, int i, String i1, Class aClass, Object s) {
+    public ObjectDetailDescription(String name, String descrition, int i, String i1, String aClass, Object s) {
         this.name = name;
         this.descrition = descrition;
         this.dim = i;
@@ -67,7 +65,7 @@ public class ObjectDetailDescription {
                 indexes = (String) aValue;
                 break;
             case 4:
-                clazz = (Class) aValue;
+                clazz = (String) aValue;
                 break;
             case 5:
                 value = (String) aValue;

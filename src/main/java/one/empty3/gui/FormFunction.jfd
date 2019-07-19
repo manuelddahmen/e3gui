@@ -40,14 +40,6 @@ new FormModel {
 						"$rowConstraints": "[][][][][][][][][][][][][][][][][][][][]"
 					} ) {
 						name: "panel1"
-						add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
-							name: "scrollPane3"
-							add( new FormComponent( "javax.swing.JTree" ) {
-								name: "tree1"
-							} )
-						}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
-							"value": "cell 0 0"
-						} )
 						add( new FormComponent( "javax.swing.JButton" ) {
 							name: "xLabel"
 							"text": "x="
@@ -188,6 +180,8 @@ new FormModel {
 						add( new FormComponent( "javax.swing.JButton" ) {
 							name: "AddRepresentableObject"
 							"text": "Add Representable Object"
+							addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "AddRepresentableObjectActionPerformed", true ) )
+							addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "AddRepresentableObjectActionPerformed", true ) )
 							addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "AddRepresentableObjectActionPerformed", true ) )
 						}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
 							"value": "cell 0 11"

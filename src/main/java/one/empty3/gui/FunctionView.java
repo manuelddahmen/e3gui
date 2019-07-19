@@ -28,6 +28,8 @@ public class FunctionView {
     private int zDiplayType = ZBufferImpl.DISPLAY_ALL;
     private ITexture texture = new TextureCol(Colors.random());
     private boolean refresh = true;
+    private Scene scene = new Scene();
+
     {
     }
     public FunctionView()
@@ -183,6 +185,15 @@ public class FunctionView {
         this.texture = texture;
     }
 
+    public void setScene(Scene scene)
+    {
+        changeSupport.firePropertyChange("scene", this.scene, scene);
+        this.scene = scene;
+    }
+
+    public Scene getScene() {
+        return scene;
+    }
 
     public boolean isOk() {
         return ok;

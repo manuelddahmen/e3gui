@@ -22,86 +22,79 @@ import java.util.ArrayList;
 /**
  * @author Manuel Dahmen
  */
-public class ObjectsView extends JFrame {
+public class ObjectsView {
 	public ObjectsView()
     {
-        initComponents();
-        setVisible(true);
 
+        initComponents();
+        ObjectsView.setVisible(true);
 	}
 
     private void table1MouseClicked(MouseEvent e) {
-        ObjectEditorBase objectEditorBase = new ObjectEditorBase(getOwner(),
+        ObjectEditorBase objectEditorBase = new ObjectEditorBase(
                 (Class<? extends Representable>) table1.getValueAt(table1.getSelectedRow(), 1));
-        //listR.add
-    }
+   }
 	private void initComponents() {
 		// JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
-        scrollPane3 = new JScrollPane();
-        listR = RepresentableClassList.getScenes();
+        ObjectsView = new JDialog();
+        objectsView = new JPanel();
         scrollPane6 = new JScrollPane();
         table1 = new JTable();
-        scrollPane4 = new JScrollPane();
-        button1 = new JButton();
-        button2 = new JButton();
-        scrollPane2 = new JScrollPane();
         observableList1 = new RepresentableClassList().myList();
 
-        //======== this ========
-        setTitle("Object View");
-        setBackground(new Color(204, 204, 0));
-        setFont(new Font("Verdana", Font.PLAIN, 18));
-        Container contentPane = getContentPane();
-        contentPane.setLayout(new MigLayout(
-            "fill,hidemode 3",
-            // columns
-            "[fill]" +
-            "[fill]" +
-            "[fill]",
-            // rows
-            "[]" +
-            "[]" +
-            "[]" +
-            "[]" +
-            "[]" +
-            "[]"));
-
-        //======== scrollPane3 ========
+        //======== ObjectsView ========
         {
+            ObjectsView.setTitle("Object choice");
+            ObjectsView.setModalExclusionType(Dialog.ModalExclusionType.APPLICATION_EXCLUDE);
+            Container ObjectsViewContentPane = ObjectsView.getContentPane();
+            ObjectsViewContentPane.setLayout(new MigLayout(
+                "fill,hidemode 3",
+                // columns
+                "[fill]" +
+                "[fill]",
+                // rows
+                "[]" +
+                "[]" +
+                "[]"));
 
-            //---- listR ----
-            listR.setFont(new Font("Tahoma", Font.PLAIN, 16));
-            scrollPane3.setViewportView(listR);
-        }
-        contentPane.add(scrollPane3, "cell 1 0 1 3,dock center");
+            //======== objectsView ========
+            {
+                objectsView.setBackground(new Color(204, 204, 0));
+                objectsView.setFont(new Font("Verdana", Font.PLAIN, 18));
+                objectsView.setPreferredSize(new Dimension(500, 500));
+                objectsView.setMinimumSize(new Dimension(500, 500));
+                objectsView.setLayout(new MigLayout(
+                    "fill,hidemode 3",
+                    // columns
+                    "[fill]" +
+                    "[fill]" +
+                    "[fill]",
+                    // rows
+                    "[]" +
+                    "[]" +
+                    "[]" +
+                    "[]" +
+                    "[]" +
+                    "[]"));
 
-        //======== scrollPane6 ========
-        {
+                //======== scrollPane6 ========
+                {
 
-            //---- table1 ----
-            table1.addMouseListener(new MouseAdapter() {
-                @Override
-                public void mouseClicked(MouseEvent e) {
-                    table1MouseClicked(e);
+                    //---- table1 ----
+                    table1.addMouseListener(new MouseAdapter() {
+                        @Override
+                        public void mouseClicked(MouseEvent e) {
+                            table1MouseClicked(e);
+                        }
+                    });
+                    scrollPane6.setViewportView(table1);
                 }
-            });
-            scrollPane6.setViewportView(table1);
+                objectsView.add(scrollPane6, "cell 0 0 3 4,dock center");
+            }
+            ObjectsViewContentPane.add(objectsView, "cell 0 0");
+            ObjectsView.pack();
+            ObjectsView.setLocationRelativeTo(ObjectsView.getOwner());
         }
-        contentPane.add(scrollPane6, "cell 0 0 1 2,dock center");
-        contentPane.add(scrollPane4, "cell 1 1,dock center");
-
-        //---- button1 ----
-        button1.setText("Add");
-        button1.setFont(new Font("Tahoma", Font.PLAIN, 16));
-        contentPane.add(button1, "cell 0 2,dock center");
-
-        //---- button2 ----
-        button2.setText("Edit");
-        button2.setFont(new Font("Tahoma", Font.PLAIN, 16));
-        contentPane.add(button2, "cell 0 2,dock center");
-        contentPane.add(scrollPane2, "cell 1 2,dock center");
-        pack();
-        setLocationRelativeTo(getOwner());
 
         //---- bindings ----
         bindingGroup = new BindingGroup();
@@ -121,14 +114,10 @@ public class ObjectsView extends JFrame {
 	}
 
 	// JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
-    private JScrollPane scrollPane3;
-    private JTree listR;
+    private JDialog ObjectsView;
+    private JPanel objectsView;
     private JScrollPane scrollPane6;
     private JTable table1;
-    private JScrollPane scrollPane4;
-    private JButton button1;
-    private JButton button2;
-    private JScrollPane scrollPane2;
     private ArrayList<one.empty3.gui.ObjectDescription> observableList1;
     private BindingGroup bindingGroup;
 	// JFormDesigner - End of variables declaration  //GEN-END:variables

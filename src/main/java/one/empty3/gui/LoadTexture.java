@@ -16,8 +16,14 @@ import java.util.ResourceBundle;
  * Created by manue on 04-07-19.
  */
 public class LoadTexture extends JDialog {
-    private final FormFunction form;
+    private FormFunction form;
     private ITexture texture;
+
+    public LoadTexture(RPropertyList owner, ITexture tex) {
+        super();
+        initComponents();
+        setVisible(true);
+    }
 
     public ITexture getTexture() {
         return texture;
@@ -70,6 +76,12 @@ public class LoadTexture extends JDialog {
        form.getPanelView3D().getView().setTexture(texture);
     }
 
+    private void okButtonActionPerformed(ActionEvent e) {
+        fileChooser1ActionPerformed(e);
+        this.dispose();
+        firePropertyChange("texture", texture, texture);
+    }
+
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
         ResourceBundle bundle = ResourceBundle.getBundle("one.empty3.gui.gui");
@@ -119,7 +131,7 @@ public class LoadTexture extends JDialog {
                 contentPanel.add(label1, "cell 1 1");
 
                 //---- textFieldR ----
-                textFieldR.setText("red");
+                textFieldR.setToolTipText("red");
                 contentPanel.add(textFieldR, "cell 2 1");
 
                 //---- textFieldG ----
@@ -157,7 +169,11 @@ public class LoadTexture extends JDialog {
 
                 //---- okButton ----
                 okButton.setText(bundle.getString("LoadTexture.okButton.text"));
-                okButton.addActionListener(e -> fileChooser1ActionPerformed(e));
+                okButton.addActionListener(e -> {
+			fileChooser1ActionPerformed(e);
+			okButtonActionPerformed(e);
+			okButtonActionPerformed(e);
+		});
                 buttonBar.add(okButton, "cell 0 0");
 
                 //---- cancelButton ----
