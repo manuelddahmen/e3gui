@@ -27,7 +27,6 @@ public class Main {
 
     public Main() {
         dataModel = new DataModel();
-        dataModel.setScene(new Scene());
         initComponents();
         getUpdateView().setFF(this);
     }

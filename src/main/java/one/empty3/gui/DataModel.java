@@ -1,14 +1,12 @@
 package one.empty3.gui;
 
+import one.empty3.library.Camera;
 import one.empty3.library.Scene;
 import one.empty3.library.core.script.Loader;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -23,6 +21,8 @@ public class DataModel implements PropertyChangeListener{
     {
         Scene scene = new Scene();
         setScene(scene);
+        scene.cameraActive(new Camera());
+        scene.cameraActive().calculerMatrice(null);
     }
     private Scene scene;
 
@@ -31,6 +31,7 @@ public class DataModel implements PropertyChangeListener{
     }
 
     public void setScene(Scene scene) {
+
         this.scene = scene;
     }
 
@@ -41,12 +42,23 @@ public class DataModel implements PropertyChangeListener{
     public void save() throws IOException {
         FileOutputStream fos = new FileOutputStream(file);
         ZipOutputStream zipOut = new ZipOutputStream(fos);
-        File file1 = new File("./tmp/tmp.mood");
-
+        File file1 = new File("./tmp/scene.mood");
+        file1.mkdirs();
         new Loader().saveTxt(file1, scene);
         FileInputStream fis = new FileInputStream(file1);
         ZipEntry zipEntry = new ZipEntry(file1.getName());
         zipEntry.setComment("Text scene description");
+        addFile(zipOut, fis, zipEntry);
+        fis.close();
+
+
+        File file2 = new File("./tmp/scene.txt");
+        file2.mkdirs();
+        PrintWriter printWriter = new PrintWriter(file2);
+        printWriter.println(getScene().toString());
+    }
+
+    private void addFile(ZipOutputStream zipOut, FileInputStream fis, ZipEntry zipEntry) throws IOException {
         zipOut.putNextEntry(zipEntry);
         byte[] bytes = new byte[1024];
         int length;
@@ -54,8 +66,8 @@ public class DataModel implements PropertyChangeListener{
             zipOut.write(bytes, 0, length);
         }
         zipOut.close();
-        fis.close();
     }
+
     public static DataModel load(File file)
     {
         throw new UnsupportedOperationException("Not implemented yet");
@@ -69,6 +81,9 @@ public class DataModel implements PropertyChangeListener{
 
         }
     }
+
+
+
 
     /*
     public class ZipMultipleFiles {

@@ -3,6 +3,7 @@ package one.empty3.gui;
 import one.empty3.library.*;
 import one.empty3.library.Polygon;
 import one.empty3.library.core.nurbs.CourbeParametriquePolynomialeBezier;
+import one.empty3.library.core.nurbs.FunctionSurface;
 import one.empty3.library.core.nurbs.SurfaceParametriquePolynomialeBezier;
 import one.empty3.library.core.raytracer.tree.AlgebraicFormulaSyntaxException;
 import one.empty3.library.core.raytracer.tree.AlgebricTree;
@@ -48,6 +49,7 @@ public class RepresentableClassList {
         add("polyline", PolyLine.class);
         add("sphere", Sphere.class);
         add("tube", TubulaireN2cc.class);
+        add("function (P = f(u,v))", FunctionSurface.class);
         //add("paramCurve", ParametricCurve.class);
         //add("paramSurface", ParametricSurface.class);
 

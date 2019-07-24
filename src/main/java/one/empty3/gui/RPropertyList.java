@@ -39,6 +39,7 @@ public class RPropertyList extends JDialog implements PropertyChangeListener {
         this.r = re;
     }
 
+
     public void init(Object re) {
         if (re instanceof Representable) {
             labelBreadCumbs.setText(re.getClass().getCanonicalName());

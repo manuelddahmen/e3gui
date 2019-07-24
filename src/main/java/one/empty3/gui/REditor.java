@@ -4,6 +4,7 @@
 
 package one.empty3.gui;
 
+import java.util.*;
 import net.miginfocom.swing.MigLayout;
 import one.empty3.library.ITexture;
 import one.empty3.library.Representable;
@@ -34,7 +35,7 @@ public class REditor extends JPanel implements PropertyChangeListener {
         super();
         initComponents();
         init(re);
-        history.addToHistory(tableModel);
+        history.getHistory().add(0, tableModel);
         init(history.get(0));
         this.r = re;
     }
@@ -47,7 +48,8 @@ public class REditor extends JPanel implements PropertyChangeListener {
                 tableObjectDetails.setModel(tableModel);
 
             } else if (re instanceof RPropertyDetailsRow) {
-                RPropertyDetailsRow model = (RPropertyDetailsRow) re;
+                labelBreadCumbs.setText(((RPropertyDetailsRow) re).getRepresentable().getClass().getCanonicalName());
+                RPropertyDetailsRow model = new RPropertyDetailsRow((RPropertyDetailsRow) re);
                 this.tableModel = model;
                 tableObjectDetails.setModel(model);
             }
@@ -68,19 +70,23 @@ public class REditor extends JPanel implements PropertyChangeListener {
             int selectedRow = tableObjectDetails.getSelectedRow();
             if (tableModel.getItemList(selectedRow) != null) {
                 if (tableModel.getItemList(selectedRow) instanceof Representable) {
+                    boolean isNew = tableModel.getValueAt(selectedRow, 1) != null && tableModel.getValueAt(selectedRow, 1).toString().equals("NEW");
                     Representable newR = (Representable) tableModel.getItemList(selectedRow);
                     Representable oldR = (Representable) r;
                     init(tableModel.getItemList(selectedRow));
-                    if(oldR instanceof Scene) {
-                        ((Scene) oldR).add(newR);
-                        System.out.print("Added to scene"+newR.toString());
-                    }
-                    if(oldR instanceof RepresentableConteneur) {
-                        ((RepresentableConteneur) oldR).add(newR);
-                        System.out.print("Added to scene" + newR.toString());
+                    if (isNew)
+                    {
+                        if (oldR instanceof Scene) {
+                            ((Scene) oldR).add(newR);
+                            System.out.print("Added to scene" + newR.toString());
+                        }
+                        if (oldR instanceof RepresentableConteneur) {
+                            ((RepresentableConteneur) oldR).add(newR);
+                            System.out.print("Added to scene" + newR.toString());
+                        }
                     }
                     history.addToHistory(tableModel);
-                    System.out.println("add to history "+history.getCurrent());
+                    System.out.println("add to history " + history.getCurrent());
                 } /*else if (tableModel.getItemList(selectedRow) instanceof ITexture) {
                     ITexture tex = ((ITexture) tableModel.getItemList(selectedRow));
                     LoadTexture loadTexture = new LoadTexture(this, tex);
@@ -181,7 +187,6 @@ public class REditor extends JPanel implements PropertyChangeListener {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
         dialogPane = new JPanel();
         contentPanel = new JPanel();
-        labelBreadCumbs = new JLabel();
         scrollPane1 = new JScrollPane();
         toolBar1 = new JToolBar();
         buttonPrev = new JButton();
@@ -192,8 +197,12 @@ public class REditor extends JPanel implements PropertyChangeListener {
         button6 = new JButton();
         button7 = new JButton();
         buttonNext = new JButton();
+        labelBreadCumbs = new JLabel();
         scrollPane2 = new JScrollPane();
         tableObjectDetails = new JTable();
+        popupMenu1 = new JPopupMenu();
+        menuItemDelete = new JMenuItem();
+        menuItem1 = new JMenuItem();
 
         //======== this ========
         setLayout(new BorderLayout());
@@ -216,10 +225,6 @@ public class REditor extends JPanel implements PropertyChangeListener {
                     "[]" +
                     "[]" +
                     "[]"));
-
-                //---- labelBreadCumbs ----
-                labelBreadCumbs.setText("Navigation history");
-                contentPanel.add(labelBreadCumbs, "cell 0 0 3 2");
 
                 //======== scrollPane1 ========
                 {
@@ -279,7 +284,6 @@ public class REditor extends JPanel implements PropertyChangeListener {
                         toolBar1.add(button6);
 
                         //---- button7 ----
-                        button7.setText("6");
                         button7.addActionListener(e -> {
 			buttonPrevActionPerformed(e);
 			button7ActionPerformed(e);
@@ -298,6 +302,10 @@ public class REditor extends JPanel implements PropertyChangeListener {
                     scrollPane1.setViewportView(toolBar1);
                 }
                 contentPanel.add(scrollPane1, "cell 0 0 3 2");
+
+                //---- labelBreadCumbs ----
+                labelBreadCumbs.setText("Navigation history");
+                contentPanel.add(labelBreadCumbs, "cell 0 0 3 2");
 
                 //======== scrollPane2 ========
                 {
@@ -319,6 +327,7 @@ public class REditor extends JPanel implements PropertyChangeListener {
                         }
                     ));
                     tableObjectDetails.setColumnSelectionAllowed(true);
+                    tableObjectDetails.setComponentPopupMenu(popupMenu1);
                     tableObjectDetails.addMouseListener(new MouseAdapter() {
                         @Override
                         public void mouseClicked(MouseEvent e) {
@@ -332,13 +341,24 @@ public class REditor extends JPanel implements PropertyChangeListener {
             dialogPane.add(contentPanel, BorderLayout.CENTER);
         }
         add(dialogPane, BorderLayout.CENTER);
+
+        //======== popupMenu1 ========
+        {
+
+            //---- menuItemDelete ----
+            menuItemDelete.setText("Delete");
+            popupMenu1.add(menuItemDelete);
+
+            //---- menuItem1 ----
+            menuItem1.setText("Refresh");
+            popupMenu1.add(menuItem1);
+        }
         // JFormDesigner - End of component initialization  //GEN-END:initComponents
     }
 
     // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
     private JPanel dialogPane;
     private JPanel contentPanel;
-    private JLabel labelBreadCumbs;
     private JScrollPane scrollPane1;
     private JToolBar toolBar1;
     private JButton buttonPrev;
@@ -349,7 +369,11 @@ public class REditor extends JPanel implements PropertyChangeListener {
     private JButton button6;
     private JButton button7;
     private JButton buttonNext;
+    private JLabel labelBreadCumbs;
     private JScrollPane scrollPane2;
     private JTable tableObjectDetails;
+    private JPopupMenu popupMenu1;
+    private JMenuItem menuItemDelete;
+    private JMenuItem menuItem1;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
 }

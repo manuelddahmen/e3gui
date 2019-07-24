@@ -17,12 +17,6 @@ new FormModel {
 					"$rowConstraints": "[][][][][]"
 				} ) {
 					name: "contentPanel"
-					add( new FormComponent( "javax.swing.JLabel" ) {
-						name: "labelBreadCumbs"
-						"text": "Navigation history"
-					}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
-						"value": "cell 0 0 3 2"
-					} )
 					add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
 						name: "scrollPane1"
 						add( new FormContainer( "javax.swing.JToolBar", new FormLayoutManager( class javax.swing.JToolBar ) ) {
@@ -68,7 +62,6 @@ new FormModel {
 							} )
 							add( new FormComponent( "javax.swing.JButton" ) {
 								name: "button7"
-								"text": "6"
 								addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "buttonPrevActionPerformed", true ) )
 								addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "button7ActionPerformed", true ) )
 							} )
@@ -80,6 +73,12 @@ new FormModel {
 								addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "buttonNextActionPerformed", true ) )
 							} )
 						} )
+					}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+						"value": "cell 0 0 3 2"
+					} )
+					add( new FormComponent( "javax.swing.JLabel" ) {
+						name: "labelBreadCumbs"
+						"text": "Navigation history"
 					}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
 						"value": "cell 0 0 3 2"
 					} )
@@ -129,6 +128,7 @@ new FormModel {
 								add( null )
 							} )
 							"columnSelectionAllowed": true
+							"componentPopupMenu": new FormReference( "popupMenu1" )
 							addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseClicked", "tableObjectDetailsMouseClicked", true ) )
 						} )
 					}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
@@ -143,6 +143,19 @@ new FormModel {
 		}, new FormLayoutConstraints( null ) {
 			"location": new java.awt.Point( 0, 0 )
 			"size": new java.awt.Dimension( 850, 455 )
+		} )
+		add( new FormContainer( "javax.swing.JPopupMenu", new FormLayoutManager( class javax.swing.JPopupMenu ) ) {
+			name: "popupMenu1"
+			add( new FormComponent( "javax.swing.JMenuItem" ) {
+				name: "menuItemDelete"
+				"text": "Delete"
+			} )
+			add( new FormComponent( "javax.swing.JMenuItem" ) {
+				name: "menuItem1"
+				"text": "Refresh"
+			} )
+		}, new FormLayoutConstraints( null ) {
+			"location": new java.awt.Point( 95, 510 )
 		} )
 	}
 }
