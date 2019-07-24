@@ -1,8 +1,6 @@
 package one.empty3.gui;
 
-import one.empty3.library.ITexture;
-import one.empty3.library.Point3D;
-import one.empty3.library.Representable;
+import one.empty3.library.*;
 
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
@@ -295,35 +293,37 @@ public class RPropertyDetailsRow implements TableModel {
 
                 }
             });
+        if(representable instanceof Scene || representable instanceof RepresentableConteneur) {
+            MyObservableList<ObjectDescription> objectDescriptions = RepresentableClassList.myList();
+            objectDescriptions.forEach(new Consumer<ObjectDescription>() {
+                @Override
+                public void accept(ObjectDescription objectDescription) {
+                    //System.out.println("objet"+objectDescription.getName());
+                    Representable value = null;
+                    try {
+                        value = objectDescription.getR().newInstance();
+                    } catch (InstantiationException e) {
+                        e.printStackTrace();
+                    } catch (IllegalAccessException e) {
+                        e.printStackTrace();
+                    }
+                    setValueAt(objectDescription.getName(), index, 0);
+                    setValueAt("NEW", index, 1);
+                    setValueAt(1, index, 2);
+                    setValueAt("", index, 3);
+                    setValueAt(value.getClass(), index, 4);
+                    setValueAt(value.toString(), index, 5);
+                    objectDetailDescriptions.add(new ObjectDetailDescription(
+                            objectDescription.getName(), "NEW", 1, "", value.getClass(), value));
+                    objectList.add(value);
 
-        MyObservableList<ObjectDescription> objectDescriptions = RepresentableClassList.myList();
-        objectDescriptions.forEach(new Consumer<ObjectDescription>() {
-            @Override
-            public void accept(ObjectDescription objectDescription) {
-                //System.out.println("objet"+objectDescription.getName());
-                Representable value = null;
-                try {
-                    value = objectDescription.getR().newInstance();
-                } catch (InstantiationException e) {
-                    e.printStackTrace();
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
+                    index++;
+
+
                 }
-                setValueAt(objectDescription.getName(), index, 0);
-                setValueAt("NEW", index, 1);
-                setValueAt(1, index, 2);
-                setValueAt("", index, 3);
-                setValueAt(value.getClass(), index, 4);
-                setValueAt(value.toString(), index, 5);
-                objectDetailDescriptions.add(new ObjectDetailDescription(
-                        objectDescription.getName(),"NEW", 1, "", value.getClass(), value));
-                objectList.add(value);
+            });
 
-                index++;
-
-
-            }
-        });
+        }
     }
 
     @Override
@@ -363,20 +363,44 @@ public class RPropertyDetailsRow implements TableModel {
         if(rowIndex<objectDetailDescriptions.size()&&rowIndex>=0) {
             try {
                 Class propertyType = representable.getPropertyType(objectDetailDescriptions.get(rowIndex).getName());
-                if(propertyType.equals(Double.class) && aValue.getClass().equals(String.class))
+                String propertyName = objectDetailDescriptions.get(rowIndex).getName();
+                if((propertyType.equals(Double.class) ||propertyType.equals(String.class))&& aValue.getClass().equals(String.class))
                 {
-                    aValue = Double.parseDouble((String)aValue);
-                System.out.println("Property type : " + propertyType.getName()+ " Property name "+objectDetailDescriptions.get(rowIndex).getName());
+                    if(propertyType.equals(Double.class))
+                        aValue = Double.parseDouble((String)aValue);
+                    System.out.println("Property type : " + propertyType.getName()+ " Property name "+objectDetailDescriptions.get(rowIndex).getName());
                     representable.setProperty(objectDetailDescriptions.get(rowIndex).getName(),
                             aValue);
                     objectDetailDescriptions.get(rowIndex).set(columnIndex, aValue);
                     System.out.print("save");
                     refresh();
                 }
-                /*
-                else if(propertyType.equals(Array.class) && aValue.getClass().equals(String.class))
+
+                int dim = objectDetailDescriptions.get(rowIndex).getDim();
+                int rowArray, columnArray;
+                String indices = objectDetailDescriptions.get(rowIndex).getIndexes();
+                Object property = representable.getProperty(propertyName);
+                if(dim>0&&dim<=2 && propertyType.equals(Double[][].class) )
                 {
                     aValue = Double.parseDouble((String)aValue);
+                    if(dim==2) {
+                        String[] split = indices.split(",");
+                        rowArray = Integer.parseInt(split[0]);
+                        columnArray = Integer.parseInt(split[1]);
+
+                        if(property.getClass().equals(Double[][].class))
+                        {
+                            ((Double[][])property)[rowArray][columnArray] = Double.parseDouble((String)aValue);
+                        }
+
+                    }
+                    else {
+                        rowArray = Integer.parseInt(indices);
+                        if(property.getClass().equals(Double[].class))
+                        {
+                            ((Double[])property)[rowArray] = Double.parseDouble((String)aValue);
+                        }
+                    }
                     System.out.println("Property type : " + propertyType.getName()+ " Property name "+objectDetailDescriptions.get(rowIndex).getName());
                     representable.setProperty(objectDetailDescriptions.get(rowIndex).getName(),
                             aValue);
@@ -385,7 +409,6 @@ public class RPropertyDetailsRow implements TableModel {
                     refresh();
 
                 }
-                */
             } catch (InvocationTargetException e) {
                 e.printStackTrace();
             } catch (IllegalAccessException e) {
