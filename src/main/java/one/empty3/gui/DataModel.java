@@ -2,12 +2,15 @@ package one.empty3.gui;
 
 import one.empty3.library.Camera;
 import one.empty3.library.Scene;
+import one.empty3.library.core.script.ExtensionFichierIncorrecteException;
 import one.empty3.library.core.script.Loader;
+import one.empty3.library.core.script.VersionNonSupporteeException;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.*;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
 
 /**
@@ -58,6 +61,24 @@ public class DataModel implements PropertyChangeListener{
         printWriter.println(getScene().toString());
     }
 
+
+    public static DataModel load(File file) throws IOException, VersionNonSupporteeException, ExtensionFichierIncorrecteException {
+        DataModel dataModel = new DataModel();
+        ZipFile zipFile = new ZipFile(file);
+        InputStream inputStream = zipFile.getInputStream(getEntry(zipFile, "scene.mood"));
+        File file1 = new File("./tmp/scene.mood");
+        file1.mkdirs();
+        int read=0;
+        FileOutputStream fileOutputStream = new FileOutputStream(file1);
+        while((read=inputStream.read())>=0)
+        {
+            fileOutputStream.write(read);
+        }
+        new Loader().load(file1, dataModel.getScene());
+        return dataModel;
+
+    }
+
     private void addFile(ZipOutputStream zipOut, FileInputStream fis, ZipEntry zipEntry) throws IOException {
         zipOut.putNextEntry(zipEntry);
         byte[] bytes = new byte[1024];
@@ -67,11 +88,8 @@ public class DataModel implements PropertyChangeListener{
         }
         zipOut.close();
     }
-
-    public static DataModel load(File file)
-    {
-        throw new UnsupportedOperationException("Not implemented yet");
-
+    private static ZipEntry getEntry(ZipFile zipIn, String zipEntry) throws IOException {
+        return zipIn.getEntry(zipEntry);
     }
 
     @Override
