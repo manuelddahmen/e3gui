@@ -14,6 +14,9 @@
       <url>ftp://ftp.empty3.one/Downloads/maven</url>
     </repository>
   </distributionManagement>
+  <properties>
+    <kotlin.version>1.1.2</kotlin.version>
+  </properties>
   <dependencies>
     <dependency>
       <groupId>junit</groupId>
@@ -131,6 +134,18 @@
       <version>0.3.9</version>
       <scope>compile</scope>
     </dependency>
+    <dependency>
+      <groupId>org.jetbrains.kotlin</groupId>
+      <artifactId>kotlin-stdlib-jre8</artifactId>
+      <version>1.1.2</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jetbrains.kotlin</groupId>
+      <artifactId>kotlin-test</artifactId>
+      <version>1.1.2</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
   <repositories>
     <repository>
@@ -175,7 +190,7 @@
     </pluginRepository>
   </pluginRepositories>
   <build>
-    <sourceDirectory>G:\Apps\IdeaProjects\E3GUI</sourceDirectory>
+    <sourceDirectory>G:\Apps\IdeaProjects\E3GUI\src\main\java</sourceDirectory>
     <scriptSourceDirectory>G:\Apps\IdeaProjects\E3GUI\src\main\scripts</scriptSourceDirectory>
     <testSourceDirectory>G:\Apps\IdeaProjects\E3GUI\src\test\java</testSourceDirectory>
     <outputDirectory>G:\Apps\IdeaProjects\E3GUI\target\classes</outputDirectory>
@@ -289,44 +304,6 @@
         </configuration>
       </plugin>
       <plugin>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>2.3.2</version>
-        <executions>
-          <execution>
-            <id>default-compile</id>
-            <phase>compile</phase>
-            <goals>
-              <goal>compile</goal>
-            </goals>
-            <configuration>
-              <showDeprecation>true</showDeprecation>
-              <source>1.8</source>
-              <target>1.8</target>
-              <encoding>UTF-8</encoding>
-            </configuration>
-          </execution>
-          <execution>
-            <id>default-testCompile</id>
-            <phase>test-compile</phase>
-            <goals>
-              <goal>testCompile</goal>
-            </goals>
-            <configuration>
-              <showDeprecation>true</showDeprecation>
-              <source>1.8</source>
-              <target>1.8</target>
-              <encoding>UTF-8</encoding>
-            </configuration>
-          </execution>
-        </executions>
-        <configuration>
-          <showDeprecation>true</showDeprecation>
-          <source>1.8</source>
-          <target>1.8</target>
-          <encoding>UTF-8</encoding>
-        </configuration>
-      </plugin>
-      <plugin>
         <artifactId>maven-dependency-plugin</artifactId>
         <version>2.8</version>
       </plugin>
@@ -365,6 +342,70 @@
             </configuration>
           </execution>
         </executions>
+      </plugin>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>2.3.2</version>
+        <executions>
+          <execution>
+            <id>default-compile</id>
+            <phase>compile</phase>
+            <goals>
+              <goal>compile</goal>
+            </goals>
+            <configuration>
+              <showDeprecation>true</showDeprecation>
+              <source>1.8</source>
+              <target>1.8</target>
+              <encoding>UTF-8</encoding>
+            </configuration>
+          </execution>
+          <execution>
+            <id>default-testCompile</id>
+            <phase>test-compile</phase>
+            <goals>
+              <goal>testCompile</goal>
+            </goals>
+            <configuration>
+              <showDeprecation>true</showDeprecation>
+              <source>1.8</source>
+              <target>1.8</target>
+              <encoding>UTF-8</encoding>
+            </configuration>
+          </execution>
+          <execution>
+            <id>compile</id>
+            <phase>compile</phase>
+            <goals>
+              <goal>compile</goal>
+            </goals>
+            <configuration>
+              <showDeprecation>true</showDeprecation>
+              <source>1.8</source>
+              <target>1.8</target>
+              <encoding>UTF-8</encoding>
+            </configuration>
+          </execution>
+          <execution>
+            <id>testCompile</id>
+            <phase>test-compile</phase>
+            <goals>
+              <goal>testCompile</goal>
+            </goals>
+            <configuration>
+              <showDeprecation>true</showDeprecation>
+              <source>1.8</source>
+              <target>1.8</target>
+              <encoding>UTF-8</encoding>
+            </configuration>
+          </execution>
+        </executions>
+        <configuration>
+          <showDeprecation>true</showDeprecation>
+          <source>1.8</source>
+          <target>1.8</target>
+          <encoding>UTF-8</encoding>
+        </configuration>
       </plugin>
       <plugin>
         <artifactId>maven-clean-plugin</artifactId>

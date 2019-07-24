@@ -13,6 +13,7 @@ import java.beans.PropertyChangeSupport;
 public class FunctionView {
     private static final int RENDERER_E3 = 0;
     private static final int RENDERER_GL = 1;
+    private DataModel dataModel;
     private double zoom = 1.0;
     //private Camera camera;
     private String xFormula ="0";
@@ -30,11 +31,11 @@ public class FunctionView {
     private boolean refresh = true;
     private Scene scene = new Scene();
 
-    {
-    }
     public FunctionView()
     {
         camera.calculerMatrice(Point3D.Y);
+        dataModel = new DataModel();
+        scene = dataModel.getScene();
     }
 
     public static int getRendererE3() {
@@ -212,4 +213,12 @@ public class FunctionView {
         changeSupport.firePropertyChange("zbuffer", this.refresh, refresh);
         this.refresh = refresh;
     }
+
+    public DataModel getDataModel() {
+        return dataModel;
+    }
+    public void setDataModel(DataModel dataModel) {
+        this.dataModel = dataModel;
+    }
+
 }

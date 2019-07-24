@@ -23,7 +23,7 @@ import java.util.ResourceBundle;
 /**
  * @author Manuel Dahmen
  */
-public class ObjectEditorBase extends JDialog {
+public class ObjectEditorBase extends JDialog  {
     private final Class<? extends Representable> representableclass;
     private boolean initValues;
     Representable r = null;
@@ -185,10 +185,10 @@ public class ObjectEditorBase extends JDialog {
     private void textAreaPoint3DPropertyChange(PropertyChangeEvent e) {
     }
 
-    private void button2ActionPerformed(ActionEvent e) {
+
+    private void button1ActionPerformed(ActionEvent e) {
         RPropertyList rPropertyList = new RPropertyList(getOwner(), r);
         rPropertyList.setVisible(true);
-
     }
 
     private void initComponents() {
@@ -223,15 +223,7 @@ public class ObjectEditorBase extends JDialog {
         textFieldScaleX = new JTextField();
         textFieldScaleY = new JTextField();
         textFieldScaleZ = new JTextField();
-        labelDataPoints = new JLabel();
-        buttonDataPoints = new JButton();
-        labelDataDoubles = new JLabel();
-        buttonDataDoubles = new JButton();
-        label6 = new JLabel();
-        button2 = new JButton();
-        button4 = new JButton();
         button1 = new JButton();
-        button3 = new JButton();
         buttonBar = new JPanel();
         okButton = new JButton();
         cancelButton = new JButton();
@@ -398,53 +390,10 @@ public class ObjectEditorBase extends JDialog {
                 contentPanel.add(textFieldScaleY, "cell 1 12");
                 contentPanel.add(textFieldScaleZ, "cell 2 12");
 
-                //---- labelDataPoints ----
-                labelDataPoints.setText("Data Points");
-                contentPanel.add(labelDataPoints, "cell 0 13");
-
-                //---- buttonDataPoints ----
-                buttonDataPoints.setText("Data Points");
-                buttonDataPoints.addPropertyChangeListener(e -> textAreaPoint3DPropertyChange(e));
-                buttonDataPoints.addActionListener(e -> button2ActionPerformed(e));
-                contentPanel.add(buttonDataPoints, "cell 0 13");
-
-                //---- labelDataDoubles ----
-                labelDataDoubles.setText("Data Doubles");
-                contentPanel.add(labelDataDoubles, "cell 1 13");
-
-                //---- buttonDataDoubles ----
-                buttonDataDoubles.setText("Data Doubles");
-                buttonDataDoubles.addPropertyChangeListener(e -> textAreaPoint3DPropertyChange(e));
-                buttonDataDoubles.addActionListener(e -> button2ActionPerformed(e));
-                contentPanel.add(buttonDataDoubles, "cell 1 13");
-
-                //---- label6 ----
-                label6.setText("Edit Texture");
-                contentPanel.add(label6, "cell 2 13");
-
-                //---- button2 ----
-                button2.setText("Texture");
-                button2.addPropertyChangeListener(e -> textAreaPoint3DPropertyChange(e));
-                button2.addActionListener(e -> button2ActionPerformed(e));
-                contentPanel.add(button2, "cell 2 13");
-
-                //---- button4 ----
-                button4.setText("Representable");
-                button4.addPropertyChangeListener(e -> textAreaPoint3DPropertyChange(e));
-                button4.addActionListener(e -> button2ActionPerformed(e));
-                contentPanel.add(button4, "cell 0 14");
-
                 //---- button1 ----
-                button1.setText("Double Array");
-                button1.addPropertyChangeListener(e -> textAreaPoint3DPropertyChange(e));
-                button1.addActionListener(e -> button2ActionPerformed(e));
-                contentPanel.add(button1, "cell 1 14");
-
-                //---- button3 ----
-                button3.setText("Double Matrix");
-                button3.addPropertyChangeListener(e -> textAreaPoint3DPropertyChange(e));
-                button3.addActionListener(e -> button2ActionPerformed(e));
-                contentPanel.add(button3, "cell 1 14");
+                button1.setText("Plus");
+                button1.addActionListener(e -> button1ActionPerformed(e));
+                contentPanel.add(button1, "cell 0 13");
             }
             dialogPane.add(contentPanel, BorderLayout.CENTER);
 
@@ -513,15 +462,7 @@ public class ObjectEditorBase extends JDialog {
     private JTextField textFieldScaleX;
     private JTextField textFieldScaleY;
     private JTextField textFieldScaleZ;
-    private JLabel labelDataPoints;
-    private JButton buttonDataPoints;
-    private JLabel labelDataDoubles;
-    private JButton buttonDataDoubles;
-    private JLabel label6;
-    private JButton button2;
-    private JButton button4;
     private JButton button1;
-    private JButton button3;
     private JPanel buttonBar;
     private JButton okButton;
     private JButton cancelButton;

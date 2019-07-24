@@ -31,7 +31,12 @@ public class RPropertyDetailsRow implements TableModel {
 
     public RPropertyDetailsRow(Representable representable) {
         this.representable = representable;
+        emptyTable();
         initTable();
+    }
+
+    private void emptyTable() {
+        objectList.clear();
     }
 
     int index = 0;
@@ -41,6 +46,32 @@ public class RPropertyDetailsRow implements TableModel {
 
 
     public void initTable() {
+        if (representable.getDeclaredLists().size() > 0)
+            representable.getDeclaredLists().entrySet().forEach(new Consumer<Map.Entry<String, List>>() {
+                @Override
+                public void accept(Map.Entry<String, List> stringListEntry) {
+
+                    int i = 0;
+                    String name = stringListEntry.getKey();
+                    for (Object o : stringListEntry.getValue()) {
+                        if(o instanceof Representable) {
+                            String[] split = split(name);
+                            Representable value = (Representable) o;
+                            setValueAt(split[0], index, 0);
+                            setValueAt(split[1], index, 1);
+                            setValueAt(1, index, 2);
+                            setValueAt(i, index, 3);
+                            setValueAt(value.getClass(), index, 4);
+                            setValueAt(value.toString(), index, 5);
+                            objectDetailDescriptions.add(new ObjectDetailDescription(split[0], split[1], 1, "" + i, value.getClass().getName(), value.toString()));
+                            objectList.add(value);
+                            index++;
+                            i++;
+                        }
+
+                    }
+                }
+            });
         if (representable.getDeclaredRepresentables().size() > 0)
             representable.getDeclaredRepresentables().entrySet().forEach(new Consumer<Map.Entry<String, Representable>>() {
                 @Override
@@ -106,14 +137,14 @@ public class RPropertyDetailsRow implements TableModel {
                     int i = 0;
                     for (Point3D p : point3DS) {
                         String[] split = split(s);
-                        Representable value = p;
+                        Point3D value = p;
                         setValueAt(split[0], index, 0);
                         setValueAt(split[1], index, 1);
                         setValueAt(1, index, 2);
                         setValueAt(i, index, 3);
                         setValueAt(value.getClass(), index, 4);
                         setValueAt(value.toString(), index, 5);
-                        new ObjectDetailDescription(split[0], split[1], 1, ""+i, value.getClass().getName(), value.toString());
+                        objectDetailDescriptions.add(new ObjectDetailDescription(split[0], split[1], 1, ""+i, value.getClass().getName(), value.toString()));
                         objectList.add(value);
                         index++;
                         i++;
@@ -137,7 +168,7 @@ public class RPropertyDetailsRow implements TableModel {
                             setValueAt(value.getClass(), index, 4);
                             setValueAt(value.toString(), index, 5);
                             objectDetailDescriptions.add(new ObjectDetailDescription(
-                                    split(s)[0], split(s)[1], 1, ""+i, value.getClass().getName(), value.toString()));
+                                    split(s)[0], split(s)[1], 1, ""+i+","+j, value.getClass().getName(), value.toString()));
                             objectList.add(value);
                             index++;
 
@@ -224,6 +255,35 @@ public class RPropertyDetailsRow implements TableModel {
                     }
                 }
             });
+
+        MyObservableList<ObjectDescription> objectDescriptions = RepresentableClassList.myList();
+        objectDescriptions.forEach(new Consumer<ObjectDescription>() {
+            @Override
+            public void accept(ObjectDescription objectDescription) {
+                System.out.println("objet"+objectDescription.getName());
+                Representable value = null;
+                try {
+                    value = objectDescription.getR().newInstance();
+                } catch (InstantiationException e) {
+                    e.printStackTrace();
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                }
+                setValueAt(objectDescription.getName(), index, 0);
+                setValueAt("NEW", index, 1);
+                setValueAt(1, index, 2);
+                setValueAt("", index, 3);
+                setValueAt(value.getClass(), index, 4);
+                setValueAt(value.toString(), index, 5);
+                objectDetailDescriptions.add(new ObjectDetailDescription(
+                        objectDescription.getName(),"NEW", 1, "", value.getClass().getName(), value));
+                objectList.add(value);
+
+                index++;
+
+
+            }
+        });
     }
 
     @Override
@@ -263,8 +323,11 @@ public class RPropertyDetailsRow implements TableModel {
         if(rowIndex<objectDetailDescriptions.size()&&rowIndex>=0) {
             representable.setProperty(getValueAt(rowIndex, 0), aValue);
             objectDetailDescriptions.get(rowIndex).set(columnIndex, aValue);
+            System.out.print("save");
         }
     }
+
+
 
     @Override
     public void addTableModelListener(TableModelListener l) {

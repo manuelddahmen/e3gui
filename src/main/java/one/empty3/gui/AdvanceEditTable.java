@@ -9,6 +9,8 @@ import one.empty3.library.Representable;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.HashMap;
 import java.util.ResourceBundle;
 
@@ -26,6 +28,14 @@ public class AdvanceEditTable<T> extends JDialog {
         initComponents();
     }
 
+    private void table1MouseClicked(MouseEvent e) {
+        if(e.getButton()==1)
+        {
+            // Right Click
+            popupMenuOptions.setVisible(true);
+        }
+    }
+
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
         ResourceBundle bundle = ResourceBundle.getBundle("one.empty3.gui.gui");
@@ -38,6 +48,7 @@ public class AdvanceEditTable<T> extends JDialog {
         okButton = new JButton();
         cancelButton = new JButton();
         helpButton = new JButton();
+        popupMenuOptions = new JPopupMenu();
 
         //======== this ========
         Container contentPane = getContentPane();
@@ -63,6 +74,14 @@ public class AdvanceEditTable<T> extends JDialog {
 
                 //======== scrollPane1 ========
                 {
+
+                    //---- table1 ----
+                    table1.addMouseListener(new MouseAdapter() {
+                        @Override
+                        public void mouseClicked(MouseEvent e) {
+                            table1MouseClicked(e);
+                        }
+                    });
                     scrollPane1.setViewportView(table1);
                 }
                 contentPanel.add(scrollPane1, "cell 0 1");
@@ -110,5 +129,6 @@ public class AdvanceEditTable<T> extends JDialog {
     private JButton okButton;
     private JButton cancelButton;
     private JButton helpButton;
+    private JPopupMenu popupMenuOptions;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
 }

@@ -1,38 +1,37 @@
 package one.empty3.gui;
 
-import java.util.ArrayList;
-import java.util.Collection;
+import com.jgoodies.common.collect.ObservableList;
 
 import javax.swing.event.ListDataListener;
-
-import com.jgoodies.common.collect.ObservableList;
+import java.util.ArrayList;
 
 /**
  * Created by manue on 01-07-19.
  */
 public class MyObservableList<T> extends ArrayList<T> implements ObservableList<T> {
+	ArrayList<ListDataListener>  listDataListeners = new ArrayList<>();
 
 	@Override
 	public int getSize() {
 		// TODO Auto-generated method stub
-		return 0;
+		return size();
 	}
 
 	@Override
 	public Object getElementAt(int index) {
-		// TODO Auto-generated method stub
-		return null;
+
+		return get(index);
 	}
 
 	@Override
 	public void addListDataListener(ListDataListener l) {
-		// TODO Auto-generated method stub
+			listDataListeners.add(l);
 		
 	}
 
 	@Override
 	public void removeListDataListener(ListDataListener l) {
-		// TODO Auto-generated method stub
+		listDataListeners.remove(l);
 		
 	}
 

@@ -3,8 +3,6 @@ package one.empty3.gui;
 import one.empty3.library.*;
 import one.empty3.library.Polygon;
 import one.empty3.library.core.nurbs.CourbeParametriquePolynomialeBezier;
-import one.empty3.library.core.nurbs.ParametricCurve;
-import one.empty3.library.core.nurbs.ParametricSurface;
 import one.empty3.library.core.nurbs.SurfaceParametriquePolynomialeBezier;
 import one.empty3.library.core.raytracer.tree.AlgebraicFormulaSyntaxException;
 import one.empty3.library.core.raytracer.tree.AlgebricTree;
@@ -25,18 +23,19 @@ import java.util.Map;
 public class RepresentableClassList {
     private static JTree scenes;
     private static boolean isInitScenes;
-    MyObservableList<ObjectDescription>
+    static MyObservableList<ObjectDescription>
      listClasses = new MyObservableList<>();
 
-    public void add(String name, Class clazz) {
+    public static void add(String name, Class clazz) {
         ObjectDescription objectDescription = new ObjectDescription();
         objectDescription.setName(name);
         objectDescription.setR(clazz);
         listClasses.add(objectDescription);
     }
 
-    public MyObservableList<ObjectDescription> myList()
+    public static MyObservableList<ObjectDescription> myList()
     {
+        listClasses = new MyObservableList<>();
         add("scene", Scene.class);
         add("p", Point3D.class);
         add("r", Representable.class);
@@ -49,8 +48,8 @@ public class RepresentableClassList {
         add("polyline", PolyLine.class);
         add("sphere", Sphere.class);
         add("tube", TubulaireN2cc.class);
-        add("paramCurve", ParametricCurve.class);
-        add("paramSurface", ParametricSurface.class);
+        //add("paramCurve", ParametricCurve.class);
+        //add("paramSurface", ParametricSurface.class);
 
         return listClasses;
     }

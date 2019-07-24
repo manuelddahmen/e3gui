@@ -7,6 +7,8 @@ package one.empty3.gui;
 import net.miginfocom.swing.MigLayout;
 import one.empty3.library.ITexture;
 import one.empty3.library.Representable;
+import one.empty3.library.RepresentableConteneur;
+import one.empty3.library.Scene;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -23,6 +25,7 @@ import java.util.ResourceBundle;
  * @author Manuel Dahmen
  */
 public class RPropertyList extends JDialog implements PropertyChangeListener {
+    private final Representable r;
     History history = new History();
 
     private RPropertyDetailsRow tableModel;
@@ -33,6 +36,7 @@ public class RPropertyList extends JDialog implements PropertyChangeListener {
         initComponents();
         init(re);
         history.getHistory().add(tableModel);
+        this.r = re;
     }
 
     public void init(Object re) {
@@ -61,21 +65,36 @@ public class RPropertyList extends JDialog implements PropertyChangeListener {
     }
 
     private void tableObjectDetailsMouseClicked(MouseEvent e) {
-        int selectedRow = tableObjectDetails.getSelectedRow();
-        if (tableModel.getItemList(selectedRow) != null) {
-            if (tableModel.getItemList(selectedRow) instanceof Representable) {
-                init(tableModel.getItemList(selectedRow));
-                history.setCurrent(history.getCurrent() + 1);
-                history.getHistory().add(history.getCurrent(), tableModel);
-                System.out.println("add to history = 1");
-            } else if (tableModel.getItemList(selectedRow) instanceof ITexture) {
-                ITexture tex = ((ITexture) tableModel.getItemList(selectedRow));
-                LoadTexture loadTexture = new LoadTexture(this, tex);
-                loadTexture.addPropertyChangeListener(this);
-            } else if (tableObjectDetails.isCellEditable(selectedRow, 5))
-                tableObjectDetails.editCellAt(selectedRow, 5);
+        System.out.println(e.getButton());
+        if(e.getButton()==1) {
+            int selectedRow = tableObjectDetails.getSelectedRow();
+            if (tableModel.getItemList(selectedRow) != null) {
+                if (tableModel.getItemList(selectedRow) instanceof Representable) {
+                    if(r instanceof Scene)
+                    {
+                        ((Scene)r).add((Representable) tableModel.getItemList(selectedRow));
+                        System.out.println("Added to scene" +((Scene) r).getClass() );
+                    } else if(r instanceof RepresentableConteneur)
+                    {
+                        ((RepresentableConteneur)r).add((Representable) tableModel.getItemList(selectedRow));
+                        System.out.println("Added to conteneur" +((RepresentableConteneur) r).getClass() );
+                    }
+                    init(tableModel.getItemList(selectedRow));
+                    history.setCurrent(history.getCurrent() + 1);
+                    history.getHistory().add(history.getCurrent(), tableModel);
+                    System.out.println("add to history = 1");
+                } else if (tableModel.getItemList(selectedRow) instanceof ITexture) {
+                    ITexture tex = ((ITexture) tableModel.getItemList(selectedRow));
+                    LoadTexture loadTexture = new LoadTexture(this, tex);
+                    loadTexture.addPropertyChangeListener(this);
+                } else if (tableObjectDetails.isCellEditable(selectedRow, 5))
+                    tableObjectDetails.editCellAt(selectedRow, 5);
             }
+        }
+        else if(e.getButton()==3) {
+                 // PopUp
 
+        }
     }
 
     private void objectType(Class<?> aClass) {
@@ -123,6 +142,10 @@ public class RPropertyList extends JDialog implements PropertyChangeListener {
             }
         }
 
+    }
+
+    private void okButtonActionPerformed(ActionEvent e) {
+        firePropertyChange("newObject", r, r);
     }
 
     private void initComponents() {
@@ -281,6 +304,7 @@ public class RPropertyList extends JDialog implements PropertyChangeListener {
 
                 //---- okButton ----
                 okButton.setText(bundle.getString("RPropertyList.okButton.text"));
+                okButton.addActionListener(e -> okButtonActionPerformed(e));
                 buttonBar.add(okButton, "cell 0 0");
 
                 //---- helpButton ----
