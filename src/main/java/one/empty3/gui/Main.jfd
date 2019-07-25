@@ -11,7 +11,7 @@ new FormModel {
 		add( new FormWindow( "javax.swing.JFrame", new FormLayoutManager( class net.miginfocom.swing.MigLayout ) {
 			"$layoutConstraints": "fill,hidemode 3"
 			"$columnConstraints": "[fill][fill][fill]"
-			"$rowConstraints": "[][][][][][][][][]"
+			"$rowConstraints": "[][][][][][][][][][]"
 		} ) {
 			name: "MainWindow"
 			"title": "Main"
@@ -21,6 +21,7 @@ new FormModel {
 			"$sizePolicy": 1
 			"resizable": false
 			"modalExclusionType": enum java.awt.Dialog$ModalExclusionType APPLICATION_EXCLUDE
+			"minimumSize": new java.awt.Dimension( 1000, 400 )
 			addEvent( new FormEvent( "java.beans.PropertyChangeListener", "propertyChange", "ScriptPanelPropertyChange", true, "fieldFunctionsPropertyChanged" ) )
 			add( new FormContainer( "javax.swing.JMenu", new FormLayoutManager( class javax.swing.JMenu ) ) {
 				name: "menu1"
@@ -42,7 +43,7 @@ new FormModel {
 					addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "menuItemSaveActionPerformed", true ) )
 				} )
 			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
-				"value": "cell 0 0 2 4,aligny top,growy 0"
+				"value": "cell 0 0 2 4,aligny top,growy 0,wmin 100,hmin 20"
 			} )
 			add( new FormComponent( "one.empty3.gui.REditor" ) {
 				name: "editor"
@@ -53,12 +54,6 @@ new FormModel {
 			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
 				"value": "cell 0 1,dock center"
 			} )
-			add( new FormComponent( "javax.swing.JCheckBoxMenuItem" ) {
-				name: "checkBoxMenuItem1"
-				"text": "text"
-			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
-				"value": "cell 0 1"
-			} )
 			add( new FormComponent( "one.empty3.gui.UpdateViewMain" ) {
 				name: "updateView"
 				"background": new java.awt.Color( 204, 255, 204, 255 )
@@ -67,6 +62,16 @@ new FormModel {
 				}
 			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
 				"value": "cell 0 1 2 8,dock center"
+			} )
+			add( new FormContainer( "javax.swing.JTabbedPane", new FormLayoutManager( class javax.swing.JTabbedPane ) ) {
+				name: "tabbedPane1"
+				add( new FormComponent( "one.empty3.gui.TextureEditor" ) {
+					name: "textureEditor1"
+				}, new FormLayoutConstraints( null ) {
+					"title": "text"
+				} )
+			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+				"value": "cell 0 4 2 4,dock center"
 			} )
 		}, new FormLayoutConstraints( null ) {
 			"location": new java.awt.Point( 0, 5 )

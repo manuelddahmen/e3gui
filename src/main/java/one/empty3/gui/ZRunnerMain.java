@@ -76,7 +76,7 @@ public class ZRunnerMain extends Thread implements PropertyChangeListener {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                //log.log(Level.WARNING, "start rendering");
+                log.log(Level.WARNING, "start rendering");
                 if (zBuffer == null || zBuffer.largeur() != updateViewMain.getWidth() || updateViewMain.getHeight() != zBuffer.hauteur()) {
                     zBuffer = new ZBufferImpl(updateViewMain.getWidth(), updateViewMain.getHeight());
                     log.log(Level.WARNING, "Zbuffer dim" + zBuffer.largeur() + ", " + zBuffer.hauteur());
@@ -89,10 +89,10 @@ public class ZRunnerMain extends Thread implements PropertyChangeListener {
                     zBuffer.scene(scene);
 
                     zBuffer.camera(scene.cameraActive());
-                    zBuffer.next();
                     showRepere(zBuffer);
-                    zBuffer.draw();
+                    zBuffer.draw(scene);
                     lastImage = zBuffer.image();
+                    zBuffer.next();
                     log.info("Draw OK");
                     propertyChanged = false;
                     updateGraphics = false;

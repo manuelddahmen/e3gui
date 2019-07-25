@@ -107,6 +107,8 @@ public class Main {
         this.menuItemSave = new JMenuItem();
         this.editor = new REditor(dataModel.getScene());
         this.updateViewMain = new UpdateViewMain();
+        this.tabbedPane1 = new JTabbedPane();
+        this.textureEditor1 = new TextureEditor();
 
         //======== MainWindow ========
         {
@@ -116,6 +118,7 @@ public class Main {
             this.MainWindow.setVisible(true);
             this.MainWindow.setResizable(false);
             this.MainWindow.setModalExclusionType(Dialog.ModalExclusionType.APPLICATION_EXCLUDE);
+            this.MainWindow.setMinimumSize(new Dimension(1000, 400));
             this.MainWindow.addPropertyChangeListener("fieldFunctionsPropertyChanged", e -> ScriptPanelPropertyChange(e));
             Container MainWindowContentPane = this.MainWindow.getContentPane();
             MainWindowContentPane.setLayout(new MigLayout(
@@ -125,6 +128,7 @@ public class Main {
                 "[fill]" +
                 "[fill]",
                 // rows
+                "[]" +
                 "[]" +
                 "[]" +
                 "[]" +
@@ -157,7 +161,7 @@ public class Main {
                 this.menuItemSave.addActionListener(e -> menuItemSaveActionPerformed(e));
                 this.menu1.add(this.menuItemSave);
             }
-            MainWindowContentPane.add(this.menu1, "cell 0 0 2 4,aligny top,growy 0");
+            MainWindowContentPane.add(this.menu1, "cell 0 0 2 4,aligny top,growy 0,wmin 100,hmin 20");
 
             //---- editor ----
             this.editor.addPropertyChangeListener(e -> editorPropertyChange(e));
@@ -166,6 +170,12 @@ public class Main {
             //---- updateViewMain ----
             this.updateViewMain.setBackground(new Color(204, 255, 204));
             MainWindowContentPane.add(this.updateViewMain, "cell 0 1 2 8,dock center");
+
+            //======== tabbedPane1 ========
+            {
+                this.tabbedPane1.addTab("text", this.textureEditor1);
+            }
+            MainWindowContentPane.add(this.tabbedPane1, "cell 0 4 2 4,dock center");
             this.MainWindow.setSize(1415, 925);
             this.MainWindow.setLocationRelativeTo(this.MainWindow.getOwner());
         }
@@ -180,6 +190,8 @@ public class Main {
     private JMenuItem menuItemSave;
     private REditor editor;
     private UpdateViewMain updateViewMain;
+    private JTabbedPane tabbedPane1;
+    private TextureEditor textureEditor1;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
 
 

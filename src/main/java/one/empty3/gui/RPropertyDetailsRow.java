@@ -368,12 +368,12 @@ public class RPropertyDetailsRow implements TableModel {
                 {
                     if(propertyType.equals(Double.class))
                         aValue = Double.parseDouble((String)aValue);
-                    System.out.println("Property type : " + propertyType.getName()+ " Property name "+objectDetailDescriptions.get(rowIndex).getName());
+                    System.out.println("Property type : " + propertyType.getName()+ " Property name "+aValue);
                     representable.setProperty(objectDetailDescriptions.get(rowIndex).getName(),
                             aValue);
+                    refresh();
                     objectDetailDescriptions.get(rowIndex).set(columnIndex, aValue);
                     System.out.print("save");
-                    refresh();
                 }
 
                 int dim = objectDetailDescriptions.get(rowIndex).getDim();
@@ -404,9 +404,9 @@ public class RPropertyDetailsRow implements TableModel {
                     System.out.println("Property type : " + propertyType.getName()+ " Property name "+objectDetailDescriptions.get(rowIndex).getName());
                     representable.setProperty(objectDetailDescriptions.get(rowIndex).getName(),
                             aValue);
+                    refresh();
                     objectDetailDescriptions.get(rowIndex).set(columnIndex, aValue);
                     System.out.print("save");
-                    refresh();
 
                 }
             } catch (InvocationTargetException e) {
