@@ -24,15 +24,14 @@ import java.util.ResourceBundle;
 /**
  * @author Manuel Dahmen
  */
-public class RPropertyList extends JDialog implements PropertyChangeListener {
+public class RPropertyList extends JPanel implements PropertyChangeListener {
     private final Representable r;
     History history = new History();
 
     private RPropertyDetailsRow tableModel;
 
 
-    public RPropertyList(Window owner, Representable re) {
-        super(owner);
+    public RPropertyList( Representable re) {
         initComponents();
         init(re);
         history.getHistory().add(tableModel);
@@ -172,9 +171,7 @@ public class RPropertyList extends JDialog implements PropertyChangeListener {
         helpButton = new JButton();
 
         //======== this ========
-        setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
-        Container contentPane = getContentPane();
-        contentPane.setLayout(new BorderLayout());
+        setLayout(new BorderLayout());
 
         //======== dialogPane ========
         {
@@ -314,9 +311,7 @@ public class RPropertyList extends JDialog implements PropertyChangeListener {
             }
             dialogPane.add(buttonBar, BorderLayout.SOUTH);
         }
-        contentPane.add(dialogPane, BorderLayout.CENTER);
-        pack();
-        setLocationRelativeTo(getOwner());
+        add(dialogPane, BorderLayout.CENTER);
         // JFormDesigner - End of component initialization  //GEN-END:initComponents
     }
 

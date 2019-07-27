@@ -23,13 +23,13 @@ import java.util.ResourceBundle;
 /**
  * @author Manuel Dahmen
  */
-public class ObjectEditorBase extends JDialog  {
+public class ObjectEditorBase extends JPanel  {
     private final Class<? extends Representable> representableclass;
     private boolean initValues;
     Representable r = null;
     private Point3D point3D = new Point3D();
     private Matrix33 matrix33 = new Matrix33(Matrix33.I);
-    private Point3D scale = new Point3D(1,1,1);
+    private Point3D scale = new Point3D(1d,1d,1d);
 
     public ObjectEditorBase(Class<? extends Representable> classR) {
         super();
@@ -187,7 +187,7 @@ public class ObjectEditorBase extends JDialog  {
 
 
     private void button1ActionPerformed(ActionEvent e) {
-        RPropertyList rPropertyList = new RPropertyList(getOwner(), r);
+        RPropertyList rPropertyList = new RPropertyList( r);
         rPropertyList.setVisible(true);
     }
 
@@ -230,9 +230,7 @@ public class ObjectEditorBase extends JDialog  {
         helpButton = new JButton();
 
         //======== this ========
-        setModal(true);
-        Container contentPane = getContentPane();
-        contentPane.setLayout(new BorderLayout());
+        setLayout(new BorderLayout());
 
         //======== dialogPane ========
         {
@@ -426,9 +424,7 @@ public class ObjectEditorBase extends JDialog  {
             }
             dialogPane.add(buttonBar, BorderLayout.SOUTH);
         }
-        contentPane.add(dialogPane, BorderLayout.CENTER);
-        pack();
-        setLocationRelativeTo(getOwner());
+        add(dialogPane, BorderLayout.CENTER);
         // JFormDesigner - End of component initialization  //GEN-END:initComponents
     }
 

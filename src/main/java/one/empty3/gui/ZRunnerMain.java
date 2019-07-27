@@ -76,7 +76,7 @@ public class ZRunnerMain extends Thread implements PropertyChangeListener {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                log.log(Level.WARNING, "start rendering");
+                //System.out.print("<");
                 if (zBuffer == null || zBuffer.largeur() != updateViewMain.getWidth() || updateViewMain.getHeight() != zBuffer.hauteur()) {
                     zBuffer = new ZBufferImpl(updateViewMain.getWidth(), updateViewMain.getHeight());
                     log.log(Level.WARNING, "Zbuffer dim" + zBuffer.largeur() + ", " + zBuffer.hauteur());
@@ -93,7 +93,7 @@ public class ZRunnerMain extends Thread implements PropertyChangeListener {
                     zBuffer.draw(scene);
                     lastImage = zBuffer.image();
                     zBuffer.next();
-                    log.info("Draw OK");
+                   // System.out.println(">");
                     propertyChanged = false;
                     updateGraphics = false;
                 } catch (NullPointerException ex)

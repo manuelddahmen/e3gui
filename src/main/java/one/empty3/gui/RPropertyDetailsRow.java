@@ -81,10 +81,16 @@ public class RPropertyDetailsRow implements TableModel {
                             index++;
                             i++;
                         }
-
+                        
                     }
+    
+                    objectDetailDescriptions.add(new ObjectDetailDescription(stringListEntry.getKey().split("/")[0], "ADD NEW", 1, "" + stringListEntry.getValue().size(), Representable.class,
+                            Representable.class.toString()));
+                    objectList.add(null);
+    
                 }
             });
+    
         if (representable.getDeclaredRepresentables().size() > 0)
             representable.getDeclaredRepresentables().entrySet().forEach(new Consumer<Map.Entry<String, Representable>>() {
                 @Override
@@ -164,6 +170,10 @@ public class RPropertyDetailsRow implements TableModel {
                             i++;
                         }
                     }
+                    objectDetailDescriptions.add(new ObjectDetailDescription(split(s)[0], "ADD NEW", 1, "" + point3DS.length, Point3D.class,
+                            Point3D.class.toString()));
+                    objectList.add(null);
+    
                 }
             });
         if (representable.getDeclaredArray2Points().size() > 0)
@@ -189,10 +199,15 @@ public class RPropertyDetailsRow implements TableModel {
 
 
                             j++;
+    
+    
                         }
                         i++;
                     }
-
+                    objectDetailDescriptions.add(new ObjectDetailDescription(split(s)[0], "INSERT NEW ROW/COLUMN", 1, "", Point3D.class,
+                            Point3D.class.toString()));
+                    objectList.add(null);
+    
                 }
             });
         if (representable.getDeclaredDoubles().size() > 0)
@@ -234,7 +249,10 @@ public class RPropertyDetailsRow implements TableModel {
                         index++;
                         i++;
                     }
-
+                    objectDetailDescriptions.add(new ObjectDetailDescription(
+                            split(s)[0], split(s)[1], 1, "" + i,Double.class, 0.0));
+                    objectList.add(null);
+    
                 }
             });
         if (representable.getDeclaredArrays2dDouble().size() > 0)
@@ -265,8 +283,11 @@ public class RPropertyDetailsRow implements TableModel {
                             }
                             i++;
                         }
-
-
+                        objectDetailDescriptions.add(new ObjectDetailDescription(
+                                split(s)[0], split(s)[1], 1, "INSERT ROW/COLUMN" + i + "", Double.class, 0.0));
+                        objectList.add(null);
+    
+    
                     }
                 }
             });
@@ -293,37 +314,60 @@ public class RPropertyDetailsRow implements TableModel {
 
                 }
             });
-        if(representable instanceof Scene || representable instanceof RepresentableConteneur) {
-            MyObservableList<ObjectDescription> objectDescriptions = RepresentableClassList.myList();
-            objectDescriptions.forEach(new Consumer<ObjectDescription>() {
+        if (representable.getDeclaredInteger().size() > 0)
+        
+            representable.getDeclaredInteger().forEach(new BiConsumer<String, Integer>() {
                 @Override
-                public void accept(ObjectDescription objectDescription) {
-                    //System.out.println("objet"+objectDescription.getName());
-                    Representable value = null;
-                    try {
-                        value = objectDescription.getR().newInstance();
-                    } catch (InstantiationException e) {
-                        e.printStackTrace();
-                    } catch (IllegalAccessException e) {
-                        e.printStackTrace();
-                    }
-                    setValueAt(objectDescription.getName(), index, 0);
-                    setValueAt("NEW", index, 1);
+                public void accept(String s, Integer value) {
+                    int i = 0;
+                    setValueAt(split(s)[0], index, 0);
+                    setValueAt(split(s)[1], index, 1);
                     setValueAt(1, index, 2);
-                    setValueAt("", index, 3);
+                    setValueAt(i, index, 3);
                     setValueAt(value.getClass(), index, 4);
                     setValueAt(value.toString(), index, 5);
                     objectDetailDescriptions.add(new ObjectDetailDescription(
-                            objectDescription.getName(), "NEW", 1, "", value.getClass(), value));
+                            split(s)[0], split(s)[1], 1, "" + i, value.getClass(), value));
                     objectList.add(value);
-
+                
                     index++;
-
-
+                
+                
+                    i++;
+                
                 }
+            });
+    
+        if(representable instanceof Scene || representable instanceof RepresentableConteneur) {
+            MyObservableList<ObjectDescription> objectDescriptions = RepresentableClassList.myList();
+            objectDescriptions.forEach(objectDescription -> {
+                Representable value = null;
+                try {
+                    value = objectDescription.getR().newInstance();
+                } catch (InstantiationException e) {
+                    e.printStackTrace();
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                }
+                /*
+                setValueAt(objectDescription.getName(), index, 0);
+                setValueAt("*NEW", index, 1);
+                setValueAt(1, index, 2);
+                setValueAt("", index, 3);
+                setValueAt(value.getClass(), index, 4);
+                setValueAt(value.toString(), index, 5);*/
+                objectDetailDescriptions.add(new ObjectDetailDescription(
+                        objectDescription.getName(), "NEW", 1, "", value.getClass(),null));
+                objectList.add(value);
+
+                index++;
+
+
             });
 
         }
+        
+        assert objectDetailDescriptions.size()==index&&objectList.size()==index;
     }
 
     @Override
@@ -438,7 +482,4 @@ public class RPropertyDetailsRow implements TableModel {
         return representable;
     }
 
-    public void setRepresentable(Representable representable) {
-        this.representable = representable;
-    }
 }

@@ -3,6 +3,7 @@ package one.empty3.gui;
 import one.empty3.library.*;
 import one.empty3.library.Polygon;
 import one.empty3.library.core.nurbs.CourbeParametriquePolynomialeBezier;
+import one.empty3.library.core.nurbs.FctXY;
 import one.empty3.library.core.nurbs.FunctionSurface;
 import one.empty3.library.core.nurbs.SurfaceParametriquePolynomialeBezier;
 import one.empty3.library.core.raytracer.tree.AlgebraicFormulaSyntaxException;
@@ -11,6 +12,7 @@ import one.empty3.library.core.raytracer.tree.TreeNodeEvalException;
 import one.empty3.library.core.script.InterpreteException;
 import one.empty3.library.core.script.InterpreteMatrix33;
 import one.empty3.library.core.script.InterpretePoint3D;
+import one.empty3.library.core.tribase.TRIEllipsoide;
 import one.empty3.library.core.tribase.TubulaireN2cc;
 
 import javax.swing.*;
@@ -50,6 +52,8 @@ public class RepresentableClassList {
         add("sphere", Sphere.class);
         add("tube", TubulaireN2cc.class);
         add("function (P = f(u,v))", FunctionSurface.class);
+        add("ellipsoide", TRIEllipsoide.class);
+        add("fct y = f(x)", FctXY.class);
         //add("paramCurve", ParametricCurve.class);
         //add("paramSurface", ParametricSurface.class);
 
@@ -57,7 +61,7 @@ public class RepresentableClassList {
     }
     public static void initScenes()
     {
-        scenes = new JTree();
+        //scenes = new JTree();
         scenes.add(new Scene().toString(), new JTextField(new Scene().toString()));
         isInitScenes = true;
     }

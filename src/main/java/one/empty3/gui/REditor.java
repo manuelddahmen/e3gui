@@ -4,7 +4,6 @@
 
 package one.empty3.gui;
 
-import java.util.*;
 import net.miginfocom.swing.MigLayout;
 import one.empty3.library.ITexture;
 import one.empty3.library.Representable;
@@ -25,12 +24,12 @@ import java.lang.reflect.InvocationTargetException;
  * @author Manuel Dahmen
  */
 public class REditor extends JPanel implements PropertyChangeListener {
-    private final Representable r;
+    private  Representable r;
     History history = new History();
 
     private RPropertyDetailsRow tableModel;
-
-
+    
+    
     public REditor(Representable re) {
         super();
         initComponents();
@@ -46,12 +45,14 @@ public class REditor extends JPanel implements PropertyChangeListener {
                 labelBreadCumbs.setText(re.getClass().getCanonicalName());
                 this.tableModel = new RPropertyDetailsRow((Representable) re);
                 tableObjectDetails.setModel(tableModel);
+                this.r = tableModel.getRepresentable();
 
             } else if (re instanceof RPropertyDetailsRow) {
                 labelBreadCumbs.setText(((RPropertyDetailsRow) re).getRepresentable().getClass().getCanonicalName());
                 RPropertyDetailsRow model = new RPropertyDetailsRow((RPropertyDetailsRow) re);
                 this.tableModel = model;
                 tableObjectDetails.setModel(model);
+                this.r = model.getRepresentable();
             }
         }
     }
@@ -375,5 +376,13 @@ public class REditor extends JPanel implements PropertyChangeListener {
     private JPopupMenu popupMenu1;
     private JMenuItem menuItemDelete;
     private JMenuItem menuItem1;
+    
+    public Representable getReprentable() {
+        return r;
+    }
+    
+    public void setReprentable(Representable reprentable) {
+        this.r  = reprentable;
+    }
     // JFormDesigner - End of variables declaration  //GEN-END:variables
 }

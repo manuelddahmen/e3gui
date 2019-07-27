@@ -29,8 +29,13 @@ public class Main {
         dataModel = new DataModel();
         initComponents();
         getUpdateView().setFF(this);
+        getTextureEditor().setMain(this);
     }
-
+    
+    private TextureEditor getTextureEditor() {
+        return textureEditor1;
+    }
+    
     public DataModel getDataModel() {
         return dataModel;
     }
@@ -109,6 +114,9 @@ public class Main {
         this.updateViewMain = new UpdateViewMain();
         this.tabbedPane1 = new JTabbedPane();
         this.textureEditor1 = new TextureEditor();
+        this.panel1 = new JPanel();
+        this.panel2 = new JPanel();
+        this.panel3 = new JPanel();
 
         //======== MainWindow ========
         {
@@ -116,9 +124,9 @@ public class Main {
             this.MainWindow.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
             this.MainWindow.setBackground(new Color(204, 255, 255));
             this.MainWindow.setVisible(true);
-            this.MainWindow.setResizable(false);
             this.MainWindow.setModalExclusionType(Dialog.ModalExclusionType.APPLICATION_EXCLUDE);
             this.MainWindow.setMinimumSize(new Dimension(1000, 400));
+            this.MainWindow.setIconImage(new ImageIcon(getClass().getResource("/one/empty3/library/mite.png")).getImage());
             this.MainWindow.addPropertyChangeListener("fieldFunctionsPropertyChanged", e -> ScriptPanelPropertyChange(e));
             Container MainWindowContentPane = this.MainWindow.getContentPane();
             MainWindowContentPane.setLayout(new MigLayout(
@@ -165,18 +173,60 @@ public class Main {
 
             //---- editor ----
             this.editor.addPropertyChangeListener(e -> editorPropertyChange(e));
-            MainWindowContentPane.add(this.editor, "cell 0 1,dock center");
+            MainWindowContentPane.add(this.editor, "cell 0 1 1 3,dock center");
 
             //---- updateViewMain ----
             this.updateViewMain.setBackground(new Color(204, 255, 204));
-            MainWindowContentPane.add(this.updateViewMain, "cell 0 1 2 8,dock center");
+            MainWindowContentPane.add(this.updateViewMain, "cell 0 1 1 3,dock center");
 
             //======== tabbedPane1 ========
             {
-                this.tabbedPane1.addTab("text", this.textureEditor1);
+                this.tabbedPane1.addTab("Textures", this.textureEditor1);
+
+                //======== panel1 ========
+                {
+                    this.panel1.setLayout(new MigLayout(
+                        "hidemode 3",
+                        // columns
+                        "[fill]" +
+                        "[fill]",
+                        // rows
+                        "[]" +
+                        "[]" +
+                        "[]"));
+                }
+                this.tabbedPane1.addTab("Position", this.panel1);
+
+                //======== panel2 ========
+                {
+                    this.panel2.setLayout(new MigLayout(
+                        "hidemode 3",
+                        // columns
+                        "[fill]" +
+                        "[fill]",
+                        // rows
+                        "[]" +
+                        "[]" +
+                        "[]"));
+                }
+                this.tabbedPane1.addTab("Rendu", this.panel2);
+
+                //======== panel3 ========
+                {
+                    this.panel3.setLayout(new MigLayout(
+                        "hidemode 3",
+                        // columns
+                        "[fill]" +
+                        "[fill]",
+                        // rows
+                        "[]" +
+                        "[]" +
+                        "[]"));
+                }
+                this.tabbedPane1.addTab("Draw Over 2D", this.panel3);
             }
             MainWindowContentPane.add(this.tabbedPane1, "cell 0 4 2 4,dock center");
-            this.MainWindow.setSize(1415, 925);
+            this.MainWindow.setSize(1620, 1085);
             this.MainWindow.setLocationRelativeTo(this.MainWindow.getOwner());
         }
         // JFormDesigner - End of component initialization  //GEN-END:initComponents
@@ -192,7 +242,17 @@ public class Main {
     private UpdateViewMain updateViewMain;
     private JTabbedPane tabbedPane1;
     private TextureEditor textureEditor1;
+    private JPanel panel1;
+    private JPanel panel2;
+    private JPanel panel3;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
-
-
+    
+    
+    public REditor getEditor() {
+        return editor;
+    }
+    
+    public void setEditor(REditor editor) {
+        this.editor = editor;
+    }
 }
