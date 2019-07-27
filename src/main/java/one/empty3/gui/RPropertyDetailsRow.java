@@ -320,16 +320,17 @@ public class RPropertyDetailsRow implements TableModel {
                 @Override
                 public void accept(String s, Integer value) {
                     int i = 0;
-                    setValueAt(split(s)[0], index, 0);
-                    setValueAt(split(s)[1], index, 1);
-                    setValueAt(1, index, 2);
-                    setValueAt(i, index, 3);
-                    setValueAt(value.getClass(), index, 4);
-                    setValueAt(value.toString(), index, 5);
                     objectDetailDescriptions.add(new ObjectDetailDescription(
                             split(s)[0], split(s)[1], 1, "" + i, value.getClass(), value));
                     objectList.add(value);
-                
+  /*
+                    setValueAt(split(s)[0], index, 0);
+                    setValueAt(split(s)[1], index, 1);
+                    setValueAt(1, index, 2);
+                    setValueAt("", index, 3);
+                    setValueAt(value.getClass(), index, 4);
+                    setValueAt(value.toString(), index, 5);
+**/
                     index++;
                 
                 
@@ -349,17 +350,16 @@ public class RPropertyDetailsRow implements TableModel {
                 } catch (IllegalAccessException e) {
                     e.printStackTrace();
                 }
-                /*
-                setValueAt(objectDescription.getName(), index, 0);
+/*                setValueAt(objectDescription.getName(), index, 0);
                 setValueAt("*NEW", index, 1);
                 setValueAt(1, index, 2);
                 setValueAt("", index, 3);
                 setValueAt(value.getClass(), index, 4);
-                setValueAt(value.toString(), index, 5);*/
+                setValueAt(value, index, 5);
+*/
                 objectDetailDescriptions.add(new ObjectDetailDescription(
                         objectDescription.getName(), "NEW", 1, "", value.getClass(),null));
                 objectList.add(value);
-
                 index++;
 
 
@@ -408,10 +408,12 @@ public class RPropertyDetailsRow implements TableModel {
             try {
                 Class propertyType = representable.getPropertyType(objectDetailDescriptions.get(rowIndex).getName());
                 String propertyName = objectDetailDescriptions.get(rowIndex).getName();
-                if((propertyType.equals(Double.class) ||propertyType.equals(String.class))&& aValue.getClass().equals(String.class))
+                if((propertyType.equals(Double.class) || propertyType.equals(Integer.class) ||propertyType.equals(String.class))&& aValue.getClass().equals(String.class))
                 {
                     if(propertyType.equals(Double.class))
                         aValue = Double.parseDouble((String)aValue);
+                    if(propertyType.equals(Integer.class))
+                        aValue = Integer.parseInt((String)aValue);
                     System.out.println("Property type : " + propertyType.getName()+ " Property name "+aValue);
                     representable.setProperty(objectDetailDescriptions.get(rowIndex).getName(),
                             aValue);
@@ -460,6 +462,10 @@ public class RPropertyDetailsRow implements TableModel {
             } catch (NoSuchMethodException e) {
                 e.printStackTrace();
             }
+        }
+        else
+        {
+
         }
     }
 
