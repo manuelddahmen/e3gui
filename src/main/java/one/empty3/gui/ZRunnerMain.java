@@ -3,8 +3,10 @@ package one.empty3.gui;
 import one.empty3.library.*;
 
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.util.ConcurrentModificationException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -26,6 +28,8 @@ public class ZRunnerMain extends Thread implements PropertyChangeListener {
     private boolean updateGraphics = false;
     private Main ff;
     private Scene scene;
+    private PropertyChangeListener changeListener;
+    private boolean stopCurrentRender;
 
 
     public ZRunnerMain() {
@@ -61,25 +65,43 @@ public class ZRunnerMain extends Thread implements PropertyChangeListener {
 
 
     public void run() {
+        boolean renderedImageOK = false;
         log.info("running renderer loop....");
+        new Thread()
+        {
+            @Override
+            public void run() {
+                super.run();
+                while(running) {
+                    if (updateViewMain != null && updateViewMain.getWidth() > 0 && updateViewMain.getHeight() > 0) {
+                        Graphics updateViewGraphics = updateViewMain.getGraphics();
+                        if (lastImage != null) {
+                            updateViewGraphics.drawImage(lastImage, 0, 0, updateViewMain.getWidth(), updateViewMain.getHeight(), null);
+                        }
+                    }
+                    try {
+                        Thread.sleep(200);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }.start();
         while (isRunning()) {
             if (ff != null)
                 updateViewMain = ff.getUpdateView();
             if (updateViewMain != null && updateViewMain.getWidth() > 0 && updateViewMain.getHeight() > 0) {
-                // log.log(Level.WARNING, "UpdateView" + updateViewMain.getWidth() + ", " + updateViewMain.getHeight() + " " + updateViewMain.hashCode());
-                Graphics updateViewGraphics = updateViewMain.getGraphics();
-                if (lastImage != null) {
-                    updateViewGraphics.drawImage(lastImage, 0, 0, updateViewMain.getWidth(), updateViewMain.getHeight(), null);
-                }
+
                 try {
                     Thread.sleep(20);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                log.info("rendering");
+
                 if (zBuffer == null || zBuffer.largeur() != updateViewMain.getWidth() || updateViewMain.getHeight() != zBuffer.hauteur()) {
                     zBuffer = new ZBufferImpl(updateViewMain.getWidth(), updateViewMain.getHeight());
-                    log.log(Level.WARNING, "Zbuffer dim" + zBuffer.largeur() + ", " + zBuffer.hauteur());
+                    log.info("UpdateView" + updateViewMain.getWidth() + ", " + updateViewMain.getHeight() + " " + updateViewMain.hashCode());
+                    log.info("Zbuffer dim" + zBuffer.largeur() + ", " + zBuffer.hauteur());
                 }
                 //zBuffer.setDimension(updateViewMain.getWidth(), updateViewMain.getHeight());
 
@@ -90,18 +112,31 @@ public class ZRunnerMain extends Thread implements PropertyChangeListener {
 
                     zBuffer.camera(scene.cameraActive());
                     showRepere(zBuffer);
+                    zBuffer.next();
                     zBuffer.draw(scene);
                     lastImage = zBuffer.image();
-                    zBuffer.next();
-                   // System.out.println(">");
+                    changeSupport.firePropertyChange("renderedImageOK", renderedImageOK, true);
+                    renderedImageOK = true;
                     propertyChanged = false;
                     updateGraphics = false;
+                    drawSuccess();
                 } catch (NullPointerException ex)
                 {
+                    changeSupport.firePropertyChange("renderedImageOK", renderedImageOK, false);
+                    drawFailed();
+                    renderedImageOK = true;
                     ex.printStackTrace();
                 }
                 catch (ConcurrentModificationException ex) {
+                    changeSupport.firePropertyChange("renderedImageOK", renderedImageOK, false);
+                    drawFailed();
+                    renderedImageOK = true;
                     log.warning("Wait concurrent modification");
+                } catch (Exception ex)
+                {
+                    ex.printStackTrace();
+                    drawFailed();
+                    changeSupport.firePropertyChange("renderedImageOK", renderedImageOK, false);
                 }
             }
             try {
@@ -111,6 +146,17 @@ public class ZRunnerMain extends Thread implements PropertyChangeListener {
             }
         }
         log.info("Ending renderer loop....");
+    }
+
+    private void drawSuccess() {
+        Graphics graphics = updateViewMain.getGraphics();
+        graphics.setColor(Color.GREEN);
+        graphics.fillRect(0, 0, 10, 10);
+    }
+    private void drawFailed() {
+        Graphics graphics = updateViewMain.getGraphics();
+        graphics.setColor(Color.RED);
+        graphics.fillRect(0, 0, 10, 10);
     }
 
     private void addRepere(Scene scene1) {
@@ -152,5 +198,23 @@ public class ZRunnerMain extends Thread implements PropertyChangeListener {
         ls.texture(new TextureCol(Color.BLUE));
         scene.add(ls);
         zBuffer.draw(scene);
+    }
+
+    private final PropertyChangeSupport changeSupport = new PropertyChangeSupport(this);
+
+    public void addPropertyChangeListener(PropertyChangeListener main) {
+        changeSupport.addPropertyChangeListener(main);
+    }
+
+    public void setStopCurrentRender(boolean stopCurrentRender) {
+        this.stopCurrentRender = stopCurrentRender;
+    }
+
+    public void setLastImage(BufferedImage lastImage) {
+        this.lastImage = lastImage;
+    }
+
+    public ZBufferImpl getZBufferImpl() {
+        return zBuffer;
     }
 }

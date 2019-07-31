@@ -135,12 +135,12 @@ public class RPropertyDetailsRow implements TableModel {
                 public void accept(Map.Entry<String, ITexture> entry) {
                     ITexture value = entry.getValue();
                     String[] split = split(entry.getKey());
-                    setValueAt(split(entry.getKey())[0], index, 0);
+                    /*setValueAt(split(entry.getKey())[0], index, 0);
                     setValueAt(split(entry.getKey())[1], index, 1);
                     setValueAt(""+0, index, 2);
                     setValueAt(""+0, index, 3);
                     setValueAt(value.getClass(), index, 4);
-                    setValueAt(value.toString(), index, 5);
+                    setValueAt(value.toString(), index, 5);*/
                     objectDetailDescriptions.add(new ObjectDetailDescription(
                             split[0], split[1], 0, "0", value.getClass(), value.toString()));
                     objectList.add(value);
@@ -215,16 +215,16 @@ public class RPropertyDetailsRow implements TableModel {
                 @Override
                 public void accept(String s, Double aDouble) {
                     Double value = aDouble;
-                    setValueAt(split(s)[0], index, 0);
-                    setValueAt(split(s)[1], index, 1);
-                    setValueAt(0, index, 2);
-                    setValueAt(0, index, 3);
-                    setValueAt(value.getClass(), index, 4);
-                    setValueAt(value, index, 5);
                     objectDetailDescriptions.add(new ObjectDetailDescription(
                             split(s)[0], split(s)[1], 0, "0", value.getClass(), value)
                     );
                     objectList.add(value);
+/*                    setValueAt(split(s)[0], index, 0);
+                    setValueAt(split(s)[1], index, 1);
+                    setValueAt(0, index, 2);
+                    setValueAt(0, index, 3);
+                    setValueAt(value.getClass(), index, 4);
+                    setValueAt(value, index, 5);*/
                     index++;
 
                 }

@@ -1,4 +1,4 @@
-JFDML JFormDesigner: "7.0.0.2.222" Java: "11.0.3" encoding: "UTF-8"
+JFDML JFormDesigner: "7.0.0.3.238" Java: "1.8.0_112-release" encoding: "UTF-8"
 
 new FormModel {
 	"i18n.autoExternalize": true
@@ -68,16 +68,7 @@ new FormModel {
 						add( new FormComponent( "javax.swing.JTable" ) {
 							name: "table1"
 							"autoResizeMode": 0
-							"model": new com.jformdesigner.model.SwingTableModel( new java.util.Vector {
-								add( new java.util.Vector {
-									add( null )
-									add( null )
-								} )
-								add( new java.util.Vector {
-									add( null )
-									add( null )
-								} )
-							}, new java.util.Vector {
+							"model": new com.jformdesigner.model.SwingTableModel( new java.util.Vector, new java.util.Vector {
 								add( "Texture" )
 								add( "Text type" )
 							}, new java.util.Vector {

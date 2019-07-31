@@ -1,5 +1,6 @@
 package one.empty3.gui;
 
+import one.empty3.library.Representable;
 import one.empty3.library.Scene;
 
 import javax.swing.*;
@@ -7,9 +8,10 @@ import javax.swing.*;
 /**
  * Created by manue on 26-06-19.
  */
-public class UpdateViewMain extends JPanel {
+public class UpdateViewMain extends JPanel implements RepresentableEditor {
     private Main ff;
     private Scene scene;
+    private Representable currentRepresentable;
 
     public UpdateViewMain() {
         setView(new FunctionView());
@@ -50,4 +52,8 @@ public class UpdateViewMain extends JPanel {
         firePropertyChange("zRunner", old, zRunner);
     }
 
+    @Override
+    public void initValues(Representable representable) {
+        this.currentRepresentable = representable;
+    }
 }

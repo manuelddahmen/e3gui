@@ -2,7 +2,6 @@ package one.empty3.gui;
 
 import one.empty3.library.ITexture;
 
-import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
 import java.io.File;
@@ -94,7 +93,6 @@ public class TableModelTexture implements TableModel {
         initTable();
     }
 
-    int index = 0;
     public void initTable()
     {
 //        lines.clear();
@@ -113,9 +111,9 @@ public class TableModelTexture implements TableModel {
 //            rows++;
 //            index++;
 //        });
-        System.out.println("Lines count = " + index + " " +getRowCount());
+        System.out.println("Lines count =  " +getRowCount());
         if(lines.size()>0) {
-            listener.tableChanged(new TableModelEvent(this, 0, lines.size(), 0, 2));
+      //      listener.tableChanged(new TableModelEvent(this, 0, lines.size(), 0, 2));
         }
     }
 

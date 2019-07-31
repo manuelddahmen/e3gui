@@ -18,12 +18,13 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.lang.reflect.InvocationTargetException;
 
 /**
  * @author Manuel Dahmen
  */
-public class REditor extends JPanel implements PropertyChangeListener {
+public class REditor extends JPanel implements PropertyChangeListener, RepresentableEditor {
     private  Representable r;
     History history = new History();
 
@@ -45,14 +46,16 @@ public class REditor extends JPanel implements PropertyChangeListener {
                 labelBreadCumbs.setText(re.getClass().getCanonicalName());
                 this.tableModel = new RPropertyDetailsRow((Representable) re);
                 tableObjectDetails.setModel(tableModel);
-                this.r = tableModel.getRepresentable();
+                propertyChangeSupport.firePropertyChange("representable", r, tableModel.getRepresentable());
+                this.r  = tableModel.getRepresentable();
 
             } else if (re instanceof RPropertyDetailsRow) {
                 labelBreadCumbs.setText(((RPropertyDetailsRow) re).getRepresentable().getClass().getCanonicalName());
                 RPropertyDetailsRow model = new RPropertyDetailsRow((RPropertyDetailsRow) re);
                 this.tableModel = model;
                 tableObjectDetails.setModel(model);
-                this.r = model.getRepresentable();
+                propertyChangeSupport.firePropertyChange("representable", r, tableModel.getRepresentable());
+                this.r  = tableModel.getRepresentable();
             }
         }
     }
@@ -383,6 +386,23 @@ public class REditor extends JPanel implements PropertyChangeListener {
     
     public void setReprentable(Representable reprentable) {
         this.r  = reprentable;
+    }
+
+    @Override
+    public void initValues(Representable representable) {
+        init(representable);
+    }
+
+    PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
+
+    @Override
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
+        propertyChangeSupport.addPropertyChangeListener(listener);
+    }
+
+    @Override
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
+        propertyChangeSupport.removePropertyChangeListener(listener);
     }
     // JFormDesigner - End of variables declaration  //GEN-END:variables
 }

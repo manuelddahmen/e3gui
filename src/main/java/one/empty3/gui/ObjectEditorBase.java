@@ -11,7 +11,6 @@ import one.empty3.library.Representable;
 import one.empty3.library.Rotation;
 import one.empty3.library.core.raytracer.tree.AlgebraicFormulaSyntaxException;
 import one.empty3.library.core.raytracer.tree.TreeNodeEvalException;
-import one.empty3.library.core.script.InterpreteException;
 
 import javax.swing.*;
 import javax.swing.event.CaretEvent;
@@ -19,67 +18,67 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
 import java.util.ResourceBundle;
+import java.util.logging.Logger;
 
 /**
  * @author Manuel Dahmen
  */
-public class ObjectEditorBase extends JPanel  {
-    private final Class<? extends Representable> representableclass;
+public class ObjectEditorBase extends JPanel implements RepresentableEditor {
     private boolean initValues;
     Representable r = null;
-    private Point3D point3D = new Point3D();
-    private Matrix33 matrix33 = new Matrix33(Matrix33.I);
-    private Point3D scale = new Point3D(1d,1d,1d);
 
-    public ObjectEditorBase(Class<? extends Representable> classR) {
+    public ObjectEditorBase(Representable r) {
         super();
         initComponents();
         initValues =false;
-        this.representableclass = classR;
-        initValues(classR);
+        initValues(r);
+        setVisible(true);
+
+    }
+    public ObjectEditorBase() {
+        super();
+        initComponents();
+        initValues =false;
         setVisible(true);
 
     }
 
-    public void initValues(Class <? extends Representable> representable)
+    public void initValues(Representable representable)
     {
-        try {
-            this.r = representable.newInstance();
+        if(r!=representable || r==null ) {
+            this.r = representable;
             initValues(r,
 
                     new JTextField[]{
-                        textFieldX, textFieldY, textFieldZ
+                            textFieldX, textFieldY, textFieldZ
                     },
-                            new JTextField[]{
-                    textField00, textField01, textField02,
-                    textField10,textField11,textField12,
-                    textField20,textField21,textField22},
+                    new JTextField[]{
+                            textField00, textField01, textField02,
+                            textField10, textField11, textField12,
+                            textField20, textField21, textField22},
                     textAreaPoint3D,
                     textAreaMatrix33,
                     new JTextField[]{
                             textFieldScaleX, textFieldScaleY, textFieldScaleZ
                     }
-                    );
+            );
             initValues = true;
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
         }
+        Logger.getAnonymousLogger().info("initValues : " + r.toString());
     }
 
     private void initValues(Representable r, JTextField[] point3d, JTextField[] jTextFieldMatrix, JTextArea textAreaPoint3D,
                             JTextArea textAreaMatrix33,
                             JTextField[] jTextFieldsScale) {
-        Rotation rotation = r.rotation;
+        Rotation rotation = r.getRotation();
         Point3D centreRot = rotation.getCentreRot();
         Matrix33 rot = rotation.getRot();
-
+        Point3D scale =r.getScale();
         textAreaMatrix33.setText(rot.toString());
         for(int i = 0; i<3; i++)
             point3d[i].setText(""+centreRot.get(i));
         for(int i=0; i<9; i++)
-            jTextFieldMatrix[i].setText(""+rot.get((i/3), (i%3)));
+            jTextFieldMatrix[i].setText(String.valueOf(rot.get((i/3), (i%3))));
         textAreaPoint3D.setText(""+centreRot.toString());
         for(int i = 0; i<3; i++)
             jTextFieldsScale[i].setText(""+scale.get(i));
@@ -87,109 +86,104 @@ public class ObjectEditorBase extends JPanel  {
     private void saveValues(Representable r, JTextField[] point3d, JTextField[] jTextFieldMatrix, JTextArea textAreaPoint3D,
                             JTextArea textAreaMatrix33,
                             JTextField[] jTextFieldsScale) {
-        Rotation rotation = r.rotation;
-        Point3D centreRot = rotation.getCentreRot();
-        Matrix33 rot = rotation.getRot();
-
-        textAreaMatrix33.setText(rot.toString());
+        Rotation rotation = new Rotation();
+        Point3D centreRot = new Point3D();
+        Matrix33 rot = new Matrix33();
+        Point3D scale =  new Point3D();
         for(int i = 0; i<3; i++) {
             centreRot.set(i, Double.parseDouble(point3d[i].getText()));
         }
         for(int i=0; i<9; i++)
-            rot.set((i/3), (i%3), Double.parseDouble(jTextFieldMatrix[i].getText()));
-        //textAreaPoint3D.setText(""+centreRot.toString());
+            rot.set((i/3), (i%3), Double.parseDouble(jTextFieldMatrix[i].getText()==""?"0.0":jTextFieldMatrix[i].getText()));
+        textAreaPoint3D.setText(""+centreRot.toString());
+        textAreaMatrix33.setText(rot.toString());
         for(int i = 0; i<3; i++)
             scale.set(i, Double.parseDouble(jTextFieldsScale[i].getText()));
+
+        r.rotation = new Rotation(rot, centreRot);
+        r.setScale(scale);
     }
 
     private void textFieldXYZActionPerformed(ActionEvent e) {
-        if(initValues) {
-            try {
-                this.point3D = RepresentableClassList.pointParse(textFieldX.getText(), textFieldY.getText(), textFieldZ.getText());
-                textAreaPoint3D.setText(point3D.toString());
-            } catch (AlgebraicFormulaSyntaxException e1) {
-                e1.printStackTrace();
-            } catch (TreeNodeEvalException e1) {
-                e1.printStackTrace();
-            }
-        }
     }
 
     private void buttonOK1ActionPerformed(ActionEvent e) {
-        if(initValues) {
-            try {
-                this.point3D = RepresentableClassList.pointParse(textAreaPoint3D.getText());
-                // TODO COULEUR NOIRE textAreaPoint3D.getFont()
-                textAreaPoint3D.setText(point3D.toString());
-            } catch (InterpreteException e1) {
-                //TODO COULEUR ROUGE
-                e1.printStackTrace();
-            }
-        }
     }
 
     private void textFieldZActionPerformed(ActionEvent e) {
     }
 
     private void okButtonActionPerformed(ActionEvent e) {
-        saveValues(r,
+        saveValues(r);
+        initValues(r);
+        Logger.getAnonymousLogger().info("save then load "+r.getClass().getName());
 
-                new JTextField[]{
-                        textFieldX, textFieldY, textFieldZ
-                },
-                new JTextField[]{
-                        textField00, textField01, textField02,
-                        textField10,textField11,textField12,
-                        textField20,textField21,textField22},
-                textAreaPoint3D,
-                textAreaMatrix33,
-                new JTextField[]{
-                        textFieldScaleX, textFieldScaleY, textFieldScaleZ
-                }
-        );
+    }
 
+    private void changeText(JTextField f, String text) {
 
+        Runnable doHighlight = new Runnable() {
+            @Override
+            public void run() {
+                f.setText(text);
+            }
+        };
+        SwingUtilities.invokeLater(doHighlight);
+    }
+
+    public Matrix33 loadMatrix(Matrix33 m, JTextField[] strings, JTextArea text) throws AlgebraicFormulaSyntaxException, TreeNodeEvalException {
+        for(int i=0; i<strings.length; i++) {
+            //AlgebricTree treeI = new AlgebricTree(strings[i].getText());
+            //treeI.construct();
+            m.set(i/3, i%3, ((double) Double.parseDouble(strings[i].getText())));
+
+            changeText(strings[i], ""+m.get(i/3, i%3));
+            text.setText(m.toString());
+        }
+        return m;
     }
 
     private void textAreaMatrix33CaretUpdate(CaretEvent e) {
-        if(initValues) {
-            try {
-                this.matrix33 = RepresentableClassList.loadMatrix(matrix33,
-                        new JTextField[]{textField00, textField01, textField02,
-                                textField10, textField11, textField12,
-                                textField20, textField21, textField22},
-                        textAreaMatrix33
-                );
-            } catch (AlgebraicFormulaSyntaxException e1) {
-                e1.printStackTrace();
-            } catch (TreeNodeEvalException e1) {
-                e1.printStackTrace();
-            }
-        }
+        //saveValues();
     }
+
+    private void saveValues(Representable r) {
+        if(initValues) {
+                saveValues(r,
+
+                        new JTextField[]{
+                                textFieldX, textFieldY, textFieldZ
+                        },
+                        new JTextField[]{
+                                textField00, textField01, textField02,
+                                textField10,textField11,textField12,
+                                textField20,textField21,textField22},
+                        textAreaPoint3D,
+                        textAreaMatrix33,
+                        new JTextField[]{
+                                textFieldScaleX, textFieldScaleY, textFieldScaleZ
+                        }
+                );
+        }
+
+    }
+
 
     private void textArea1Matrix33CaretUpdate(CaretEvent e) {
     }
 
     private void textFieldsMatrixActionPerformed(ActionEvent e) {
-        if(initValues) {
-            try {
-                this.matrix33 = RepresentableClassList.matrixParse(textAreaMatrix33.getText());
-                textAreaPoint3D.setText(matrix33.toString());
-            } catch (InterpreteException e1) {
-                e1.printStackTrace();
-            }
-        }
+
     }
 
     private void textAreaPoint3DPropertyChange(PropertyChangeEvent e) {
     }
 
-
     private void button1ActionPerformed(ActionEvent e) {
-        RPropertyList rPropertyList = new RPropertyList( r);
-        rPropertyList.setVisible(true);
+        // TODO add your code here
     }
+
+
 
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
@@ -333,47 +327,38 @@ public class ObjectEditorBase extends JPanel  {
                 contentPanel.add(scrollPane3, "cell 0 5 3 3");
 
                 //---- textField00 ----
-                textField00.addCaretListener(e -> textAreaMatrix33CaretUpdate(e));
                 textField00.addActionListener(e -> textFieldsMatrixActionPerformed(e));
                 contentPanel.add(textField00, "cell 0 8");
 
                 //---- textField01 ----
-                textField01.addCaretListener(e -> textAreaMatrix33CaretUpdate(e));
                 textField01.addActionListener(e -> textFieldsMatrixActionPerformed(e));
                 contentPanel.add(textField01, "cell 1 8");
 
                 //---- textField02 ----
-                textField02.addCaretListener(e -> textAreaMatrix33CaretUpdate(e));
                 textField02.addActionListener(e -> textFieldsMatrixActionPerformed(e));
                 contentPanel.add(textField02, "cell 2 8");
 
                 //---- textField10 ----
-                textField10.addCaretListener(e -> textAreaMatrix33CaretUpdate(e));
                 textField10.addActionListener(e -> textFieldsMatrixActionPerformed(e));
                 contentPanel.add(textField10, "cell 0 9");
 
                 //---- textField11 ----
-                textField11.addCaretListener(e -> textAreaMatrix33CaretUpdate(e));
                 textField11.addActionListener(e -> textFieldsMatrixActionPerformed(e));
                 contentPanel.add(textField11, "cell 1 9");
 
                 //---- textField12 ----
-                textField12.addCaretListener(e -> textAreaMatrix33CaretUpdate(e));
                 textField12.addActionListener(e -> textFieldsMatrixActionPerformed(e));
                 contentPanel.add(textField12, "cell 2 9");
 
                 //---- textField20 ----
-                textField20.addCaretListener(e -> textAreaMatrix33CaretUpdate(e));
                 textField20.addActionListener(e -> textFieldsMatrixActionPerformed(e));
                 contentPanel.add(textField20, "cell 0 10");
 
                 //---- textField21 ----
-                textField21.addCaretListener(e -> textAreaMatrix33CaretUpdate(e));
                 textField21.addActionListener(e -> textFieldsMatrixActionPerformed(e));
                 contentPanel.add(textField21, "cell 1 10");
 
                 //---- textField22 ----
-                textField22.addCaretListener(e -> textAreaMatrix33CaretUpdate(e));
                 textField22.addActionListener(e -> textFieldsMatrixActionPerformed(e));
                 contentPanel.add(textField22, "cell 2 10");
 
@@ -408,10 +393,7 @@ public class ObjectEditorBase extends JPanel  {
 
                 //---- okButton ----
                 okButton.setText(bundle.getString("ObjectEditorBase.okButton.text"));
-                okButton.addActionListener(e -> {
-			okButtonActionPerformed(e);
-			okButtonActionPerformed(e);
-		});
+                okButton.addActionListener(e -> okButtonActionPerformed(e));
                 buttonBar.add(okButton, "cell 0 0");
 
                 //---- cancelButton ----

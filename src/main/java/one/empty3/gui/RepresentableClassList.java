@@ -2,15 +2,11 @@ package one.empty3.gui;
 
 import one.empty3.library.*;
 import one.empty3.library.Polygon;
-import one.empty3.library.core.nurbs.CourbeParametriquePolynomialeBezier;
-import one.empty3.library.core.nurbs.FctXY;
-import one.empty3.library.core.nurbs.FunctionSurface;
-import one.empty3.library.core.nurbs.SurfaceParametriquePolynomialeBezier;
+import one.empty3.library.core.nurbs.*;
 import one.empty3.library.core.raytracer.tree.AlgebraicFormulaSyntaxException;
 import one.empty3.library.core.raytracer.tree.AlgebricTree;
 import one.empty3.library.core.raytracer.tree.TreeNodeEvalException;
 import one.empty3.library.core.script.InterpreteException;
-import one.empty3.library.core.script.InterpreteMatrix33;
 import one.empty3.library.core.script.InterpretePoint3D;
 import one.empty3.library.core.tribase.TRIEllipsoide;
 import one.empty3.library.core.tribase.TubulaireN2cc;
@@ -54,6 +50,8 @@ public class RepresentableClassList {
         add("function (P = f(u,v))", FunctionSurface.class);
         add("ellipsoide", TRIEllipsoide.class);
         add("fct y = f(x)", FctXY.class);
+        add("heightSurfaceXYZ", HeightMapSurfaceXYZ.class);
+        add("courbe B-Spline", BSpline.class);
         //add("paramCurve", ParametricCurve.class);
         //add("paramSurface", ParametricSurface.class);
 
@@ -82,17 +80,9 @@ public class RepresentableClassList {
             AlgebricTree treeZ = new AlgebricTree(z, hashMap);
             treeZ.construct();
 
-            return new Point3D((Double)treeX.eval(), (Double)treeY.eval(), (Double)treeZ.eval());
-    }
-    public static Matrix33 loadMatrix(Matrix33 m, JTextField[] strings, JTextArea text) throws AlgebraicFormulaSyntaxException, TreeNodeEvalException {
-        for(int i=0; i<strings.length; i++) {
-            AlgebricTree treeI = new AlgebricTree(strings[i].getText());
-            treeI.construct();
-            m.set(i/3, i%3, (double)treeI.eval());
-            strings[i].setText(""+m.get(i/3, i%3));
-            text.setText(m.toString());
-        }
-        return m;
+        Point3D point3D = new Point3D((Double) treeX.eval(), (Double) treeY.eval(), (Double) treeZ.eval());
+
+        return point3D;
     }
 
 
@@ -100,12 +90,12 @@ public class RepresentableClassList {
         InterpretePoint3D interpretePoint3D = new InterpretePoint3D();
         return (Point3D) interpretePoint3D.interprete(toStringRepresentation, 0);
     }
-
+/*
     public static Matrix33 matrixParse(String text) throws InterpreteException {
         InterpreteMatrix33 interpreteMatrix33 = new InterpreteMatrix33();
         return (Matrix33) interpreteMatrix33.interprete(text, 0);
     }
-
+*/
     public static Matrix33 matrixParse(JTextField[] strings) throws AlgebraicFormulaSyntaxException, TreeNodeEvalException {
         Matrix33 matrix = new Matrix33();
         for(int i=0; i<strings.length; i++) {
@@ -117,18 +107,18 @@ public class RepresentableClassList {
         return matrix;
     }
 
-    public static void setObjectFields(Point3D point3D, JTextArea textAreaPoint3D, JTextField[] jTextFields, Matrix33 matrix33, JTextArea textAreaMatrix33, JTextField[] jTextFields1, Point3D scale, JTextField textFieldScaleX, JTextField textFieldScaleY, JTextField textFieldScaleZ) {
+    public static void setObjectFields(Representable r,Point3D point3D, JTextArea textAreaPoint3D, JTextField[] jTextFields, Matrix33 matrix33, JTextArea textAreaMatrix33, JTextField[] jTextFields1, Point3D scale, JTextField textFieldScaleX, JTextField textFieldScaleY, JTextField textFieldScaleZ) {
 
         textAreaMatrix33.setText(matrix33.toString());
         textAreaPoint3D.setText(point3D.toString());
 
         for(int i=0; i<jTextFields.length; i++)
-            jTextFields[i].setText(""+point3D.get(i));
+            jTextFields[i].setText(""+String.valueOf(point3D.get(i)));
         for(int i=0; i<jTextFields1.length; i++)
             jTextFields1[i].setText(""+matrix33.get(i/3, i%3));
-        textFieldScaleX.setText(""+scale.get(0));
-        textFieldScaleY.setText(""+scale.get(1));
-        textFieldScaleZ.setText(""+scale.get(2));
+        textFieldScaleX.setText(""+r.getScale().get(0));
+        textFieldScaleY.setText(""+r.getScale().get(1));
+        textFieldScaleZ.setText(""+r.getScale().get(2));
 
 
     }

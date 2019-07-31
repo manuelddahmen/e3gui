@@ -14,13 +14,11 @@ import java.util.ResourceBundle;
  * Created by manue on 04-07-19.
  */
 public class Camera3dControl extends JDialog {
-    FormFunction scriptPanel;
 
     Camera camera;
-    public Camera3dControl(FormFunction scriptPanel, Camera c) {
+    public Camera3dControl(Camera c) {
         super();
         initComponents();
-        this.scriptPanel = scriptPanel;
         this.camera  = c;
         if(camera==null)
             camera = new Camera();
@@ -74,8 +72,7 @@ public class Camera3dControl extends JDialog {
             {
                 camera.calculerMatrice(new Point3D(getD(textFieldMY0), getD(textFieldMY1), getD(textFieldMY2)));
             }
-            scriptPanel.getPanelView3D().getView().setCamera(camera);
-        } catch (Exception ex)
+       } catch (Exception ex)
         {
             ex.printStackTrace();
         }
