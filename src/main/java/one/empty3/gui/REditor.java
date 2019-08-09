@@ -58,6 +58,7 @@ public class REditor extends JPanel implements PropertyChangeListener, Represent
                 this.r  = tableModel.getRepresentable();
             }
         }
+        tableObjectDetails.repaint();
     }
 
     private void buttonRefreshActionPerformed(ActionEvent e) {

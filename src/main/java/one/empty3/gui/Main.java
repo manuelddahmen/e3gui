@@ -226,6 +226,7 @@ public class Main implements PropertyChangeListener {
                 "[]" +
                 "[]" +
                 "[]" +
+                "[]" +
                 "[]"));
 
             //======== menu1 ========
@@ -250,11 +251,11 @@ public class Main implements PropertyChangeListener {
                 this.menuItemSave.addActionListener(e -> menuItemSaveActionPerformed(e));
                 this.menu1.add(this.menuItemSave);
             }
-            MainWindowContentPane.add(this.menu1, "pad 5,cell 0 0 2 4,aligny top,growy 0,wmin 100,hmin 20");
+            MainWindowContentPane.add(this.menu1, "pad 5,cell 0 0 2 3,aligny top,growy 0,wmin 100,hmin 20");
 
             //---- editor ----
             this.editor.addPropertyChangeListener(e -> editorPropertyChange(e));
-            MainWindowContentPane.add(this.editor, "cell 0 1 1 3,dock center");
+            MainWindowContentPane.add(this.editor, "cell 0 2 2 3,dock center");
 
             //---- updateViewMain ----
             this.updateViewMain.setBackground(new Color(204, 255, 204));
@@ -265,7 +266,7 @@ public class Main implements PropertyChangeListener {
                     updateViewMouseClicked(e);
                 }
             });
-            MainWindowContentPane.add(this.updateViewMain, "cell 0 1 1 3,dock center");
+            MainWindowContentPane.add(this.updateViewMain, "cell 0 2 2 3,dock center");
 
             //======== tabbedPane1 ========
             {
@@ -354,7 +355,7 @@ public class Main implements PropertyChangeListener {
                 }
                 this.tabbedPane1.addTab("Draw Over 2D", this.panel3);
             }
-            MainWindowContentPane.add(this.tabbedPane1, "cell 0 4 2 4,dock center");
+            MainWindowContentPane.add(this.tabbedPane1, "cell 0 5 2 4,dock center");
             this.MainWindow.setSize(1620, 1085);
             this.MainWindow.setLocationRelativeTo(this.MainWindow.getOwner());
         }

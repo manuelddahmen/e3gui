@@ -88,6 +88,7 @@ public class TextureEditor extends JPanel {
                 }
             }
         }
+        table1.repaint();
     }
 
     private void button3ActionPerformed(ActionEvent e) {
@@ -149,22 +150,8 @@ public class TextureEditor extends JPanel {
                     // columns
                     "[fill]" +
                     "[fill]" +
-                    "[fill]" +
-                    "[fill]" +
-                    "[fill]" +
-                    "[fill]" +
-                    "[fill]" +
-                    "[fill]" +
-                    "[fill]" +
                     "[fill]",
                     // rows
-                    "[]" +
-                    "[]" +
-                    "[]" +
-                    "[]" +
-                    "[]" +
-                    "[]" +
-                    "[]" +
                     "[]" +
                     "[]" +
                     "[]" +
@@ -202,6 +189,7 @@ public class TextureEditor extends JPanel {
 
                 //======== scrollPane1 ========
                 {
+                    scrollPane1.setDoubleBuffered(true);
 
                     //---- table1 ----
                     table1.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
@@ -217,7 +205,7 @@ public class TextureEditor extends JPanel {
                     table1.setAutoCreateRowSorter(true);
                     scrollPane1.setViewportView(table1);
                 }
-                contentPanel.add(scrollPane1, "cell 0 3 3 8");
+                contentPanel.add(scrollPane1, "cell 0 3 3 8,dock center");
             }
             dialogPane.add(contentPanel, BorderLayout.CENTER);
         }

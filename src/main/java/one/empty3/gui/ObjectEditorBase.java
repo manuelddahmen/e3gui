@@ -100,7 +100,7 @@ public class ObjectEditorBase extends JPanel implements RepresentableEditor {
         for(int i = 0; i<3; i++)
             scale.set(i, Double.parseDouble(jTextFieldsScale[i].getText()));
 
-        r.rotation = new Rotation(rot, centreRot);
+        r.setRotation(new Rotation(rot, centreRot));
         r.setScale(scale);
     }
 
@@ -183,6 +183,11 @@ public class ObjectEditorBase extends JPanel implements RepresentableEditor {
         // TODO add your code here
     }
 
+    private void buttonOkActionPerformed(ActionEvent e) {
+        saveValues(r);
+        initValues(r);
+    }
+
 
 
     private void initComponents() {
@@ -218,10 +223,6 @@ public class ObjectEditorBase extends JPanel implements RepresentableEditor {
         textFieldScaleY = new JTextField();
         textFieldScaleZ = new JTextField();
         button1 = new JButton();
-        buttonBar = new JPanel();
-        okButton = new JButton();
-        cancelButton = new JButton();
-        helpButton = new JButton();
 
         //======== this ========
         setLayout(new BorderLayout());
@@ -374,37 +375,14 @@ public class ObjectEditorBase extends JPanel implements RepresentableEditor {
                 contentPanel.add(textFieldScaleZ, "cell 2 12");
 
                 //---- button1 ----
-                button1.setText("Plus");
-                button1.addActionListener(e -> button1ActionPerformed(e));
+                button1.setText("Ok");
+                button1.addActionListener(e -> {
+			button1ActionPerformed(e);
+			buttonOkActionPerformed(e);
+		});
                 contentPanel.add(button1, "cell 0 13");
             }
             dialogPane.add(contentPanel, BorderLayout.CENTER);
-
-            //======== buttonBar ========
-            {
-                buttonBar.setLayout(new MigLayout(
-                    "insets dialog,alignx right",
-                    // columns
-                    "[button,fill]" +
-                    "[button,fill]" +
-                    "[button,fill]",
-                    // rows
-                    null));
-
-                //---- okButton ----
-                okButton.setText(bundle.getString("ObjectEditorBase.okButton.text"));
-                okButton.addActionListener(e -> okButtonActionPerformed(e));
-                buttonBar.add(okButton, "cell 0 0");
-
-                //---- cancelButton ----
-                cancelButton.setText(bundle.getString("ObjectEditorBase.cancelButton.text"));
-                buttonBar.add(cancelButton, "cell 1 0");
-
-                //---- helpButton ----
-                helpButton.setText(bundle.getString("ObjectEditorBase.helpButton.text"));
-                buttonBar.add(helpButton, "cell 2 0");
-            }
-            dialogPane.add(buttonBar, BorderLayout.SOUTH);
         }
         add(dialogPane, BorderLayout.CENTER);
         // JFormDesigner - End of component initialization  //GEN-END:initComponents
@@ -441,9 +419,5 @@ public class ObjectEditorBase extends JPanel implements RepresentableEditor {
     private JTextField textFieldScaleY;
     private JTextField textFieldScaleZ;
     private JButton button1;
-    private JPanel buttonBar;
-    private JButton okButton;
-    private JButton cancelButton;
-    private JButton helpButton;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
 }

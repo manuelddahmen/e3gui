@@ -13,8 +13,8 @@ new FormModel {
 				name: "dialogPane"
 				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class net.miginfocom.swing.MigLayout ) {
 					"$layoutConstraints": "insets dialog,hidemode 3"
-					"$columnConstraints": "[fill][fill][fill][fill][fill][fill][fill][fill][fill][fill]"
-					"$rowConstraints": "[][][][][][][][][][][]"
+					"$columnConstraints": "[fill][fill][fill]"
+					"$rowConstraints": "[][][][]"
 				} ) {
 					name: "contentPanel"
 					add( new FormComponent( "javax.swing.JLabel" ) {
@@ -65,6 +65,7 @@ new FormModel {
 					} )
 					add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
 						name: "scrollPane1"
+						"doubleBuffered": true
 						add( new FormComponent( "javax.swing.JTable" ) {
 							name: "table1"
 							"autoResizeMode": 0
@@ -86,7 +87,7 @@ new FormModel {
 							"autoCreateRowSorter": true
 						} )
 					}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
-						"value": "cell 0 3 3 8"
+						"value": "cell 0 3 3 8,dock center"
 					} )
 				}, new FormLayoutConstraints( class java.lang.String ) {
 					"value": "Center"
