@@ -85,6 +85,12 @@ public class TextureEditor extends JPanel {
                         tableModelTexture.getLines().add(new TableModelTexture.ModelLine(sel, textureMov, textureMov.getClass()));
     
                     }
+                    main.getDataModel().addTextureFile(sel);
+                    try {
+                        main.getDataModel().save();
+                    } catch (IOException e1) {
+                        e1.printStackTrace();
+                    }
                 }
             }
         }
@@ -118,7 +124,7 @@ public class TextureEditor extends JPanel {
     }
 
     private void button2ActionPerformed(ActionEvent e) {
-        getMain().getEditor().getReprentable().setTexture(tableModelTexture.getLines().get(table1.getSelectedRow()).getiTexture());
+        getMain().getEditor().getRepresentable().setTexture(tableModelTexture.getLines().get(table1.getSelectedRow()).getiTexture());
     }
 
     private void initComponents() {

@@ -49,7 +49,7 @@ new FormModel {
 			add( new FormComponent( "one.empty3.gui.REditor" ) {
 				name: "editor"
 				auxiliary() {
-					"JavaCodeGenerator.customCreateCode": "new REditor(dataModel.getScene());"
+					"JavaCodeGenerator.customCreateCode": "new REditor(dataModel, dataModel.getScene());"
 				}
 				addEvent( new FormEvent( "java.beans.PropertyChangeListener", "propertyChange", "editorPropertyChange", true ) )
 			}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {

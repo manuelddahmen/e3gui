@@ -9,8 +9,11 @@ import one.empty3.library.ITexture;
 import one.empty3.library.Representable;
 import one.empty3.library.RepresentableConteneur;
 import one.empty3.library.Scene;
+import one.empty3.library.core.Arrays;
 
 import javax.swing.*;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -18,7 +21,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 
 /**
@@ -29,15 +32,18 @@ public class REditor extends JPanel implements PropertyChangeListener, Represent
     History history = new History();
 
     private RPropertyDetailsRow tableModel;
-    
-    
-    public REditor(Representable re) {
+    private DataModel dataModel ;
+
+
+    public REditor(DataModel dataModel, Representable re) {
         super();
+        this.dataModel = dataModel;
         initComponents();
         init(re);
         history.getHistory().add(0, tableModel);
         init(history.get(0));
         this.r = re;
+
     }
 
     public void init(Object re) {
@@ -46,7 +52,7 @@ public class REditor extends JPanel implements PropertyChangeListener, Represent
                 labelBreadCumbs.setText(re.getClass().getCanonicalName());
                 this.tableModel = new RPropertyDetailsRow((Representable) re);
                 tableObjectDetails.setModel(tableModel);
-                propertyChangeSupport.firePropertyChange("representable", r, tableModel.getRepresentable());
+                firePropertyChange("representable", r, tableModel.getRepresentable());
                 this.r  = tableModel.getRepresentable();
 
             } else if (re instanceof RPropertyDetailsRow) {
@@ -54,10 +60,20 @@ public class REditor extends JPanel implements PropertyChangeListener, Represent
                 RPropertyDetailsRow model = new RPropertyDetailsRow((RPropertyDetailsRow) re);
                 this.tableModel = model;
                 tableObjectDetails.setModel(model);
-                propertyChangeSupport.firePropertyChange("representable", r, tableModel.getRepresentable());
+                firePropertyChange("representable", r, tableModel.getRepresentable());
                 this.r  = tableModel.getRepresentable();
             }
         }
+        tableObjectDetails.getModel().addTableModelListener(new TableModelListener() {
+            @Override
+            public void tableChanged(TableModelEvent e) {
+                try {
+                    getDataModel().save();
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
+            }
+        });
         tableObjectDetails.repaint();
     }
 
@@ -69,18 +85,17 @@ public class REditor extends JPanel implements PropertyChangeListener, Represent
         // TODO add your code here
     }
 
-    private void tableObjectDetailsMouseClicked(MouseEvent e) {
-        System.out.println(e.getButton());
+    private void tableObjectDetailsMouseClicked(MouseEvent e)  {
+        int selectedRow = tableObjectDetails.getSelectedRow();
+        ObjectDetailDescription objectDetailDescription = tableModel.getObjectDetailDescriptions().get(selectedRow);
         if(e.getButton()==1) {
-            int selectedRow = tableObjectDetails.getSelectedRow();
             if (tableModel.getItemList(selectedRow) != null) {
                 if (tableModel.getItemList(selectedRow) instanceof Representable) {
                     boolean isNew = tableModel.getValueAt(selectedRow, 1) != null && tableModel.getValueAt(selectedRow, 1).toString().equals("NEW");
                     Representable newR = (Representable) tableModel.getItemList(selectedRow);
                     Representable oldR = (Representable) r;
                     init(tableModel.getItemList(selectedRow));
-                    if (isNew)
-                    {
+                    if (isNew) {
                         if (oldR instanceof Scene) {
                             ((Scene) oldR).add(newR);
                             System.out.print("Added to scene" + newR.toString());
@@ -88,19 +103,60 @@ public class REditor extends JPanel implements PropertyChangeListener, Represent
                         if (oldR instanceof RepresentableConteneur) {
                             ((RepresentableConteneur) oldR).add(newR);
                             System.out.print("Added to scene" + newR.toString());
-                        }
-                    }
-                    history.addToHistory(tableModel);
-                    System.out.println("add to history " + history.getCurrent());
-                } /*else if (tableModel.getItemList(selectedRow) instanceof ITexture) {
-                    ITexture tex = ((ITexture) tableModel.getItemList(selectedRow));
-                    LoadTexture loadTexture = new LoadTexture(this, tex);
-                    loadTexture.addPropertyChangeListener(this);
-                } */else if (tableObjectDetails.isCellEditable(selectedRow, 5))
-                    tableObjectDetails.editCellAt(selectedRow, 5);
-            } else {
-                MyObservableList<ObjectDescription> objectDescriptions = RepresentableClassList.myList();
+                        } else {
+                            if (objectDetailDescription.getDim() == 1) {
+                                Object[] insert = new Arrays().insert((Object[]) objectDetailDescription.getValue(), Integer.parseInt(objectDetailDescription.getIndexes()));
+                                try {
+                                    newR.setProperty(objectDetailDescription.getName(), insert);
+                                } catch (InvocationTargetException e1) {
+                                    e1.printStackTrace();
+                                } catch (IllegalAccessException e1) {
+                                    e1.printStackTrace();
+                                } catch (NoSuchMethodException e1) {
+                                    e1.printStackTrace();
+                                }
+                            } else if (objectDetailDescription.getDim() == 2 && objectDetailDescription.getClazz().equals(Double[][].class)) {
+                                String[] split = objectDetailDescription.getIndexes().split(",");
+                                int pos1 = Integer.parseInt(split[0]);
+                                int pos2 = Integer.parseInt(split[1]);
+                                Double[][] insert = new Arrays().insert(Double.class, (Double[][]) objectDetailDescription.getValue(),
+                                        pos1, pos2, 0);// TODO
+                                try {
+                                    newR.setProperty(objectDetailDescription.getName(), insert);
+                                } catch (InvocationTargetException e1) {
+                                    e1.printStackTrace();
+                                } catch (IllegalAccessException e1) {
+                                    e1.printStackTrace();
+                                } catch (NoSuchMethodException e1) {
+                                    e1.printStackTrace();
+                                }
 
+                            } else if (objectDetailDescription.getDim() == 2 && objectDetailDescription.getClazz().isAssignableFrom(Representable[][].class)) {
+                                String[] split = objectDetailDescription.getIndexes().split(",");
+                                int pos1 = Integer.parseInt(split[0]);
+                                int pos2 = Integer.parseInt(split[1]);
+                                Representable[][] insert = new Arrays().insert(Representable.class, (Representable[][]) objectDetailDescription.getValue(),
+                                        pos1, pos2, 0);// TODO
+                                try {
+                                    newR.setProperty(objectDetailDescription.getName(), insert);
+                                } catch (InvocationTargetException e1) {
+                                    e1.printStackTrace();
+                                } catch (IllegalAccessException e1) {
+                                    e1.printStackTrace();
+                                } catch (NoSuchMethodException e1) {
+                                    e1.printStackTrace();
+                                }
+
+                            }
+                        }
+                        history.addToHistory(tableModel);
+                        System.out.println("add to history " + history.getCurrent());
+                    } else if (tableObjectDetails.isCellEditable(selectedRow, 5))
+                        tableObjectDetails.editCellAt(selectedRow, 5);
+                } else {
+                    MyObservableList<ObjectDescription> objectDescriptions = RepresentableClassList.myList();
+
+                }
             }
         }
         else if(e.getButton()==3) {
@@ -108,6 +164,7 @@ public class REditor extends JPanel implements PropertyChangeListener, Represent
 
         }
     }
+
 
     private void objectType(Class<?> aClass) {
 
@@ -188,6 +245,10 @@ public class REditor extends JPanel implements PropertyChangeListener, Represent
 
     }
 
+    private void createUIComponents() {
+        // TODO: add custom component creation code here
+    }
+
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
         dialogPane = new JPanel();
@@ -204,7 +265,24 @@ public class REditor extends JPanel implements PropertyChangeListener, Represent
         buttonNext = new JButton();
         labelBreadCumbs = new JLabel();
         scrollPane2 = new JScrollPane();
-        tableObjectDetails = new JTable();
+        tableObjectDetails = new JTable() {
+            public String getToolTipText(MouseEvent e) {
+                String tip = null;
+                java.awt.Point p = e.getPoint();
+                int rowIndex = rowAtPoint(p);
+                int colIndex = columnAtPoint(p);
+
+                try {
+                    tip = getValueAt(rowIndex, 5).toString();
+                    ObjectDetailDescription objectDetailDescription = ((RPropertyDetailsRow) this.getModel()).objectDetailDescriptions.get(rowIndex);
+                    tip += objectDetailDescription.toString();
+                } catch (RuntimeException e1) {
+
+                }
+
+                return tip;
+            }
+        };
         popupMenu1 = new JPopupMenu();
         menuItemDelete = new JMenuItem();
         menuItem1 = new JMenuItem();
@@ -380,30 +458,27 @@ public class REditor extends JPanel implements PropertyChangeListener, Represent
     private JPopupMenu popupMenu1;
     private JMenuItem menuItemDelete;
     private JMenuItem menuItem1;
-    
-    public Representable getReprentable() {
-        return r;
-    }
-    
-    public void setReprentable(Representable reprentable) {
-        this.r  = reprentable;
-    }
+    // JFormDesigner - End of variables declaration  //GEN-END:variables
 
     @Override
     public void initValues(Representable representable) {
         init(representable);
     }
 
-    PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
-
-    @Override
-    public void addPropertyChangeListener(PropertyChangeListener listener) {
-        propertyChangeSupport.addPropertyChangeListener(listener);
+    public DataModel getDataModel() {
+        return dataModel;
     }
 
-    @Override
-    public void removePropertyChangeListener(PropertyChangeListener listener) {
-        propertyChangeSupport.removePropertyChangeListener(listener);
+    public void setDataModel(DataModel dataModel) {
+        this.dataModel = dataModel;
     }
-    // JFormDesigner - End of variables declaration  //GEN-END:variables
-}
+
+    public Representable getRepresentable() {
+        return r;
+    }
+
+    public void setRepresentable(Representable r) {
+        this.r = r;
+    }
+
+    }

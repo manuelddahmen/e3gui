@@ -121,4 +121,16 @@ public class ObjectDetailDescription {
     public void setValue(Object value) {
         this.value = value;
     }
+
+    @Override
+    public String toString() {
+        return "ObjectDetailDescription{\n" +
+                "name='" + name + "\'\n" +
+                ", descrition='" + descrition + "\'\n" +
+                ", dim=" + dim +
+                ", indexes='" + indexes + "\'\n" +
+                ", clazz=" + clazz +
+                ", value=" + value +
+                '}';
+    }
 }

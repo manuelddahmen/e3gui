@@ -176,7 +176,7 @@ public class Main implements PropertyChangeListener {
         this.menuItemNew = new JMenuItem();
         this.menuItemLoad = new JMenuItem();
         this.menuItemSave = new JMenuItem();
-        this.editor = new REditor(dataModel.getScene());
+        this.editor = new REditor(dataModel, dataModel.getScene());
         this.updateViewMain = new UpdateViewMain();
         this.tabbedPane1 = new JTabbedPane();
         this.textureEditor1 = new TextureEditor();
