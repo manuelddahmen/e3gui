@@ -458,7 +458,7 @@ public class Main implements PropertyChangeListener {
                 }
                 this.panel6.add(this.panel5, "cell 0 2,dock center");
             }
-            MainWindowContentPane.add(this.panel6, "cell 0 0");
+            MainWindowContentPane.add(this.panel6, "cell 0 0,dock center");
             this.MainWindow.setSize(1620, 1085);
             this.MainWindow.setLocationRelativeTo(this.MainWindow.getOwner());
         }
