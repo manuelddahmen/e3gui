@@ -146,6 +146,12 @@
       <version>1.1.2</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>com.google.code.gson</groupId>
+      <artifactId>gson</artifactId>
+      <version>2.8.5</version>
+      <scope>compile</scope>
+    </dependency>
   </dependencies>
   <repositories>
     <repository>
@@ -276,30 +282,14 @@
             </goals>
             <configuration>
               <archive>
-                <manifest>
-                  <mainClass>info.emptycanvas.library.gui.NEWMain</mainClass>
-                  <packageName>info.emptycanvas.library.gui</packageName>
-                  <addClasspath>true</addClasspath>
-                </manifest>
-                <manifestEntries>
-                  <mode>development</mode>
-                  <url>${pom.url}</url>
-                </manifestEntries>
+                <manifestFile>META-INF/MANIFEST.MF</manifestFile>
               </archive>
             </configuration>
           </execution>
         </executions>
         <configuration>
           <archive>
-            <manifest>
-              <mainClass>info.emptycanvas.library.gui.NEWMain</mainClass>
-              <packageName>info.emptycanvas.library.gui</packageName>
-              <addClasspath>true</addClasspath>
-            </manifest>
-            <manifestEntries>
-              <mode>development</mode>
-              <url>${pom.url}</url>
-            </manifestEntries>
+            <manifestFile>META-INF/MANIFEST.MF</manifestFile>
           </archive>
         </configuration>
       </plugin>

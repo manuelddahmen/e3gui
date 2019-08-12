@@ -9,6 +9,8 @@ import one.empty3.library.*;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
@@ -32,7 +34,12 @@ public class TextureEditor extends JPanel {
     public TextureEditor() {
         initComponents();
         tableModelTexture = new TableModelTexture();
-        tableModelTexture.initTable();
+        tableModelTexture.addTableModelListener(new TableModelListener() {
+            @Override
+            public void tableChanged(TableModelEvent e) {
+                refreshTable();
+            }
+        });
         table1.setModel(tableModelTexture);
      }
 
@@ -85,16 +92,10 @@ public class TextureEditor extends JPanel {
                         tableModelTexture.getLines().add(new TableModelTexture.ModelLine(sel, textureMov, textureMov.getClass()));
     
                     }
-                    main.getDataModel().addTextureFile(sel);
-                    try {
-                        main.getDataModel().save();
-                    } catch (IOException e1) {
-                        e1.printStackTrace();
-                    }
                 }
             }
         }
-        table1.repaint();
+        tableModelTexture.initTable();
     }
 
     private void button3ActionPerformed(ActionEvent e) {
@@ -250,5 +251,4 @@ public class TextureEditor extends JPanel {
     public Main getMain() {
         return main;
     }
-
 }

@@ -10,7 +10,7 @@
     <name>Empty3_GUI</name>
 
     <groupId>one.empty3.apps</groupId>
-        <artifactId>empty3-library-3d-gui</artifactId>
+    <artifactId>empty3-library-3d-gui</artifactId>
     <version>1</version>
     <description>3D rendering engine. Plus modelling.</description>
     <packaging>jar</packaging>
@@ -63,19 +63,10 @@
                 <version>2.0</version>
                 <configuration>
                     <archive>
-                        <manifest>
-                            <mainClass>info.emptycanvas.library.gui.NEWMain</mainClass>
-                            <packageName>info.emptycanvas.library.gui</packageName>
-                            <addClasspath>true</addClasspath>
-                        </manifest>
-                        <manifestEntries>
-                            <mode>development</mode>
-                            <url>${pom.url}</url>
-                        </manifestEntries>
+                        <manifestFile>META-INF/MANIFEST.MF</manifestFile>
                     </archive>
                 </configuration>
             </plugin>
-
 
             <plugin>
                 <artifactId>maven-dependency-plugin</artifactId>
@@ -106,7 +97,7 @@
                     </execution>
                 </executions>
             </plugin>
-            
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -197,7 +188,7 @@
             <version>1.0</version>
             <type>jar</type>
         </dependency>
-       <dependency>
+        <dependency>
             <groupId>org.swinglabs</groupId>
             <artifactId>swing-layout</artifactId>
             <version>1.0.3</version>
@@ -217,23 +208,23 @@
             <artifactId>jep</artifactId>
             <version>2.24</version>
         </dependency>
-    <!-- https://mvnrepository.com/artifact/org.jogamp.jogl/jogl -->
-    <dependency>
-        <groupId>org.jogamp.jogl</groupId>
-        <artifactId>jogl</artifactId>
-        <version>2.3.2</version>
-    </dependency>
- <dependency>
-        <groupId>javax.media</groupId>
-        <artifactId>jmf</artifactId>
-        <version>2.1.1e</version>
-    </dependency>
-    <dependency>
-        <groupId>javax.media</groupId>
-        <artifactId>jai-core</artifactId>
-        <version>1.1.3</version>
-    </dependency>
-    <dependency>
+        <!-- https://mvnrepository.com/artifact/org.jogamp.jogl/jogl -->
+        <dependency>
+            <groupId>org.jogamp.jogl</groupId>
+            <artifactId>jogl</artifactId>
+            <version>2.3.2</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.media</groupId>
+            <artifactId>jmf</artifactId>
+            <version>2.1.1e</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.media</groupId>
+            <artifactId>jai-core</artifactId>
+            <version>1.1.3</version>
+        </dependency>
+        <dependency>
             <groupId>xuggle</groupId>
             <artifactId>xuggle-xuggler</artifactId>
             <version>5.4</version>

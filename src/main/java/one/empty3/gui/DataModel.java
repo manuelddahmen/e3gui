@@ -1,20 +1,21 @@
 package one.empty3.gui;
 
 import com.google.gson.Gson;
+import com.thoughtworks.xstream.XStream;
 import one.empty3.library.Camera;
 import one.empty3.library.ITexture;
 import one.empty3.library.Representable;
 import one.empty3.library.Scene;
-import one.empty3.library.core.script.ExtensionFichierIncorrecteException;
 import one.empty3.library.core.script.Loader;
-import one.empty3.library.core.script.VersionNonSupporteeException;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
@@ -23,13 +24,16 @@ import java.util.zip.ZipOutputStream;
  * Created by manue on 22-07-19.
  */
 public class DataModel implements PropertyChangeListener{
-    private File fileModel = new File("./scene-"+(int)(Math.random()*10000)+".moodz");
     private TreeScene treeScene;
     private REditor rEditor;
     private ArrayList<File> texturesFiles = new ArrayList();
+    private String fileModel;
+    private File newImageFile;
+    private String sceneDirectory;
 
     public DataModel()
     {
+        getDirectory(true);
         Scene scene = new Scene();
         setScene(scene);
         scene.cameraActive(new Camera());
@@ -47,20 +51,41 @@ public class DataModel implements PropertyChangeListener{
     }
 
     public void saveAs(File file) throws IOException {
-        this.fileModel = file;
+        this.fileModel = file.getAbsolutePath();
+        save(fileModel);
 
     }
-    public void save() throws IOException {
-        FileOutputStream fos = new FileOutputStream(fileModel);
+    public String getDirectory(boolean isNew)
+    {
+        if(isNew)
+        {
+        this.sceneDirectory = "./storage/scene-"+System.nanoTime();
+        new File(sceneDirectory).mkdirs();
+        }
+        return sceneDirectory;
+    }
+    public String getDefaultFilename() {
+        return getDirectory(false)+"/"+"scene-"+System.nanoTime()+"";
+    }
+
+
+    public void save(String fileModel) throws IOException {
+        Logger.getAnonymousLogger().info("Save Data Model");
+        if(fileModel==null)
+            fileModel = getFileModel();
+
+        FileOutputStream fos = new FileOutputStream(getFileModel());
         ZipOutputStream zipOut = new ZipOutputStream(fos);
-        File file1 = new File("./tmp/scene.mood");
-        new File("./tmp").mkdirs();
+
+        File file1 = new File(getDefaultFilename()+".mood");
         new Loader().saveTxt(file1, scene);
+
         FileInputStream fis = new FileInputStream(file1);
-        ZipEntry zipEntry = new ZipEntry(file1.getName());
+        ZipEntry zipEntry = new ZipEntry("scenes/"+file1.getName());
         zipEntry.setComment("Text scene description");
         addFile(zipOut, fis, zipEntry);
         fis.close();
+
 
 
         texturesFiles.forEach(new Consumer<File>() {
@@ -69,8 +94,8 @@ public class DataModel implements PropertyChangeListener{
                 FileInputStream fis = null;
                 try {
                     fis = new FileInputStream(file);
-                    ZipEntry zipEntry = new ZipEntry(file1.getName());
-                    zipEntry.setComment("Text scene description");
+                    ZipEntry zipEntry = new ZipEntry("textures/"+file.getName());
+                    zipEntry.setComment("Texture");
                     addFile(zipOut, fis, zipEntry);
                     fis.close();
                 } catch (FileNotFoundException e) {
@@ -82,13 +107,31 @@ public class DataModel implements PropertyChangeListener{
         });
 
 
-        File file2 = new File("./tmp/scene.txt");
+        File file2 = new File(getDefaultFilename()+".txt");
         PrintWriter printWriter = new PrintWriter(file2);
         printWriter.println(getScene().toString());
 
+        String fileSceneRaw = getDefaultFilename()+".raw";
+        /*XMLEncoder xmlEncoder = new XMLEncoder(new FileOutputStream(fileSceneRaw));
+        xmlEncoder.writeObject(getScene());
+        xmlEncoder.close();
+        */
+        BrowseScene browseScene = new BrowseScene(fileSceneRaw);
+
+        browseScene.encode(getScene());
+
+        XStream xStream = new XStream();
+        String xml = xStream.toXML(scene);
+        File file = new File(fileSceneRaw + "_xtream.xml");
+        PrintWriter pw = new PrintWriter(file);
+        pw.print(xml);
+        pw.close();
+
+
+
         zipOut.close();
         fos.close();
-
+/*
         Gson gson = new Gson();
         ArrayList<MoodModelCell> cellsFromRepresentable = createCellsFromRepresentable(scene);
 
@@ -97,18 +140,26 @@ public class DataModel implements PropertyChangeListener{
         } catch (java.lang.StackOverflowError ex)
         { ex.printStackTrace();}
         try {
-            System.out.println(gson.toJson(scene));
+            //System.out.println(gson.toJson(scene));
         } catch (java.lang.StackOverflowError ex)
         { ex.printStackTrace();}
+*/
     }
 
 
-    public static DataModel load(File file) throws IOException, VersionNonSupporteeException, ExtensionFichierIncorrecteException {
+    public static DataModel load(File file) {
         DataModel dataModel = new DataModel();
-        ZipFile zipFile = new ZipFile(file);
+        ZipFile zipFile = null;
+        try {
+            zipFile = new ZipFile(file);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+        /*
         InputStream inputStream = zipFile.getInputStream(getEntry(zipFile, "scene.mood"));
         File file1 = new File("./tmp/scene.mood");
-        file1.mkdirs();
+        //file1.mkdirs();
         int read=0;
         FileOutputStream fileOutputStream = new FileOutputStream(file1);
         while((read=inputStream.read())>=0)
@@ -116,6 +167,33 @@ public class DataModel implements PropertyChangeListener{
             fileOutputStream.write(read);
         }
         new Loader().load(file1, dataModel.getScene());
+        */
+        Enumeration<? extends ZipEntry> entries = zipFile.entries();
+        while(entries.hasMoreElements())
+        {
+            ZipEntry zipEntry = entries.nextElement();
+            if(zipEntry.getName().endsWith("xml")) {
+                XStream xStream = new XStream();
+                Object fromXML = null;
+                try {
+                    fromXML = xStream.fromXML(zipFile.getInputStream(zipEntry));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    return null;
+                }
+                if(fromXML instanceof Scene)
+                {
+                    DataModel dataModel1 = new DataModel();
+                    dataModel1.setScene((Scene)fromXML);
+                }
+                else
+                {
+                    Logger.getAnonymousLogger().info("Error loading");
+                }
+            }
+        }
+
+
         return dataModel;
 
     }
@@ -127,7 +205,6 @@ public class DataModel implements PropertyChangeListener{
         while((length = fis.read(bytes)) >= 0) {
             zipOut.write(bytes, 0, length);
         }
-        zipOut.close();
     }
     private static ZipEntry getEntry(ZipFile zipIn, String zipEntry) throws IOException {
         return zipIn.getEntry(zipEntry);
@@ -224,6 +301,22 @@ public class DataModel implements PropertyChangeListener{
     public Representable getRepresentableFromCells(ArrayList<MoodModelCell> cells)
     {
         return null;
+    }
+
+    public String getNewImageFile() {
+        return getDefaultFilename()+".jpg";
+    }
+
+    public String getFileModel() {
+        return getDefaultFilename()+".moodz";
+    }
+
+    public String getNewStlFile() {
+
+        return getDefaultFilename()+".stl";
+    }
+    public String getNewObjFile() {
+        return getDefaultFilename()+".obj";
     }
 
     class MoodModelCell {

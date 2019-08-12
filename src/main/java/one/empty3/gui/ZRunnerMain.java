@@ -214,7 +214,11 @@ public class ZRunnerMain extends Thread implements PropertyChangeListener {
         this.lastImage = lastImage;
     }
 
-    public ZBufferImpl getZBufferImpl() {
+    public ZBufferImpl getzBuffer() {
         return zBuffer;
+    }
+
+    public void setzBuffer(ZBufferImpl zBuffer) {
+        this.zBuffer = zBuffer;
     }
 }

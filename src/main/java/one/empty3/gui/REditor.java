@@ -68,7 +68,7 @@ public class REditor extends JPanel implements PropertyChangeListener, Represent
             @Override
             public void tableChanged(TableModelEvent e) {
                 try {
-                    getDataModel().save();
+                    getDataModel().save(null);
                 } catch (IOException e1) {
                     e1.printStackTrace();
                 }
@@ -104,7 +104,7 @@ public class REditor extends JPanel implements PropertyChangeListener, Represent
                             ((RepresentableConteneur) oldR).add(newR);
                             System.out.print("Added to scene" + newR.toString());
                         } else {
-                            if (objectDetailDescription.getDim() == 1) {
+                            if (objectDetailDescription.getDim() == 1 && objectDetailDescription.getDescrition().equals("ADD NEW")) {
                                 Object[] insert = new Arrays().insert((Object[]) objectDetailDescription.getValue(), Integer.parseInt(objectDetailDescription.getIndexes()));
                                 try {
                                     newR.setProperty(objectDetailDescription.getName(), insert);
@@ -115,7 +115,7 @@ public class REditor extends JPanel implements PropertyChangeListener, Represent
                                 } catch (NoSuchMethodException e1) {
                                     e1.printStackTrace();
                                 }
-                            } else if (objectDetailDescription.getDim() == 2 && objectDetailDescription.getClazz().equals(Double[][].class)) {
+                            } else if (objectDetailDescription.getDim() == 2 && objectDetailDescription.getClazz().equals(Double[][].class)&& objectDetailDescription.getDescrition().equals("ADD NEW")) {
                                 String[] split = objectDetailDescription.getIndexes().split(",");
                                 int pos1 = Integer.parseInt(split[0]);
                                 int pos2 = Integer.parseInt(split[1]);
@@ -131,7 +131,7 @@ public class REditor extends JPanel implements PropertyChangeListener, Represent
                                     e1.printStackTrace();
                                 }
 
-                            } else if (objectDetailDescription.getDim() == 2 && objectDetailDescription.getClazz().isAssignableFrom(Representable[][].class)) {
+                            } else if (objectDetailDescription.getDim() == 2 && objectDetailDescription.getClazz().isAssignableFrom(Representable[][].class)&& objectDetailDescription.getDescrition().equals("ADD NEW")) {
                                 String[] split = objectDetailDescription.getIndexes().split(",");
                                 int pos1 = Integer.parseInt(split[0]);
                                 int pos2 = Integer.parseInt(split[1]);
