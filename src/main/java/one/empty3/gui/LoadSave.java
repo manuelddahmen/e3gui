@@ -137,7 +137,7 @@ public class LoadSave extends JPanel {
             }
             scrollPane1.setViewportView(tableLatest);
         }
-        add(scrollPane1, "cell 1 0 1 4");
+        add(scrollPane1, "cell 1 0 1 7");
 
         //---- button2 ----
         button2.setText("load");

@@ -2,19 +2,20 @@ package one.empty3.gui;
 
 import com.google.gson.Gson;
 import com.thoughtworks.xstream.XStream;
-import one.empty3.library.Camera;
-import one.empty3.library.ITexture;
-import one.empty3.library.Representable;
-import one.empty3.library.Scene;
+import one.empty3.library.*;
 import one.empty3.library.core.script.Loader;
 
+import javax.imageio.ImageIO;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -26,7 +27,7 @@ import java.util.zip.ZipOutputStream;
 public class DataModel implements PropertyChangeListener{
     private TreeScene treeScene;
     private REditor rEditor;
-    private ArrayList<File> texturesFiles = new ArrayList();
+    private ArrayList<ITexture> textures = new ArrayList();
     private String fileModel;
     private File newImageFile;
     private String sceneDirectory;
@@ -79,32 +80,45 @@ public class DataModel implements PropertyChangeListener{
 
         File file1 = new File(getDefaultFilename()+".mood");
         new Loader().saveTxt(file1, scene);
-
-        FileInputStream fis = new FileInputStream(file1);
-        ZipEntry zipEntry = new ZipEntry("scenes/"+file1.getName());
-        zipEntry.setComment("Text scene description");
-        addFile(zipOut, fis, zipEntry);
-        fis.close();
-
+        final FileInputStream[] fis = {new FileInputStream(file1)};
+        final ZipEntry[] zipEntry = {new ZipEntry("scenes/" + file1.getName())};
+        zipEntry[0].setComment("Text scene description");
+        addFile(zipOut, fis[0], zipEntry[0]);
+        fis[0].close();
 
 
-        texturesFiles.forEach(new Consumer<File>() {
-            @Override
-            public void accept(File file) {
-                FileInputStream fis = null;
-                try {
-                    fis = new FileInputStream(file);
-                    ZipEntry zipEntry = new ZipEntry("textures/"+file.getName());
-                    zipEntry.setComment("Texture");
-                    addFile(zipOut, fis, zipEntry);
-                    fis.close();
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
+
+        textures.forEach(iTexture ->
+
+                {
+                    fis[0] = null;
+                    File file3 = null;
+                    try {
+                        file3 = new File(getDirectory(false) + "/textures/" + ((TextureImg) iTexture).getFilename() + "_" + iTexture.hashCode() + ".jpg");
+                        if (iTexture instanceof TextureImg)
+                            try {
+                                ImageIO.write(((TextureImg) iTexture).getImage(), "jpg", file3);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        if (iTexture instanceof TextureMov) {
+                            file3 = ((TextureMov) iTexture).getFile();
+                            copy(file3, new File(getDirectory(false) + "/textures/" + file3.getName()));
+                        }
+
+                        fis[0] = new FileInputStream(file3);
+                        zipEntry[0] = new ZipEntry("textures/" + file3.getName());
+                        zipEntry[0].setComment("Texture { class: " + iTexture.getClass() + ", string : " + iTexture.toString());
+
+                        addFile(zipOut, fis[0], zipEntry[0]);
+                        fis[0].close();
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                });
+
 
 
         File file2 = new File(getDefaultFilename()+".txt");
@@ -146,7 +160,13 @@ public class DataModel implements PropertyChangeListener{
 */
     }
 
+    public void copy(File a, File b)
+            throws IOException {
 
+        Path copied = Paths.get(b.getCanonicalPath());
+        Path originalPath = a.toPath();
+        Files.copy(originalPath, copied, StandardCopyOption.REPLACE_EXISTING);
+    }
     public static DataModel load(File file) {
         DataModel dataModel = new DataModel();
         ZipFile zipFile = null;
@@ -218,8 +238,8 @@ public class DataModel implements PropertyChangeListener{
         }
     }
 
-    public void addTextureFile(File sel) {
-        this.texturesFiles.add(sel);
+    public void addTexture(ITexture sel) {
+        this.textures.add(sel);
     }
 
 
@@ -318,6 +338,7 @@ public class DataModel implements PropertyChangeListener{
     public String getNewObjFile() {
         return getDefaultFilename()+".obj";
     }
+
 
     class MoodModelCell {
         private String idContainer;

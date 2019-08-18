@@ -12,6 +12,7 @@ public class UpdateViewMain extends JPanel implements RepresentableEditor {
     private Main ff;
     private Scene scene;
     private Representable currentRepresentable;
+    private int displayType;
 
     public UpdateViewMain() {
         setView(new FunctionView());
@@ -55,5 +56,13 @@ public class UpdateViewMain extends JPanel implements RepresentableEditor {
     @Override
     public void initValues(Representable representable) {
         this.currentRepresentable = representable;
+    }
+
+    public int getDisplayType() {
+        return displayType;
+    }
+
+    public void setDisplayType(int displayType) {
+        this.displayType = displayType;
     }
 }

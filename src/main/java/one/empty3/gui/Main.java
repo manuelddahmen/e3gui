@@ -472,7 +472,7 @@ public class Main implements PropertyChangeListener {
             this.updateViewMain, BeanProperty.create("height"),
             this.textFieldYres, BeanProperty.create("text_ON_ACTION_OR_FOCUS_LOST")));
         this.bindingGroup.addBinding(Bindings.createAutoBinding(UpdateStrategy.READ_WRITE,
-            this.updateViewMain, BeanProperty.create("zRunner.zBuffer.displayType"),
+            this.updateViewMain, BeanProperty.create("displayType"),
             this.comboBox1, BeanProperty.create("selectedItem")));
         this.bindingGroup.bind();
         // JFormDesigner - End of component initialization  //GEN-END:initComponents

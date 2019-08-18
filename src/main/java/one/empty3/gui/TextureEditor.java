@@ -49,7 +49,7 @@ public class TextureEditor extends JPanel {
             currentColor = JColorChooser.showDialog(this, "Choose a Color", currentColor);
             textureCol = new TextureCol(currentColor);
             tableModelTexture.getLines().add(new TableModelTexture.ModelLine(null, textureCol, textureCol.getClass()));
-    
+            getMain().getDataModel().addTexture(textureCol);
         } else {
             JFileChooser choose = new JFileChooser();
             choose.setFileFilter(new FileFilter() {
@@ -83,12 +83,14 @@ public class TextureEditor extends JPanel {
                     if (choiceTexType == 1) {
                         try {
                             TextureImg textureImg = new TextureImg(new ECBufferedImage(ImageIO.read(sel)));
+                            getMain().getDataModel().addTexture(textureImg);
                             tableModelTexture.getLines().add(new TableModelTexture.ModelLine(sel, textureImg, textureImg.getClass()));
                         } catch (IOException e1) {
                             e1.printStackTrace();
                         }
                     } else {
                         TextureMov textureMov = new TextureMov(sel.getAbsolutePath());
+                        getMain().getDataModel().addTexture(textureMov);
                         tableModelTexture.getLines().add(new TableModelTexture.ModelLine(sel, textureMov, textureMov.getClass()));
     
                     }

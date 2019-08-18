@@ -212,7 +212,7 @@ new FormModel {
 			"name": "bindingGroup"
 			addBinding( new FormBinding( "updateView", "width", "textFieldXres", "text_ON_ACTION_OR_FOCUS_LOST" ) )
 			addBinding( new FormBinding( "updateView", "height", "textFieldYres", "text_ON_ACTION_OR_FOCUS_LOST" ) )
-			addBinding( new FormBinding( "updateView", "zRunner.zBuffer.displayType", "comboBox1", "selectedItem" ) )
+			addBinding( new FormBinding( "updateView", "displayType", "comboBox1", "selectedItem" ) )
 		} )
 	}
 }
