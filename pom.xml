@@ -11,7 +11,7 @@
 
     <groupId>one.empty3.apps</groupId>
     <artifactId>empty3-library-3d-gui</artifactId>
-    <version>1</version>
+    <version>2019.2</version>
     <description>3D rendering engine. Plus modelling.</description>
     <packaging>jar</packaging>
 

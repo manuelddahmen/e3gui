@@ -13,6 +13,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 import java.awt.event.ActionEvent;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 /**
@@ -49,9 +50,14 @@ public class LoadSave extends JPanel {
             } catch (IOException e1) {
                 e1.printStackTrace();
             }
-            DataModel load = main.getDataModel().load(jFileChooser.getSelectedFile());
-            if(load!=null)
-            main.setDataModel(load);
+            DataModel load = null;
+            try {
+                load = DataModel.load(jFileChooser.getSelectedFile());
+                if(load!=null)
+                    main.setDataModel(load);
+            } catch (FileNotFoundException e1) {
+                e1.printStackTrace();
+            }
         }
     }
     private void buttonSaveActionPerformed(ActionEvent e) {

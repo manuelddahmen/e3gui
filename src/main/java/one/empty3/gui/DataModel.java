@@ -14,7 +14,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.function.BiConsumer;
 import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
@@ -167,7 +166,11 @@ public class DataModel implements PropertyChangeListener{
         Path originalPath = a.toPath();
         Files.copy(originalPath, copied, StandardCopyOption.REPLACE_EXISTING);
     }
-    public static DataModel load(File file) {
+    public static DataModel load(File file) throws FileNotFoundException {
+        XStream stream = new XStream();
+        DataModel dataModel = new DataModel();
+        dataModel.setScene((Scene)stream.fromXML(new FileInputStream(file)));
+        /*
         DataModel dataModel = new DataModel();
         ZipFile zipFile = null;
         try {
@@ -176,7 +179,7 @@ public class DataModel implements PropertyChangeListener{
             e.printStackTrace();
             return null;
         }
-        /*
+
         InputStream inputStream = zipFile.getInputStream(getEntry(zipFile, "scene.mood"));
         File file1 = new File("./tmp/scene.mood");
         //file1.mkdirs();
@@ -187,7 +190,7 @@ public class DataModel implements PropertyChangeListener{
             fileOutputStream.write(read);
         }
         new Loader().load(file1, dataModel.getScene());
-        */
+
         Enumeration<? extends ZipEntry> entries = zipFile.entries();
         while(entries.hasMoreElements())
         {
@@ -213,7 +216,7 @@ public class DataModel implements PropertyChangeListener{
             }
         }
 
-
+*/
         return dataModel;
 
     }
