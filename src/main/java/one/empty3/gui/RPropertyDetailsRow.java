@@ -124,13 +124,20 @@ public class RPropertyDetailsRow implements TableModel {
             representable.getDeclaredTextures().entrySet().forEach(new Consumer<Map.Entry<String, ITexture>>() {
                 @Override
                 public void accept(Map.Entry<String, ITexture> entry) {
-                    ITexture value = entry.getValue();
-                    String[] split = split(entry.getKey());
-                    objectDetailDescriptions.add(new ObjectDetailDescription(
-                            split[0], split[1], 0, "0", value.getClass(), value.toString()));
-                    objectList.add(value);
-                    index++;
 
+                    ITexture value = entry.getValue();
+                    if(value!=null) {
+                        String[] split = split(entry.getKey());
+                        objectDetailDescriptions.add(new ObjectDetailDescription(
+                                split[0],
+                                split[1],
+                                0,
+                                "0",
+                                value.getClass(),
+                                value.toString()));
+                        objectList.add(value);
+                        index++;
+                    }
 
                 }
             });
@@ -361,7 +368,19 @@ public class RPropertyDetailsRow implements TableModel {
                 int rowArray, columnArray;
                 String indices = objectDetailDescriptions.get(rowIndex).getIndexes();
                 Object property = representable.getProperty(propertyName);
-                if(dim>0&&dim<=2 && propertyType.equals(Double[][].class) )
+                if(dim>0&&dim==1 && propertyType.equals(Double[].class) ) {
+                    aValue = Double.parseDouble((String)aValue);
+                        String[] split = indices.split(",");
+                        rowArray = Integer.parseInt(indices);
+                        columnArray = Integer.parseInt(split[1]);
+
+                        if(property.getClass().equals(Double[][].class))
+                        {
+                            ((Double[])property)[rowArray] = Double.parseDouble((String)aValue);
+                        }
+
+                    }
+                else if(dim>0&&dim<=2 && propertyType.equals(Double[][].class) )
                 {
                     aValue = Double.parseDouble((String)aValue);
                     if(dim==2) {

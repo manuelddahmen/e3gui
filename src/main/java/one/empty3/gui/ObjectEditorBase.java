@@ -76,7 +76,9 @@ public class ObjectEditorBase extends JPanel implements RepresentableEditor {
         Point3D scale =r.getScale();
         textAreaMatrix33.setText(rot.toString());
         for(int i = 0; i<3; i++)
-            point3d[i].setText(""+centreRot.get(i));
+            point3d[i].setText(
+                    ""+centreRot
+                            .get(i));
         for(int i=0; i<9; i++)
             jTextFieldMatrix[i].setText(String.valueOf(rot.get((i/3), (i%3))));
         textAreaPoint3D.setText(""+centreRot.toString());
@@ -234,7 +236,7 @@ public class ObjectEditorBase extends JPanel implements RepresentableEditor {
             //======== contentPanel ========
             {
                 contentPanel.setLayout(new MigLayout(
-                    "fill,insets dialog,hidemode 3",
+                    "fillx,insets dialog,hidemode 3",
                     // columns
                     "[fill]" +
                     "[fill]" +
@@ -255,6 +257,12 @@ public class ObjectEditorBase extends JPanel implements RepresentableEditor {
                     "[]" +
                     "[]" +
                     "[]"));
+
+                //======== layeredPane1 ========
+                {
+                    layeredPane1.setAlignmentX(0.0F);
+                    layeredPane1.setAlignmentY(0.0F);
+                }
                 contentPanel.add(layeredPane1, "cell 0 0");
 
                 //---- labelClass ----

@@ -5,6 +5,7 @@ import one.empty3.library.*;
 import one.empty3.library.core.script.ExtensionFichierIncorrecteException;
 import one.empty3.library.core.script.Loader;
 import one.empty3.library.core.script.VersionNonSupporteeException;
+import org.jdesktop.beansbinding.*;
 import org.jdesktop.beansbinding.AutoBinding.UpdateStrategy;
 import org.jdesktop.beansbinding.BeanProperty;
 import org.jdesktop.beansbinding.BindingGroup;
@@ -179,7 +180,7 @@ public class Main implements PropertyChangeListener {
                 }
                 ZBufferImpl zBuffer = new ZBufferImpl(imageWidth, imageHeight);
                 zBuffer.scene(getDataModel().getScene());
-                zBuffer.setDisplayType(comboBox1.getSelectedIndex());
+                zBuffer.setDisplayType(updateViewMain.getDisplayType());
                 zBuffer.draw();
                 ECBufferedImage image = zBuffer.image();
                 try {
@@ -420,7 +421,6 @@ public class Main implements PropertyChangeListener {
                                 "SURFACE_DISPLAY_LINES",
                                 "SURFACE_DISPLAY_POINTS"
                             }));
-                            this.comboBox1.setEditable(true);
                             this.panel2.add(this.comboBox1, "cell 1 2");
 
                             //---- buttonRender ----
@@ -431,6 +431,7 @@ public class Main implements PropertyChangeListener {
                             //---- buttonSaveR ----
                             this.buttonSaveR.setText("Save");
                             this.buttonSaveR.addActionListener(e -> {
+			buttonSaveRActionPerformed(e);
 			buttonSaveRActionPerformed(e);
 			buttonSaveRActionPerformed(e);
 			buttonSaveRActionPerformed(e);
@@ -471,9 +472,16 @@ public class Main implements PropertyChangeListener {
         this.bindingGroup.addBinding(Bindings.createAutoBinding(UpdateStrategy.READ_WRITE,
             this.updateViewMain, BeanProperty.create("height"),
             this.textFieldYres, BeanProperty.create("text_ON_ACTION_OR_FOCUS_LOST")));
-        this.bindingGroup.addBinding(Bindings.createAutoBinding(UpdateStrategy.READ_WRITE,
-            this.updateViewMain, BeanProperty.create("displayType"),
-            this.comboBox1, BeanProperty.create("selectedItem")));
+        {
+            Binding binding = Bindings.createAutoBinding(UpdateStrategy.READ_WRITE,
+                this.updateViewMain, BeanProperty.create("displayType"),
+                this.comboBox1, BeanProperty.create("selectedIndex"));
+            binding.setSourceNullValue(-1);
+            binding.setSourceUnreadableValue(-1);
+            binding.setTargetNullValue(-1);
+            this.bindingGroup.addBinding(binding);
+            binding.bind();
+        }
         this.bindingGroup.bind();
         // JFormDesigner - End of component initialization  //GEN-END:initComponents
     }

@@ -93,7 +93,7 @@ public class DataModel implements PropertyChangeListener{
                     fis[0] = null;
                     File file3 = null;
                     try {
-                        file3 = new File(getDirectory(false) + "/textures/" + ((TextureImg) iTexture).getFilename() + "_" + iTexture.hashCode() + ".jpg");
+                        file3 = new File(getDirectory(false) + "/textures/" + ((TextureImg) iTexture).getFile() + "_" + iTexture.hashCode() + ".jpg");
                         if (iTexture instanceof TextureImg)
                             try {
                                 ImageIO.write(((TextureImg) iTexture).getImage(), "jpg", file3);

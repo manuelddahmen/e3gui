@@ -22,6 +22,7 @@ import java.io.IOException;
 public class LoadSave extends JPanel {
     private Main main;
     private  DataModel dataModel;
+    private File currentDirectory = new File("./");
 
     public LoadSave() {
         initComponents();
@@ -43,6 +44,7 @@ public class LoadSave extends JPanel {
 
     private void buttonLoadActionPerformed(ActionEvent e) {
         JFileChooser jFileChooser = new JFileChooser();
+        jFileChooser.setCurrentDirectory(currentDirectory);
         jFileChooser.showDialog(this, "Load");
         if(jFileChooser.getSelectedFile()!=null) {
             try {
@@ -53,8 +55,10 @@ public class LoadSave extends JPanel {
             DataModel load = null;
             try {
                 load = DataModel.load(jFileChooser.getSelectedFile());
-                if(load!=null)
+                if(load!=null) {
                     main.setDataModel(load);
+                    currentDirectory = jFileChooser.getCurrentDirectory();
+                }
             } catch (FileNotFoundException e1) {
                 e1.printStackTrace();
             }

@@ -9,7 +9,7 @@ import one.empty3.library.core.raytracer.tree.TreeNodeEvalException;
 import one.empty3.library.core.script.InterpreteException;
 import one.empty3.library.core.script.InterpretePoint3D;
 import one.empty3.library.core.tribase.TRIEllipsoide;
-import one.empty3.library.core.tribase.TubulaireN2cc;
+import one.empty3.library.core.tribase.Tubulaire3;
 
 import javax.swing.*;
 import java.awt.*;
@@ -46,7 +46,7 @@ public class RepresentableClassList {
         add("polygon", Polygon.class);
         add("polyline", PolyLine.class);
         add("sphere", Sphere.class);
-        add("tube", TubulaireN2cc.class);
+        add("tube", Tubulaire3.class);
         add("function (P = f(u,v))", FunctionSurface.class);
         add("ellipsoide", TRIEllipsoide.class);
         add("fct y = f(x)", FctXY.class);
@@ -56,18 +56,6 @@ public class RepresentableClassList {
         //add("paramSurface", ParametricSurface.class);
 
         return listClasses;
-    }
-    public static void initScenes()
-    {
-        //scenes = new JTree();
-        scenes.add(new Scene().toString(), new JTextField(new Scene().toString()));
-        isInitScenes = true;
-    }
-    public static JTree getScenes()
-    {
-        if(!isInitScenes)
-            initScenes();
-        return scenes;
     }
 
     public static Point3D pointParse(String x, String y, String z) throws AlgebraicFormulaSyntaxException, TreeNodeEvalException {
