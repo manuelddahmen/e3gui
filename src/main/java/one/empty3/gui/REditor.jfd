@@ -1,4 +1,4 @@
-JFDML JFormDesigner: "7.0.0.4.245" Java: "1.8.0_112-release" encoding: "UTF-8"
+JFDML JFormDesigner: "7.0.0.5.251" Java: "1.8.0_112-release" encoding: "UTF-8"
 
 new FormModel {
 	"i18n.autoExternalize": true
@@ -26,6 +26,8 @@ new FormModel {
 								"text": "<<"
 								addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "buttonPrevActionPerformed", true ) )
 								addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "buttonPrevActionPerformed", true ) )
+								addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "buttonPrevActionPerformed", true ) )
+								addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "buttonBackActionPerformed", true ) )
 								addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "buttonPrevActionPerformed", true ) )
 								addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "buttonBackActionPerformed", true ) )
 							} )
@@ -85,7 +87,7 @@ new FormModel {
 					add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
 						name: "scrollPane2"
 						addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseClicked", "scrollPane2MouseClicked", true ) )
-						add( new FormComponent( "javax.swing.JTable" ) {
+						add( new FormComponent( "one.empty3.gui.JTablePopUp" ) {
 							name: "tableObjectDetails"
 							"model": new com.jformdesigner.model.SwingTableModel( new java.util.Vector {
 								add( new java.util.Vector {
@@ -129,8 +131,9 @@ new FormModel {
 							} )
 							"columnSelectionAllowed": true
 							"componentPopupMenu": new FormReference( "popupMenu1" )
+							"selectionForeground": sfield java.awt.Color red
 							auxiliary() {
-								"JavaCodeGenerator.customCreateCode": "new JTable() {\n    public String getToolTipText(MouseEvent e) {\n        String tip = null;\n        java.awt.Point p = e.getPoint();\n        int rowIndex = rowAtPoint(p);\n        int colIndex = columnAtPoint(p);\n\n        try {\n            tip = getValueAt(rowIndex, 5).toString();\n            ObjectDetailDescription objectDetailDescription = ((RPropertyDetailsRow) this.getModel()).objectDetailDescriptions.get(rowIndex);\n            tip += objectDetailDescription.toString();\n        } catch (RuntimeException e1) {\n\n        }\n\n        return tip;\n    }\n};"
+								"JavaCodeGenerator.customCreateCode": "new JTablePopUp();"
 							}
 							addEvent( new FormEvent( "java.awt.event.MouseListener", "mouseClicked", "tableObjectDetailsMouseClicked", true ) )
 						} )
@@ -152,10 +155,38 @@ new FormModel {
 			add( new FormComponent( "javax.swing.JMenuItem" ) {
 				name: "menuItemDelete"
 				"text": "Delete"
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "menuItemDeleteActionPerformed", true ) )
 			} )
 			add( new FormComponent( "javax.swing.JMenuItem" ) {
 				name: "menuItem1"
 				"text": "Refresh"
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "menuItem1ActionPerformed", true ) )
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "menuItemRefreshActionPerformed", true ) )
+			} )
+			add( new FormComponent( "javax.swing.JMenuItem" ) {
+				name: "menuItemRowAt"
+				"text": new FormMessage( null, "RPropertyList.menuItemRowAt.text" )
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "menuItemInsertActionPerformed", true ) )
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "menuItemInsRowActionPerformed", true ) )
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "menuItemInsRowActionPerformed", true ) )
+			} )
+			add( new FormComponent( "javax.swing.JMenuItem" ) {
+				name: "menuItemColAt"
+				"text": new FormMessage( null, "RPropertyList.menuItemColAt.text" )
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "menuItemInsColActionPerformed", true ) )
+			} )
+			add( new FormComponent( "javax.swing.JMenuItem" ) {
+				name: "menuItemRowAfter"
+				"text": new FormMessage( null, "RPropertyList.menuItemRowAfter.text" )
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "menuItemInsertActionPerformed", true ) )
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "menuItemInsRowActionPerformed", true ) )
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "menuItemRowAfterActionPerformed", true ) )
+			} )
+			add( new FormComponent( "javax.swing.JMenuItem" ) {
+				name: "menuItemColAfter"
+				"text": new FormMessage( null, "RPropertyList.menuItemColAfter.text" )
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "menuItemInsColActionPerformed", true ) )
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "menuItemColAfterActionPerformed", true ) )
 			} )
 		}, new FormLayoutConstraints( null ) {
 			"location": new java.awt.Point( 95, 510 )

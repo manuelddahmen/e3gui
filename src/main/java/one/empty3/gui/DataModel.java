@@ -91,20 +91,22 @@ public class DataModel implements PropertyChangeListener{
 
                 {
                     fis[0] = null;
-                    File file3 = null;
+                    File file3 = null;File s =null;
+                    String s2 = "";
                     try {
-                        file3 = new File(getDirectory(false) + "/textures/" + ((TextureImg) iTexture).getFile() + "_" + iTexture.hashCode() + ".jpg");
+                        new File(getDirectory(false) + "/textures/").mkdirs();
+                        s2 += "text_" + iTexture.getClass() ;
                         if (iTexture instanceof TextureImg)
                             try {
-                                ImageIO.write(((TextureImg) iTexture).getImage(), "jpg", file3);
+                            s2+= ".jpg";
+
+                                ImageIO.write(((TextureImg) iTexture).getImage(), "jpg", new File(s2));
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
                         if (iTexture instanceof TextureMov) {
-                            file3 = ((TextureMov) iTexture).getFile();
                             copy(file3, new File(getDirectory(false) + "/textures/" + file3.getName()));
                         }
-
                         fis[0] = new FileInputStream(file3);
                         zipEntry[0] = new ZipEntry("textures/" + file3.getName());
                         zipEntry[0].setComment("Texture { class: " + iTexture.getClass() + ", string : " + iTexture.toString());
@@ -170,53 +172,7 @@ public class DataModel implements PropertyChangeListener{
         XStream stream = new XStream();
         DataModel dataModel = new DataModel();
         dataModel.setScene((Scene)stream.fromXML(new FileInputStream(file)));
-        /*
-        DataModel dataModel = new DataModel();
-        ZipFile zipFile = null;
-        try {
-            zipFile = new ZipFile(file);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
 
-        InputStream inputStream = zipFile.getInputStream(getEntry(zipFile, "scene.mood"));
-        File file1 = new File("./tmp/scene.mood");
-        //file1.mkdirs();
-        int read=0;
-        FileOutputStream fileOutputStream = new FileOutputStream(file1);
-        while((read=inputStream.read())>=0)
-        {
-            fileOutputStream.write(read);
-        }
-        new Loader().load(file1, dataModel.getScene());
-
-        Enumeration<? extends ZipEntry> entries = zipFile.entries();
-        while(entries.hasMoreElements())
-        {
-            ZipEntry zipEntry = entries.nextElement();
-            if(zipEntry.getName().endsWith("xml")) {
-                XStream xStream = new XStream();
-                Object fromXML = null;
-                try {
-                    fromXML = xStream.fromXML(zipFile.getInputStream(zipEntry));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    return null;
-                }
-                if(fromXML instanceof Scene)
-                {
-                    DataModel dataModel1 = new DataModel();
-                    dataModel1.setScene((Scene)fromXML);
-                }
-                else
-                {
-                    Logger.getAnonymousLogger().info("Error loading");
-                }
-            }
-        }
-
-*/
         return dataModel;
 
     }
@@ -461,26 +417,3 @@ public class DataModel implements PropertyChangeListener{
     }
 
 }
-    /*
-    public class ZipMultipleFiles {
-            List<String> srcFiles = Arrays.asList("test1.txt", "test2.txt");
-            FileOutputStream fos = new FileOutputStream("multiCompressed.zip");
-            ZipOutputStream zipOut = new ZipOutputStream(fos);
-            for (String srcFile : srcFiles) {
-                File fileToZip = new File(srcFile);
-                FileInputStream fis = new FileInputStream(fileToZip);
-                ZipEntry zipEntry = new ZipEntry(fileToZip.getName());
-                zipOut.putNextEntry(zipEntry);
-
-                byte[] bytes = new byte[1024];
-                int length;
-                while((length = fis.read(bytes)) >= 0) {
-                    zipOut.write(bytes, 0, length);
-                }
-                fis.close();
-            }
-            zipOut.close();
-            fos.close();
-    }
-*/
-

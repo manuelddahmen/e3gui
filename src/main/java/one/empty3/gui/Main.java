@@ -262,7 +262,7 @@ public class Main implements PropertyChangeListener {
 
         //======== MainWindow ========
         {
-            this.MainWindow.setTitle("Main");
+            this.MainWindow.setTitle("Empty3gui");
             this.MainWindow.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
             this.MainWindow.setBackground(new Color(204, 255, 255));
             this.MainWindow.setVisible(true);

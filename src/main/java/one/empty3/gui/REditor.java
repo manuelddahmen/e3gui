@@ -4,6 +4,7 @@
 
 package one.empty3.gui;
 
+import java.util.*;
 import net.miginfocom.swing.MigLayout;
 import one.empty3.library.ITexture;
 import one.empty3.library.Representable;
@@ -23,11 +24,21 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.util.logging.Logger;
 
 /**
  * @author Manuel Dahmen
  */
 public class REditor extends JPanel implements PropertyChangeListener, RepresentableEditor {
+    private static final int INSERT_ROW_AT_DIM1 = 0;
+    private static final int INSERT_ROW_AFTER_DIM1 = 1;
+    private static final int INSERT_ROW_AT_DIM2 = 2;
+    private static final int INSERT_ROW_AFTER_DIM2 = 3;
+    private static final int INSERT_COL_AT = 4;
+    private static final int INSERT_COL_AFTER = 5;
+    private static final int DELETE_AT = 6;
+    private static final int DELETE_COL = 7;
+
     private  Representable r;
     History history = new History();
 
@@ -40,10 +51,9 @@ public class REditor extends JPanel implements PropertyChangeListener, Represent
         this.dataModel = dataModel;
         initComponents();
         init(re);
-        history.getHistory().add(0, tableModel);
-        init(history.get(0));
+        history.addToHistory(tableModel);
+        init(history.getCurrentRow());
         this.r = re;
-
     }
 
     public void init(Object re) {
@@ -93,8 +103,7 @@ public class REditor extends JPanel implements PropertyChangeListener, Represent
                 if (tableModel.getItemList(selectedRow) instanceof Representable) {
                     boolean isNew = tableModel.getValueAt(selectedRow, 1) != null && tableModel.getValueAt(selectedRow, 1).toString().equals("NEW");
                     Representable newR = (Representable) tableModel.getItemList(selectedRow);
-                    Representable oldR = (Representable) r;
-                    init(tableModel.getItemList(selectedRow));
+                    Representable oldR = r;
                     if (isNew) {
                         if (oldR instanceof Scene) {
                             ((Scene) oldR).add(newR);
@@ -103,58 +112,13 @@ public class REditor extends JPanel implements PropertyChangeListener, Represent
                         if (oldR instanceof RepresentableConteneur) {
                             ((RepresentableConteneur) oldR).add(newR);
                             System.out.print("Added to scene" + newR.toString());
-                        } else {
-                            if (objectDetailDescription.getDim() == 1 && objectDetailDescription.getDescrition().equals("ADD NEW")) {
-                                Object[] insert = new Arrays().insert((Object[]) objectDetailDescription.getValue(), Integer.parseInt(objectDetailDescription.getIndexes()));
-                                try {
-                                    newR.setProperty(objectDetailDescription.getName(), insert);
-                                } catch (InvocationTargetException e1) {
-                                    e1.printStackTrace();
-                                } catch (IllegalAccessException e1) {
-                                    e1.printStackTrace();
-                                } catch (NoSuchMethodException e1) {
-                                    e1.printStackTrace();
-                                }
-                            } else if (objectDetailDescription.getDim() == 2 && objectDetailDescription.getClazz().equals(Double[][].class)&& objectDetailDescription.getDescrition().equals("ADD NEW")) {
-                                String[] split = objectDetailDescription.getIndexes().split(",");
-                                int pos1 = Integer.parseInt(split[0]);
-                                int pos2 = Integer.parseInt(split[1]);
-                                Double[][] insert = new Arrays().insert(Double.class, (Double[][]) objectDetailDescription.getValue(),
-                                        pos1, pos2, 0);// TODO
-                                try {
-                                    newR.setProperty(objectDetailDescription.getName(), insert);
-                                } catch (InvocationTargetException e1) {
-                                    e1.printStackTrace();
-                                } catch (IllegalAccessException e1) {
-                                    e1.printStackTrace();
-                                } catch (NoSuchMethodException e1) {
-                                    e1.printStackTrace();
-                                }
-
-                            } else if (objectDetailDescription.getDim() == 2 && objectDetailDescription.getClazz().isAssignableFrom(Representable[][].class)&& objectDetailDescription.getDescrition().equals("ADD NEW")) {
-                                String[] split = objectDetailDescription.getIndexes().split(",");
-                                int pos1 = Integer.parseInt(split[0]);
-                                int pos2 = Integer.parseInt(split[1]);
-                                Representable[][] insert = new Arrays().insert(Representable.class, (Representable[][]) objectDetailDescription.getValue(),
-                                        pos1, pos2, 0);// TODO
-                                try {
-                                    newR.setProperty(objectDetailDescription.getName(), insert);
-                                } catch (InvocationTargetException e1) {
-                                    e1.printStackTrace();
-                                } catch (IllegalAccessException e1) {
-                                    e1.printStackTrace();
-                                } catch (NoSuchMethodException e1) {
-                                    e1.printStackTrace();
-                                }
-
-                            }
                         }
-                        history.addToHistory(tableModel);
+
+                    }
+                        history.addToHistory(new RPropertyDetailsRow(newR));
                         System.out.println("add to history " + history.getCurrent());
-                    } else if (tableObjectDetails.isCellEditable(selectedRow, 5))
-                        tableObjectDetails.editCellAt(selectedRow, 5);
-                } else {
-                    MyObservableList<ObjectDescription> objectDescriptions = RepresentableClassList.myList();
+                        init(newR);
+                        refreshTable();
 
                 }
             }
@@ -194,9 +158,6 @@ public class REditor extends JPanel implements PropertyChangeListener, Represent
         historyBack();
     }
 
-    private void buttonPrevActionPerformed(ActionEvent e) {
-        // TODO add your code here
-    }
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         if (evt.getNewValue() instanceof ITexture) {
@@ -249,8 +210,256 @@ public class REditor extends JPanel implements PropertyChangeListener, Represent
         // TODO: add custom component creation code here
     }
 
+
+
+
+    // Insert
+    private void menuItemInsertActionPerformed(ActionEvent e) {
+    }
+
+    // Delete
+    private void menuItemDeleteActionPerformed(ActionEvent e) {
+        ObjectDetailDescription description = tableModel.getObjectDetailDescriptions().get(tableObjectDetails.getSelectedRow());
+        Logger.getAnonymousLogger().info("Delete"+ description);
+        try {
+            insertDeleteAtAfter(description, DELETE_AT);
+        } catch (IllegalAccessException e1) {
+            e1.printStackTrace();
+        } catch (NoSuchMethodException e1) {
+            e1.printStackTrace();
+        } catch (InvocationTargetException e1) {
+            e1.printStackTrace();
+        }
+    }
+
+    // Refresh
+    private void menuItem1ActionPerformed(ActionEvent e) {
+        refreshTable();
+    }
+
+    private void buttonPrevActionPerformed(ActionEvent e) {
+        historyBack();
+    }
+
+    private void menuItemInsRowActionPerformed(ActionEvent e) {
+        ObjectDetailDescription objectDetailDescription = tableModel.getObjectDetailDescriptions().get(tableObjectDetails.getSelectedRow());
+        if(objectDetailDescription.getDim()==1)
+        {
+            Logger.getAnonymousLogger().info("Insert row at "+objectDetailDescription.getName()+" ["+objectDetailDescription.getIndexes() +"]");
+            try {
+                insertDeleteAtAfter(objectDetailDescription, INSERT_ROW_AT_DIM1);
+            } catch (IllegalAccessException e1) {
+                e1.printStackTrace();
+            } catch (NoSuchMethodException e1) {
+                e1.printStackTrace();
+            } catch (InvocationTargetException e1) {
+                e1.printStackTrace();
+            }
+        }
+        if(objectDetailDescription.getDim()==2)
+        {
+            Logger.getAnonymousLogger().info("Insert row at "+objectDetailDescription.getName()+" ["+objectDetailDescription.getIndexes().split(",")[0]
+                  +  " [*]");
+            try {
+                insertDeleteAtAfter(objectDetailDescription, INSERT_ROW_AT_DIM2);
+            } catch (IllegalAccessException e1) {
+                e1.printStackTrace();
+            } catch (NoSuchMethodException e1) {
+                e1.printStackTrace();
+            } catch (InvocationTargetException e1) {
+                e1.printStackTrace();
+            }
+        }
+
+    }
+
+    public void insertDeleteAtAfter(ObjectDetailDescription description, int ACTION) throws IllegalAccessException, NoSuchMethodException, InvocationTargetException
+
+    {/*
+        Object property;
+        Arrays<T> arrays = new Arrays();
+            property = r.getProperty(description.getName());
+        if (description.getDim() == 1 && description.getClazz().equals(Double[].class)) {
+            if (ACTION == DELETE_AT) {
+                arrays.deleteAt(Double.class, (Double)property, Integer.parseInt(description.getIndexes()));
+            }
+            if (ACTION == INSERT_ROW_AT_DIM1) {
+                Double[] insert = (Double[]) arrays.insertAt(Double[].class, description.getValue(), Integer.parseInt(description.getIndexes()));
+                r.setProperty(description.getName(), insert);
+            }
+            if (ACTION == INSERT_ROW_AT_DIM1) {
+                Double[] insert = (Double[]) arrays.insertAt(Double[].class, description.getValue(), Integer.parseInt(description.getIndexes())+1);
+                r.setProperty(description.getName(), insert);
+            }
+        } else if (description.getDim() == 1 && description.getClazz().isAssignableFrom(Representable[].class)) {
+            String[] split = description.getIndexes().split(",");
+            int pos1 = Integer.parseInt(split[0]);
+            if(ACTION==INSERT_ROW_AT_DIM1) {
+                Representable[] insert = arrays.insertAt(Representable.class, (Representable[]) description.getValue(),
+                        pos1);// TODO
+                r.setProperty(description.getName(), insert);
+            }
+            if(ACTION==INSERT_ROW_AFTER_DIM1) {
+                Representable[] insert = arrays.insertAt(description.getClazz(), (Representable[]) description.getValue(),
+                        pos1+1);// TODO
+                r.setProperty(description.getName(), insert);
+            }
+        } else if (description.getDim() == 2 && description.getClazz().isAssignableFrom(Representable[][].class)) {
+            String[] split = description.getIndexes().split(",");
+            int pos1 = Integer.parseInt(split[0]);
+            int pos2 = Integer.parseInt(split[1]);
+            Representable[][] insert = new Representable[1][1];
+            if(ACTION==INSERT_ROW_AT_DIM2) {
+                insert = arrays.insertAt(Representable.class, (Representable[][]) description.getValue(),
+                        pos1, pos2, 0);// TODO
+                r.setProperty(description.getName(), insert);
+            }
+            if(ACTION==INSERT_ROW_AFTER_DIM2) {
+                insert = arrays.insertAt(description.getClazz(), (Representable[]) description.getValue(),
+                        pos1+1, pos2, 0);// TODO
+                r.setProperty(description.getName(), insert);
+            }
+            if(ACTION==INSERT_COL_AT) {
+                insert = arrays.insertAt(Representable.class, (Representable[][]) description.getValue(),
+                        pos1, pos2, 1);// TODO
+                r.setProperty(description.getName(), insert);
+            }
+            if(ACTION==INSERT_COL_AFTER) {
+                insert = arrays.insertAt(description.getClazz(), (Representable[]) description.getValue(),
+                        pos1+1, pos2+1, 1);// TODO
+                r.setProperty(description.getName(), insert);
+            }
+            r.setProperty(description.getName(), insert);
+        } else if (description.getDim() == 2 && description.getClazz().equals(Double[][].class)) {
+            String[] split = description.getIndexes().split(",");
+            int pos1 = Integer.parseInt(split[0]);
+            int pos2 = Integer.parseInt(split[1]);
+            Double[][] insert = new Double[1][1];
+            if(ACTION==INSERT_ROW_AT_DIM2) {
+                insert = arrays.insertAt(Double.class, (Double[][]) description.getValue(),
+                        pos1, pos2, 0);// TODO
+                r.setProperty(description.getName(), insert);
+            }
+            if(ACTION==INSERT_ROW_AFTER_DIM2) {
+                insert = arrays.insertAt(description.getClazz(), (Double[][]) description.getValue(),
+                        pos1+1, pos2, 0);// TODO
+                r.setProperty(description.getName(), insert);
+            }
+            if(ACTION==INSERT_COL_AT) {
+                insert = arrays.insertAt(Representable.class, (Double[][]) description.getValue(),
+                        pos1, pos2, 1);// TODO
+                r.setProperty(description.getName(), insert);
+            }
+            if(ACTION==INSERT_COL_AFTER) {
+                insert = arrays.insertAt(description.getClazz(), (Double[][]) description.getValue(),
+                        pos1+1, pos2+1, 1);// TODO
+                r.setProperty(description.getName(), insert);
+            }
+            r.setProperty(description.getName(), insert);
+        }
+        if (ACTION == DELETE_AT) {
+            if (description.getDim() == 1)
+                arrays.deleteAt(Integer.parseInt(description.getIndexes()));
+            if (description.getDim() == 2) {
+                String[] split = description.getIndexes().split(",");
+
+                arrays.deleteAt(description.getClazz(), (Representable[][]) property, Integer.parseInt(split[0]), Integer.parseInt(split[1]), 0);
+            }
+        }
+        if (ACTION == DELETE_COL) {
+            if(description.getDim()==2 )
+                arrays.deleteAt(description.getClazz(), (Representable[][]) property, Integer.parseInt(description.getIndexes()));
+        }
+*/
+    }
+
+
+    private void menuItemInsColActionPerformed(ActionEvent e) {
+        ObjectDetailDescription objectDetailDescription = tableModel.getObjectDetailDescriptions().get(tableObjectDetails.getSelectedRow());
+        if(objectDetailDescription.getDim()==1)
+        {
+            Logger.getAnonymousLogger().info("Nothing");
+        }
+        if(objectDetailDescription.getDim()==2)
+        {
+            Logger.getAnonymousLogger().info("Insert column at "+objectDetailDescription.getName()+" [*]["
+                    +  objectDetailDescription.getIndexes().split(",")[0]+"]");
+            try {
+                insertDeleteAtAfter(objectDetailDescription, INSERT_COL_AT);
+            } catch (IllegalAccessException e1) {
+                e1.printStackTrace();
+            } catch (NoSuchMethodException e1) {
+                e1.printStackTrace();
+            } catch (InvocationTargetException e1) {
+                e1.printStackTrace();
+            }
+        }
+
+
+    }
+
+    private void menuItemRefreshActionPerformed(ActionEvent e) {
+        refreshTable();
+    }
+
+    private void menuItemRowAfterActionPerformed(ActionEvent e) {
+        ObjectDetailDescription objectDetailDescription = tableModel.getObjectDetailDescriptions().get(tableObjectDetails.getSelectedRow());
+        if(objectDetailDescription.getDim()==1)
+        {
+            Logger.getAnonymousLogger().info("Insert row after "+objectDetailDescription.getName()+" ["+objectDetailDescription.getIndexes() +"]");
+            try {
+                insertDeleteAtAfter(objectDetailDescription, INSERT_ROW_AFTER_DIM1);
+            } catch (IllegalAccessException e1) {
+                e1.printStackTrace();
+            } catch (NoSuchMethodException e1) {
+                e1.printStackTrace();
+            } catch (InvocationTargetException e1) {
+                e1.printStackTrace();
+            }
+        }
+        if(objectDetailDescription.getDim()==2)
+        {
+            Logger.getAnonymousLogger().info("Insert row after "+objectDetailDescription.getName()+" ["+objectDetailDescription.getIndexes().split(",")[0]
+                    +  " [*]");
+            try {
+                insertDeleteAtAfter(objectDetailDescription, INSERT_ROW_AFTER_DIM2);
+            } catch (IllegalAccessException e1) {
+                e1.printStackTrace();
+            } catch (NoSuchMethodException e1) {
+                e1.printStackTrace();
+            } catch (InvocationTargetException e1) {
+                e1.printStackTrace();
+            }
+        }
+
+    }
+
+    private void menuItemColAfterActionPerformed(ActionEvent e) {
+        ObjectDetailDescription objectDetailDescription = tableModel.getObjectDetailDescriptions().get(tableObjectDetails.getSelectedRow());
+        if(objectDetailDescription.getDim()==1)
+        {
+            Logger.getAnonymousLogger().info("Nothing");
+        }
+        if(objectDetailDescription.getDim()==2)
+        {
+            Logger.getAnonymousLogger().info("Insert column after "+objectDetailDescription.getName()+" [*]["
+                    +  objectDetailDescription.getIndexes().split(",")[0]+"]");
+            try {
+                insertDeleteAtAfter(objectDetailDescription, INSERT_COL_AFTER);
+            } catch (IllegalAccessException e1) {
+                e1.printStackTrace();
+            } catch (NoSuchMethodException e1) {
+                e1.printStackTrace();
+            } catch (InvocationTargetException e1) {
+                e1.printStackTrace();
+            }
+        }
+
+    }
+
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
+        ResourceBundle bundle = ResourceBundle.getBundle("one.empty3.gui.gui");
         dialogPane = new JPanel();
         contentPanel = new JPanel();
         scrollPane1 = new JScrollPane();
@@ -265,27 +474,14 @@ public class REditor extends JPanel implements PropertyChangeListener, Represent
         buttonNext = new JButton();
         labelBreadCumbs = new JLabel();
         scrollPane2 = new JScrollPane();
-        tableObjectDetails = new JTable() {
-            public String getToolTipText(MouseEvent e) {
-                String tip = null;
-                java.awt.Point p = e.getPoint();
-                int rowIndex = rowAtPoint(p);
-                int colIndex = columnAtPoint(p);
-
-                try {
-                    tip = getValueAt(rowIndex, 5).toString();
-                    ObjectDetailDescription objectDetailDescription = ((RPropertyDetailsRow) this.getModel()).objectDetailDescriptions.get(rowIndex);
-                    tip += objectDetailDescription.toString();
-                } catch (RuntimeException e1) {
-
-                }
-
-                return tip;
-            }
-        };
+        tableObjectDetails = new JTablePopUp();
         popupMenu1 = new JPopupMenu();
         menuItemDelete = new JMenuItem();
         menuItem1 = new JMenuItem();
+        menuItemRowAt = new JMenuItem();
+        menuItemColAt = new JMenuItem();
+        menuItemRowAfter = new JMenuItem();
+        menuItemColAfter = new JMenuItem();
 
         //======== this ========
         setLayout(new BorderLayout());
@@ -320,6 +516,8 @@ public class REditor extends JPanel implements PropertyChangeListener, Represent
                         buttonPrev.addActionListener(e -> {
 			buttonPrevActionPerformed(e);
 			buttonPrevActionPerformed(e);
+			buttonPrevActionPerformed(e);
+			buttonBackActionPerformed(e);
 			buttonPrevActionPerformed(e);
 			buttonBackActionPerformed(e);
 		});
@@ -411,6 +609,7 @@ public class REditor extends JPanel implements PropertyChangeListener, Represent
                     ));
                     tableObjectDetails.setColumnSelectionAllowed(true);
                     tableObjectDetails.setComponentPopupMenu(popupMenu1);
+                    tableObjectDetails.setSelectionForeground(Color.red);
                     tableObjectDetails.addMouseListener(new MouseAdapter() {
                         @Override
                         public void mouseClicked(MouseEvent e) {
@@ -430,11 +629,47 @@ public class REditor extends JPanel implements PropertyChangeListener, Represent
 
             //---- menuItemDelete ----
             menuItemDelete.setText("Delete");
+            menuItemDelete.addActionListener(e -> menuItemDeleteActionPerformed(e));
             popupMenu1.add(menuItemDelete);
 
             //---- menuItem1 ----
             menuItem1.setText("Refresh");
+            menuItem1.addActionListener(e -> {
+			menuItem1ActionPerformed(e);
+			menuItemRefreshActionPerformed(e);
+		});
             popupMenu1.add(menuItem1);
+
+            //---- menuItemRowAt ----
+            menuItemRowAt.setText(bundle.getString("RPropertyList.menuItemRowAt.text"));
+            menuItemRowAt.addActionListener(e -> {
+			menuItemInsertActionPerformed(e);
+			menuItemInsRowActionPerformed(e);
+			menuItemInsRowActionPerformed(e);
+		});
+            popupMenu1.add(menuItemRowAt);
+
+            //---- menuItemColAt ----
+            menuItemColAt.setText(bundle.getString("RPropertyList.menuItemColAt.text"));
+            menuItemColAt.addActionListener(e -> menuItemInsColActionPerformed(e));
+            popupMenu1.add(menuItemColAt);
+
+            //---- menuItemRowAfter ----
+            menuItemRowAfter.setText(bundle.getString("RPropertyList.menuItemRowAfter.text"));
+            menuItemRowAfter.addActionListener(e -> {
+			menuItemInsertActionPerformed(e);
+			menuItemInsRowActionPerformed(e);
+			menuItemRowAfterActionPerformed(e);
+		});
+            popupMenu1.add(menuItemRowAfter);
+
+            //---- menuItemColAfter ----
+            menuItemColAfter.setText(bundle.getString("RPropertyList.menuItemColAfter.text"));
+            menuItemColAfter.addActionListener(e -> {
+			menuItemInsColActionPerformed(e);
+			menuItemColAfterActionPerformed(e);
+		});
+            popupMenu1.add(menuItemColAfter);
         }
         // JFormDesigner - End of component initialization  //GEN-END:initComponents
     }
@@ -454,10 +689,14 @@ public class REditor extends JPanel implements PropertyChangeListener, Represent
     private JButton buttonNext;
     private JLabel labelBreadCumbs;
     private JScrollPane scrollPane2;
-    private JTable tableObjectDetails;
+    private JTablePopUp tableObjectDetails;
     private JPopupMenu popupMenu1;
     private JMenuItem menuItemDelete;
     private JMenuItem menuItem1;
+    private JMenuItem menuItemRowAt;
+    private JMenuItem menuItemColAt;
+    private JMenuItem menuItemRowAfter;
+    private JMenuItem menuItemColAfter;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
 
     @Override

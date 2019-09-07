@@ -35,23 +35,23 @@ public class RepresentableClassList {
     public static MyObservableList<ObjectDescription> myList()
     {
         listClasses = new MyObservableList<>();
-        add("scene", Scene.class);
-        add("p", Point3D.class);
-        add("r", Representable.class);
-        add("rContainer", RepresentableConteneur.class);
+        add("point", Point3D.class);
+        add("container (group)", RepresentableConteneur.class);
         add("line", LineSegment.class);
         add("bezier", CourbeParametriquePolynomialeBezier.class);
         add("bezier2", SurfaceParametriquePolynomialeBezier.class);
-        add("t", TRI.class);
+        add("triangle", TRI.class);
         add("polygon", Polygon.class);
         add("polyline", PolyLine.class);
         add("sphere", Sphere.class);
         add("tube", Tubulaire3.class);
-        add("function (P = f(u,v))", FunctionSurface.class);
-        add("ellipsoide", TRIEllipsoide.class);
+        add("surface (P = f(u,v))", FunctionSurface.class);
+        add("curve   (P = f(u))", FunctionCurve.class);
+        add("ellipsoid", TRIEllipsoide.class);
         add("fct y = f(x)", FctXY.class);
-        add("heightSurfaceXYZ", HeightMapSurfaceXYZ.class);
-        add("courbe B-Spline", BSpline.class);
+        //add("heightSurfaceXYZ", HeightMapSurfaceXYZ.class);
+        add("B-Spline", BSpline.class);
+        //add("move", Move.class);
         //add("paramCurve", ParametricCurve.class);
         //add("paramSurface", ParametricSurface.class);
 

@@ -370,14 +370,8 @@ public class RPropertyDetailsRow implements TableModel {
                 Object property = representable.getProperty(propertyName);
                 if(dim>0&&dim==1 && propertyType.equals(Double[].class) ) {
                     aValue = Double.parseDouble((String)aValue);
-                        String[] split = indices.split(",");
                         rowArray = Integer.parseInt(indices);
-                        columnArray = Integer.parseInt(split[1]);
-
-                        if(property.getClass().equals(Double[][].class))
-                        {
-                            ((Double[])property)[rowArray] = Double.parseDouble((String)aValue);
-                        }
+                        ((Double[])property)[rowArray] = Double.parseDouble((String)aValue);
 
                     }
                 else if(dim>0&&dim<=2 && propertyType.equals(Double[][].class) )
