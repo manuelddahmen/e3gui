@@ -4,13 +4,13 @@
 
 package one.empty3.gui;
 
+import java.lang.reflect.Type;
 import java.util.*;
+
+import com.sun.org.apache.regexp.internal.RE;
 import net.miginfocom.swing.MigLayout;
-import one.empty3.library.ITexture;
-import one.empty3.library.Representable;
-import one.empty3.library.RepresentableConteneur;
-import one.empty3.library.Scene;
-import one.empty3.library.core.Arrays;
+import one.empty3.library.*;
+import one.empty3.library.core.EcArrays;
 
 import javax.swing.*;
 import javax.swing.event.TableModelEvent;
@@ -24,6 +24,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.util.List;
 import java.util.logging.Logger;
 
 /**
@@ -211,25 +212,60 @@ public class REditor extends JPanel implements PropertyChangeListener, Represent
     }
 
 
-
+    private StructureMatrix getProperty()
+    {
+        ObjectDetailDescription description = tableModel.getObjectDetailDescriptions().get(tableObjectDetails.getSelectedRow());
+        Logger.getAnonymousLogger().info("Delete"+ description);
+        try {
+            Object property = getRepresentable().getProperty(description.getName());
+            if(property instanceof StructureMatrix)
+            {
+                return (StructureMatrix)property;
+            }
+        } catch (IllegalAccessException e1) {
+            e1.printStackTrace();
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
     // Insert
     private void menuItemInsertActionPerformed(ActionEvent e) {
+        StructureMatrix property = getProperty();
+        ObjectDetailDescription description = tableModel.getObjectDetailDescriptions().get(tableObjectDetails.getSelectedRow());
+        if(property!=null)
+        {
+            if(property.getDim()==1)
+            {
+                property.insert(Integer.parseInt(description.getIndexes()), null);
+            }
+            if(property.getDim()==2)
+            {
+                int pos = Integer.parseInt(description.getIndexes().split(",")[0]);
+                description = tableModel.getObjectDetailDescriptions().get(tableObjectDetails.getSelectedRow());
+                property.addRow();
+                for(int i=0; i<((List)property.getData2d().get(0)).size(); i++)
+                    property.getData2d().add(property.getData2d().get(property.getData2d().size()-2));
+
+            }
+        }
     }
 
     // Delete
     private void menuItemDeleteActionPerformed(ActionEvent e) {
-        ObjectDetailDescription description = tableModel.getObjectDetailDescriptions().get(tableObjectDetails.getSelectedRow());
-        Logger.getAnonymousLogger().info("Delete"+ description);
-        try {
-            insertDeleteAtAfter(description, DELETE_AT);
-        } catch (IllegalAccessException e1) {
-            e1.printStackTrace();
-        } catch (NoSuchMethodException e1) {
-            e1.printStackTrace();
-        } catch (InvocationTargetException e1) {
-            e1.printStackTrace();
+        StructureMatrix property = getProperty();
+        if(property!=null)
+        {
+            if(property.getDim()==1)
+            {
+                ObjectDetailDescription description = tableModel.getObjectDetailDescriptions().get(tableObjectDetails.getSelectedRow());
+                property.delete(Integer.parseInt(description.getIndexes()), 0);//TODO
+            }
         }
+
     }
 
     // Refresh
@@ -242,159 +278,20 @@ public class REditor extends JPanel implements PropertyChangeListener, Represent
     }
 
     private void menuItemInsRowActionPerformed(ActionEvent e) {
-        ObjectDetailDescription objectDetailDescription = tableModel.getObjectDetailDescriptions().get(tableObjectDetails.getSelectedRow());
-        if(objectDetailDescription.getDim()==1)
-        {
-            Logger.getAnonymousLogger().info("Insert row at "+objectDetailDescription.getName()+" ["+objectDetailDescription.getIndexes() +"]");
-            try {
-                insertDeleteAtAfter(objectDetailDescription, INSERT_ROW_AT_DIM1);
-            } catch (IllegalAccessException e1) {
-                e1.printStackTrace();
-            } catch (NoSuchMethodException e1) {
-                e1.printStackTrace();
-            } catch (InvocationTargetException e1) {
-                e1.printStackTrace();
-            }
-        }
-        if(objectDetailDescription.getDim()==2)
-        {
-            Logger.getAnonymousLogger().info("Insert row at "+objectDetailDescription.getName()+" ["+objectDetailDescription.getIndexes().split(",")[0]
-                  +  " [*]");
-            try {
-                insertDeleteAtAfter(objectDetailDescription, INSERT_ROW_AT_DIM2);
-            } catch (IllegalAccessException e1) {
-                e1.printStackTrace();
-            } catch (NoSuchMethodException e1) {
-                e1.printStackTrace();
-            } catch (InvocationTargetException e1) {
-                e1.printStackTrace();
-            }
-        }
-
-    }
-
-    public void insertDeleteAtAfter(ObjectDetailDescription description, int ACTION) throws IllegalAccessException, NoSuchMethodException, InvocationTargetException
-
-    {/*
-        Object property;
-        Arrays<T> arrays = new Arrays();
-            property = r.getProperty(description.getName());
-        if (description.getDim() == 1 && description.getClazz().equals(Double[].class)) {
-            if (ACTION == DELETE_AT) {
-                arrays.deleteAt(Double.class, (Double)property, Integer.parseInt(description.getIndexes()));
-            }
-            if (ACTION == INSERT_ROW_AT_DIM1) {
-                Double[] insert = (Double[]) arrays.insertAt(Double[].class, description.getValue(), Integer.parseInt(description.getIndexes()));
-                r.setProperty(description.getName(), insert);
-            }
-            if (ACTION == INSERT_ROW_AT_DIM1) {
-                Double[] insert = (Double[]) arrays.insertAt(Double[].class, description.getValue(), Integer.parseInt(description.getIndexes())+1);
-                r.setProperty(description.getName(), insert);
-            }
-        } else if (description.getDim() == 1 && description.getClazz().isAssignableFrom(Representable[].class)) {
-            String[] split = description.getIndexes().split(",");
-            int pos1 = Integer.parseInt(split[0]);
-            if(ACTION==INSERT_ROW_AT_DIM1) {
-                Representable[] insert = arrays.insertAt(Representable.class, (Representable[]) description.getValue(),
-                        pos1);// TODO
-                r.setProperty(description.getName(), insert);
-            }
-            if(ACTION==INSERT_ROW_AFTER_DIM1) {
-                Representable[] insert = arrays.insertAt(description.getClazz(), (Representable[]) description.getValue(),
-                        pos1+1);// TODO
-                r.setProperty(description.getName(), insert);
-            }
-        } else if (description.getDim() == 2 && description.getClazz().isAssignableFrom(Representable[][].class)) {
-            String[] split = description.getIndexes().split(",");
-            int pos1 = Integer.parseInt(split[0]);
-            int pos2 = Integer.parseInt(split[1]);
-            Representable[][] insert = new Representable[1][1];
-            if(ACTION==INSERT_ROW_AT_DIM2) {
-                insert = arrays.insertAt(Representable.class, (Representable[][]) description.getValue(),
-                        pos1, pos2, 0);// TODO
-                r.setProperty(description.getName(), insert);
-            }
-            if(ACTION==INSERT_ROW_AFTER_DIM2) {
-                insert = arrays.insertAt(description.getClazz(), (Representable[]) description.getValue(),
-                        pos1+1, pos2, 0);// TODO
-                r.setProperty(description.getName(), insert);
-            }
-            if(ACTION==INSERT_COL_AT) {
-                insert = arrays.insertAt(Representable.class, (Representable[][]) description.getValue(),
-                        pos1, pos2, 1);// TODO
-                r.setProperty(description.getName(), insert);
-            }
-            if(ACTION==INSERT_COL_AFTER) {
-                insert = arrays.insertAt(description.getClazz(), (Representable[]) description.getValue(),
-                        pos1+1, pos2+1, 1);// TODO
-                r.setProperty(description.getName(), insert);
-            }
-            r.setProperty(description.getName(), insert);
-        } else if (description.getDim() == 2 && description.getClazz().equals(Double[][].class)) {
-            String[] split = description.getIndexes().split(",");
-            int pos1 = Integer.parseInt(split[0]);
-            int pos2 = Integer.parseInt(split[1]);
-            Double[][] insert = new Double[1][1];
-            if(ACTION==INSERT_ROW_AT_DIM2) {
-                insert = arrays.insertAt(Double.class, (Double[][]) description.getValue(),
-                        pos1, pos2, 0);// TODO
-                r.setProperty(description.getName(), insert);
-            }
-            if(ACTION==INSERT_ROW_AFTER_DIM2) {
-                insert = arrays.insertAt(description.getClazz(), (Double[][]) description.getValue(),
-                        pos1+1, pos2, 0);// TODO
-                r.setProperty(description.getName(), insert);
-            }
-            if(ACTION==INSERT_COL_AT) {
-                insert = arrays.insertAt(Representable.class, (Double[][]) description.getValue(),
-                        pos1, pos2, 1);// TODO
-                r.setProperty(description.getName(), insert);
-            }
-            if(ACTION==INSERT_COL_AFTER) {
-                insert = arrays.insertAt(description.getClazz(), (Double[][]) description.getValue(),
-                        pos1+1, pos2+1, 1);// TODO
-                r.setProperty(description.getName(), insert);
-            }
-            r.setProperty(description.getName(), insert);
-        }
-        if (ACTION == DELETE_AT) {
-            if (description.getDim() == 1)
-                arrays.deleteAt(Integer.parseInt(description.getIndexes()));
-            if (description.getDim() == 2) {
-                String[] split = description.getIndexes().split(",");
-
-                arrays.deleteAt(description.getClazz(), (Representable[][]) property, Integer.parseInt(split[0]), Integer.parseInt(split[1]), 0);
-            }
-        }
-        if (ACTION == DELETE_COL) {
-            if(description.getDim()==2 )
-                arrays.deleteAt(description.getClazz(), (Representable[][]) property, Integer.parseInt(description.getIndexes()));
-        }
-*/
     }
 
 
+    // Insert Col at
     private void menuItemInsColActionPerformed(ActionEvent e) {
-        ObjectDetailDescription objectDetailDescription = tableModel.getObjectDetailDescriptions().get(tableObjectDetails.getSelectedRow());
-        if(objectDetailDescription.getDim()==1)
+        StructureMatrix property = getProperty();
+        if(property!=null)
         {
-            Logger.getAnonymousLogger().info("Nothing");
-        }
-        if(objectDetailDescription.getDim()==2)
-        {
-            Logger.getAnonymousLogger().info("Insert column at "+objectDetailDescription.getName()+" [*]["
-                    +  objectDetailDescription.getIndexes().split(",")[0]+"]");
-            try {
-                insertDeleteAtAfter(objectDetailDescription, INSERT_COL_AT);
-            } catch (IllegalAccessException e1) {
-                e1.printStackTrace();
-            } catch (NoSuchMethodException e1) {
-                e1.printStackTrace();
-            } catch (InvocationTargetException e1) {
-                e1.printStackTrace();
+            if(property.getDim()==2)
+            {
+                ObjectDetailDescription description = tableModel.getObjectDetailDescriptions().get(tableObjectDetails.getSelectedRow());
+                property.insert(Integer.parseInt(description.getIndexes()), 1, null);
             }
         }
-
 
     }
 
@@ -402,59 +299,29 @@ public class REditor extends JPanel implements PropertyChangeListener, Represent
         refreshTable();
     }
 
+    //Insert Row after
     private void menuItemRowAfterActionPerformed(ActionEvent e) {
-        ObjectDetailDescription objectDetailDescription = tableModel.getObjectDetailDescriptions().get(tableObjectDetails.getSelectedRow());
-        if(objectDetailDescription.getDim()==1)
+        StructureMatrix property = getProperty();
+        if(property!=null)
         {
-            Logger.getAnonymousLogger().info("Insert row after "+objectDetailDescription.getName()+" ["+objectDetailDescription.getIndexes() +"]");
-            try {
-                insertDeleteAtAfter(objectDetailDescription, INSERT_ROW_AFTER_DIM1);
-            } catch (IllegalAccessException e1) {
-                e1.printStackTrace();
-            } catch (NoSuchMethodException e1) {
-                e1.printStackTrace();
-            } catch (InvocationTargetException e1) {
-                e1.printStackTrace();
+            if(property.getDim()==2)
+            {
+                ObjectDetailDescription description = tableModel.getObjectDetailDescriptions().get(tableObjectDetails.getSelectedRow());
+                property.insert(Integer.parseInt(description.getIndexes())+1, 0, null);
             }
         }
-        if(objectDetailDescription.getDim()==2)
-        {
-            Logger.getAnonymousLogger().info("Insert row after "+objectDetailDescription.getName()+" ["+objectDetailDescription.getIndexes().split(",")[0]
-                    +  " [*]");
-            try {
-                insertDeleteAtAfter(objectDetailDescription, INSERT_ROW_AFTER_DIM2);
-            } catch (IllegalAccessException e1) {
-                e1.printStackTrace();
-            } catch (NoSuchMethodException e1) {
-                e1.printStackTrace();
-            } catch (InvocationTargetException e1) {
-                e1.printStackTrace();
-            }
-        }
-
     }
-
+    // Insert col after
     private void menuItemColAfterActionPerformed(ActionEvent e) {
-        ObjectDetailDescription objectDetailDescription = tableModel.getObjectDetailDescriptions().get(tableObjectDetails.getSelectedRow());
-        if(objectDetailDescription.getDim()==1)
+        StructureMatrix property = getProperty();
+        if(property!=null)
         {
-            Logger.getAnonymousLogger().info("Nothing");
-        }
-        if(objectDetailDescription.getDim()==2)
-        {
-            Logger.getAnonymousLogger().info("Insert column after "+objectDetailDescription.getName()+" [*]["
-                    +  objectDetailDescription.getIndexes().split(",")[0]+"]");
-            try {
-                insertDeleteAtAfter(objectDetailDescription, INSERT_COL_AFTER);
-            } catch (IllegalAccessException e1) {
-                e1.printStackTrace();
-            } catch (NoSuchMethodException e1) {
-                e1.printStackTrace();
-            } catch (InvocationTargetException e1) {
-                e1.printStackTrace();
+            if(property.getDim()==2)
+            {
+                ObjectDetailDescription description = tableModel.getObjectDetailDescriptions().get(tableObjectDetails.getSelectedRow());
+                property.insert(Integer.parseInt(description.getIndexes())+1, 1, null);
             }
         }
-
     }
 
     private void initComponents() {

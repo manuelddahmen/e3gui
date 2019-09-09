@@ -118,8 +118,8 @@ public class RepresentableClassList {
             jTextFields[i].setText(""+ camera.getLookat().get(i-3));
         // Verticale
         for(int i=9; i<18; i++) jTextFields[i].setText("" + camera.getMatrice().get((i - 9) / 3, (i - 9) % 3));
-        jTextFields[18].setText("" + camera.angleX());
-        jTextFields[19].setText("" + camera.angleY());
+        jTextFields[18].setText("" + camera.getAngleX());
+        jTextFields[19].setText("" + camera.getAngleY());
         jTextFields[20].setText("1.0");
     }
 
