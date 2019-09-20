@@ -24,54 +24,40 @@ new FormModel {
 							add( new FormComponent( "javax.swing.JButton" ) {
 								name: "buttonPrev"
 								"text": "<<"
-								addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "buttonPrevActionPerformed", true ) )
-								addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "buttonPrevActionPerformed", true ) )
-								addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "buttonPrevActionPerformed", true ) )
-								addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "buttonBackActionPerformed", true ) )
-								addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "buttonPrevActionPerformed", true ) )
 								addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "buttonBackActionPerformed", true ) )
 							} )
 							add( new FormComponent( "javax.swing.JButton" ) {
 								name: "button1"
 								"text": "1"
-								addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "buttonRefreshActionPerformed", true ) )
-								addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "buttonPrevActionPerformed", true ) )
 								addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "button1ActionPerformed", true ) )
 							} )
 							add( new FormComponent( "javax.swing.JButton" ) {
 								name: "button2"
 								"text": "2"
-								addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "buttonPrevActionPerformed", true ) )
 								addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "button2ActionPerformed", true ) )
 							} )
 							add( new FormComponent( "javax.swing.JButton" ) {
 								name: "button3"
 								"text": "3"
-								addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "buttonPrevActionPerformed", true ) )
 								addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "button3ActionPerformed", true ) )
 							} )
 							add( new FormComponent( "javax.swing.JButton" ) {
 								name: "button4"
 								"text": "4"
-								addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "buttonPrevActionPerformed", true ) )
 								addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "button4ActionPerformed", true ) )
 							} )
 							add( new FormComponent( "javax.swing.JButton" ) {
 								name: "button6"
 								"text": "5"
-								addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "buttonPrevActionPerformed", true ) )
 								addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "button6ActionPerformed", true ) )
 							} )
 							add( new FormComponent( "javax.swing.JButton" ) {
 								name: "button7"
-								addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "buttonPrevActionPerformed", true ) )
 								addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "button7ActionPerformed", true ) )
 							} )
 							add( new FormComponent( "javax.swing.JButton" ) {
 								name: "buttonNext"
 								"text": ">>"
-								addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "buttonPrevActionPerformed", true ) )
-								addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "buttonNextActionPerformed", true ) )
 								addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "buttonNextActionPerformed", true ) )
 							} )
 						} )
@@ -153,21 +139,13 @@ new FormModel {
 		add( new FormContainer( "javax.swing.JPopupMenu", new FormLayoutManager( class javax.swing.JPopupMenu ) ) {
 			name: "popupMenu1"
 			add( new FormComponent( "javax.swing.JMenuItem" ) {
-				name: "menuItemDelete"
-				"text": "Delete"
-				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "menuItemDeleteActionPerformed", true ) )
-			} )
-			add( new FormComponent( "javax.swing.JMenuItem" ) {
 				name: "menuItem1"
 				"text": "Refresh"
-				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "menuItem1ActionPerformed", true ) )
 				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "menuItemRefreshActionPerformed", true ) )
 			} )
 			add( new FormComponent( "javax.swing.JMenuItem" ) {
 				name: "menuItemRowAt"
 				"text": new FormMessage( null, "RPropertyList.menuItemRowAt.text" )
-				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "menuItemInsertActionPerformed", true ) )
-				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "menuItemInsRowActionPerformed", true ) )
 				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "menuItemInsRowActionPerformed", true ) )
 			} )
 			add( new FormComponent( "javax.swing.JMenuItem" ) {
@@ -178,15 +156,22 @@ new FormModel {
 			add( new FormComponent( "javax.swing.JMenuItem" ) {
 				name: "menuItemRowAfter"
 				"text": new FormMessage( null, "RPropertyList.menuItemRowAfter.text" )
-				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "menuItemInsertActionPerformed", true ) )
-				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "menuItemInsRowActionPerformed", true ) )
 				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "menuItemRowAfterActionPerformed", true ) )
 			} )
 			add( new FormComponent( "javax.swing.JMenuItem" ) {
 				name: "menuItemColAfter"
 				"text": new FormMessage( null, "RPropertyList.menuItemColAfter.text" )
-				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "menuItemInsColActionPerformed", true ) )
 				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "menuItemColAfterActionPerformed", true ) )
+			} )
+			add( new FormComponent( "javax.swing.JMenuItem" ) {
+				name: "menuItemDelete"
+				"text": "Delete Row"
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "menuItemDeleteRowActionPerformed", true ) )
+			} )
+			add( new FormComponent( "javax.swing.JMenuItem" ) {
+				name: "menuItem2"
+				"text": "Delete column"
+				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "menuItemDeleteColActionPerformed", true ) )
 			} )
 		}, new FormLayoutConstraints( null ) {
 			"location": new java.awt.Point( 95, 510 )

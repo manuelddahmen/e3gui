@@ -75,15 +75,22 @@ public class ObjectEditorBase extends JPanel implements RepresentableEditor {
         Matrix33 rot = rotation.getRot();
         Point3D scale =r.getScale();
         textAreaMatrix33.setText(rot.toString());
-        for(int i = 0; i<3; i++)
-            point3d[i].setText(
-                    ""+centreRot
-                            .get(i));
-        for(int i=0; i<9; i++)
+        try {
+            for (int i = 0; i < 3; i++)
+                point3d[i].setText(
+                        "" + centreRot.get(i));
+            for(int i=0; i<9; i++)
             jTextFieldMatrix[i].setText(String.valueOf(rot.get((i/3), (i%3))));
-        textAreaPoint3D.setText(""+centreRot.toString());
-        for(int i = 0; i<3; i++)
-            jTextFieldsScale[i].setText(""+scale.get(i));
+            textAreaPoint3D.setText(""+centreRot.toString());
+            for(int i = 0; i<3; i++)
+                jTextFieldsScale[i].setText(""+scale.get(i));
+        } catch (NullPointerException ex)
+        {
+            ex.printStackTrace();
+        }
+
+
+
     }
     private void saveValues(Representable r, JTextField[] point3d, JTextField[] jTextFieldMatrix, JTextArea textAreaPoint3D,
                             JTextArea textAreaMatrix33,

@@ -13,7 +13,6 @@ public class MyObservableList<T> extends ArrayList<T> implements ObservableList<
 
 	@Override
 	public int getSize() {
-		// TODO Auto-generated method stub
 		return size();
 	}
 
