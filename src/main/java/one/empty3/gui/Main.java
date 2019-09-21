@@ -32,6 +32,8 @@ public class Main implements PropertyChangeListener {
     private boolean drawingPointCoords;
     private Point click;
     private String toDraw;
+    private boolean running = true;
+    private boolean refreshXMLactioned;
 
     public static void main(String [] args)
     {
@@ -209,6 +211,49 @@ public class Main implements PropertyChangeListener {
         Logger.getAnonymousLogger().info("Nothing here");
     }
 
+    private void tabbedPaneXMLComponentAdded(ContainerEvent e) {
+        new Thread() {
+            @Override
+            public void run() {
+                while (isRunning()) {
+                    if (isRefreshXMLactioned())
+                        try {
+                            Scene scene = getDataModel().getScene();
+                            StringBuilder stringBuilder = new StringBuilder();
+                            scene.xmlRepresentation(getDataModel().getDirectory(false), scene, stringBuilder, scene);
+
+                            textAreaXML.setText(stringBuilder.toString());
+
+                            setRefreshXMLactioned(false);
+                        } catch (NullPointerException ex) {
+                            ex.printStackTrace();
+                        }
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException e1) {
+                        e1.printStackTrace();
+                    }
+                }
+            }
+        }.start();
+    }
+
+    public boolean isRunning() {
+        return running;
+    }
+
+    private void buttonRefreshXMLActionPerformed(ActionEvent e) {
+        setRefreshXMLactioned(true);
+    }
+
+    private void setRefreshXMLactioned(boolean value) {
+        this.refreshXMLactioned = value;
+    }
+
+    public boolean isRefreshXMLactioned() {
+        return refreshXMLactioned;
+    }
+
     class ThreadDrawingCoords  extends Thread {
         @Override
         public void run() {
@@ -259,10 +304,14 @@ public class Main implements PropertyChangeListener {
         this.buttonSaveR = new JButton();
         this.panel3 = new JPanel();
         this.loadSave1 = new LoadSave();
+        this.panel7 = new JPanel();
+        this.buttonRefreshXML = new JButton();
+        this.scrollPane1 = new JScrollPane();
+        this.textAreaXML = new JTextArea();
 
         //======== MainWindow ========
         {
-            this.MainWindow.setTitle("Empty3gui");
+            this.MainWindow.setTitle("Empty3");
             this.MainWindow.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
             this.MainWindow.setBackground(new Color(204, 255, 255));
             this.MainWindow.setVisible(true);
@@ -350,6 +399,12 @@ public class Main implements PropertyChangeListener {
                     //======== tabbedPane1 ========
                     {
                         this.tabbedPane1.setMinimumSize(new Dimension(400, 300));
+                        this.tabbedPane1.addContainerListener(new ContainerAdapter() {
+                            @Override
+                            public void componentAdded(ContainerEvent e) {
+                                tabbedPaneXMLComponentAdded(e);
+                            }
+                        });
 
                         //---- textureEditor1 ----
                         this.textureEditor1.setMinimumSize(new Dimension(400, 300));
@@ -454,6 +509,34 @@ public class Main implements PropertyChangeListener {
                             this.panel3.add(this.loadSave1, "cell 0 0 2 3,dock center");
                         }
                         this.tabbedPane1.addTab("LOad/save/export", this.panel3);
+
+                        //======== panel7 ========
+                        {
+                            this.panel7.setLayout(new MigLayout(
+                                "hidemode 3",
+                                // columns
+                                "[fill]" +
+                                "[fill]" +
+                                "[fill]",
+                                // rows
+                                "[]" +
+                                "[]" +
+                                "[]" +
+                                "[]" +
+                                "[]"));
+
+                            //---- buttonRefreshXML ----
+                            this.buttonRefreshXML.setText("Refresh");
+                            this.buttonRefreshXML.addActionListener(e -> buttonRefreshXMLActionPerformed(e));
+                            this.panel7.add(this.buttonRefreshXML, "cell 0 0");
+
+                            //======== scrollPane1 ========
+                            {
+                                this.scrollPane1.setViewportView(this.textAreaXML);
+                            }
+                            this.panel7.add(this.scrollPane1, "cell 1 0,dock center");
+                        }
+                        this.tabbedPane1.addTab("text", this.panel7);
                     }
                     this.panel5.setBottomComponent(this.tabbedPane1);
                 }
@@ -513,6 +596,10 @@ public class Main implements PropertyChangeListener {
     private JButton buttonSaveR;
     private JPanel panel3;
     private LoadSave loadSave1;
+    private JPanel panel7;
+    private JButton buttonRefreshXML;
+    private JScrollPane scrollPane1;
+    private JTextArea textAreaXML;
     private BindingGroup bindingGroup;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
     
