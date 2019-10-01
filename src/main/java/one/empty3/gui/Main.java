@@ -1,5 +1,26 @@
+/*
+ *
+ *  *  This file is part of Empty3.
+ *  *
+ *  *     Empty3 is free software: you can redistribute it and/or modify
+ *  *     it under the terms of the GNU General Public License as published by
+ *  *     the Free Software Foundation, either version 2 of the License, or
+ *  *     (at your option) any later version.
+ *  *
+ *  *     Empty3 is distributed in the hope that it will be useful,
+ *  *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  *     GNU General Public License for more details.
+ *  *
+ *  *     You should have received a copy of the GNU General Public License
+ *  *     along with Empty3.  If not, see <https://www.gnu.org/licenses/>. 2
+ *
+ *
+ */
+
 package one.empty3.gui;
 
+import javax.swing.border.*;
 import net.miginfocom.swing.MigLayout;
 import one.empty3.library.*;
 import one.empty3.library.core.script.ExtensionFichierIncorrecteException;
@@ -50,8 +71,34 @@ public class Main implements PropertyChangeListener {
         ThreadDrawingCoords threadDrawingCoords = new ThreadDrawingCoords();
         threadDrawingCoords.start();
         getLoadSave1().setMain(this);
+
+        JDialog licence = new JDialog(MainWindow, "Licence");
+        JTextArea area = null;
+        licence.add(area=new JTextArea("Création d'objets simples\n" +
+                "    Copyright (C) 2019  Manuel Dahmen\n" +
+                "\n" +
+                "    This program is free software: you can redistribute it and/or modify\n" +
+                "    it under the terms of the GNU General Public License as published by\n" +
+                "    the Free Software Foundation, either version 3 of the License, or\n" +
+                "    (at your option) any later version.\n" +
+                "\n" +
+                "    This program is distributed in the hope that it will be useful,\n" +
+                "    but WITHOUT ANY WARRANTY; without even the implied warranty of\n" +
+                "    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n" +
+                "    GNU General Public License for more details.\n" +
+                "\n" +
+                "    You should have received a copy of the GNU General Public License\n" +
+                "    along with this program.  If not, see <https://www.gnu.org/licenses/>."));
+        licence.pack();
+        area.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                licence.setVisible(false);
+            }
+        });
+        licence.setVisible(true);
     }
-    
+
     private TextureEditor getTextureEditor() {
         return textureEditor1;
     }
@@ -93,7 +140,7 @@ public class Main implements PropertyChangeListener {
         Scene scene = new Scene();
         try {
             new Loader().load(selectedFile, scene);
-            dataModel = new DataModel();
+            dataModel = new DataModel(selectedFile);
             dataModel.setScene(scene);
         } catch (VersionNonSupporteeException e1) {
             e1.printStackTrace();
@@ -254,6 +301,17 @@ public class Main implements PropertyChangeListener {
         return refreshXMLactioned;
     }
 
+    private void checkBoxActiveItemStateChanged(ItemEvent e) {
+        if(e.getStateChange()== ItemEvent.SELECTED)
+        {
+            System.out.println("Graphical edition enabled");
+        }
+        else if(e.getStateChange()== ItemEvent.DESELECTED)
+        {
+            System.out.println("Graphical edition disabled");
+        }
+    }
+
     class ThreadDrawingCoords  extends Thread {
         @Override
         public void run() {
@@ -308,6 +366,8 @@ public class Main implements PropertyChangeListener {
         this.buttonRefreshXML = new JButton();
         this.scrollPane1 = new JScrollPane();
         this.textAreaXML = new JTextArea();
+        this.panel8 = new JPanel();
+        this.checkBoxActive = new JCheckBox();
 
         //======== MainWindow ========
         {
@@ -536,7 +596,29 @@ public class Main implements PropertyChangeListener {
                             }
                             this.panel7.add(this.scrollPane1, "cell 1 0,dock center");
                         }
-                        this.tabbedPane1.addTab("text", this.panel7);
+                        this.tabbedPane1.addTab("XML", this.panel7);
+
+                        //======== panel8 ========
+                        {
+                            this.panel8.setLayout(new MigLayout(
+                                "hidemode 3",
+                                // columns
+                                "[fill]" +
+                                "[fill]",
+                                // rows
+                                "[]" +
+                                "[]" +
+                                "[]" +
+                                "[]"));
+
+                            //---- checkBoxActive ----
+                            this.checkBoxActive.setText("Active graphical editing");
+                            this.checkBoxActive.setBorder(new SoftBevelBorder(SoftBevelBorder.LOWERED));
+                            this.checkBoxActive.setBorderPainted(true);
+                            this.checkBoxActive.addItemListener(e -> checkBoxActiveItemStateChanged(e));
+                            this.panel8.add(this.checkBoxActive, "cell 0 0");
+                        }
+                        this.tabbedPane1.addTab("graphical editing", this.panel8);
                     }
                     this.panel5.setBottomComponent(this.tabbedPane1);
                 }
@@ -600,6 +682,8 @@ public class Main implements PropertyChangeListener {
     private JButton buttonRefreshXML;
     private JScrollPane scrollPane1;
     private JTextArea textAreaXML;
+    private JPanel panel8;
+    private JCheckBox checkBoxActive;
     private BindingGroup bindingGroup;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
     

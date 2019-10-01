@@ -1,4 +1,24 @@
 /*
+ *
+ *  *  This file is part of Empty3.
+ *  *
+ *  *     Empty3 is free software: you can redistribute it and/or modify
+ *  *     it under the terms of the GNU General Public License as published by
+ *  *     the Free Software Foundation, either version 2 of the License, or
+ *  *     (at your option) any later version.
+ *  *
+ *  *     Empty3 is distributed in the hope that it will be useful,
+ *  *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  *     GNU General Public License for more details.
+ *  *
+ *  *     You should have received a copy of the GNU General Public License
+ *  *     along with Empty3.  If not, see <https://www.gnu.org/licenses/>. 2
+ *
+ *
+ */
+
+/*
  * Created by JFormDesigner on Thu Jul 25 04:19:30 CEST 2019
  */
 
@@ -13,7 +33,11 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.table.DefaultTableModel;
+import javax.xml.soap.Text;
 import java.awt.*;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
+import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.IOException;
@@ -23,6 +47,89 @@ import java.util.Arrays;
  * @author Manuel Dahmen
  */
 public class TextureEditor extends JPanel {
+    class TextureTransferHandler extends TransferHandler
+    {
+        public class MyTransferHandler extends TransferHandler{
+
+            /**
+             * Méthode permettant à l'objet de savoir si les données reçues
+             * via un drop sont autorisées à être importées
+             * @param info
+             * @return boolean
+             */
+            public boolean canImport(TransferHandler.TransferSupport info) {
+                //Nous contrôlons si les données reçues sont d'un type autorisé, ici String
+                if (!info.isDataFlavorSupported(DataFlavor.javaFileListFlavor)) {
+                    return false;
+                }
+                return true;
+            }
+            /**
+             * C'est ici que l'insertion des données dans notre composant est réalisée
+             * @param support
+             * @return boolean
+             */
+            public boolean importData(TransferHandler.TransferSupport support){
+                //Nous contrôlons si les données reçues sont d'un type autorisé
+                if(!canImport(support))
+                    return false;
+
+                //On récupère notre objet Transferable, celui qui contient les données en transit
+                Transferable data = support.getTransferable();
+                File f = null;
+
+                try {
+                    //Nous récupérons nos données en spécifiant ce que nous attendons
+                    f = (File) data.getTransferData(DataFlavor.javaFileListFlavor);
+                } catch (UnsupportedFlavorException e){
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                boolean done = false;
+
+                String[] extensionsImg = new String[]{"jpg", "jpeg", "png", "gif", "tiff", "ppm"};//...
+                String[] extensionsMov = new String[]{"mpeg", "mpg", "avi", "qt", "mp4"};
+                if(Arrays.stream(extensionsImg).anyMatch(s -> s.equals(extensionsImg)))
+                {
+                    try {
+                        tableModelTexture.getLines().add(new TableModelTexture.ModelLine(f, new TextureImg(
+                                new ECBufferedImage(ImageIO.read(f))), TextureImg.class));
+                        done = true;
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+                if(Arrays.stream(extensionsMov).anyMatch(s -> s.equals(extensionsMov)))
+                {
+                        TextureMov textureMov = new TextureMov();
+                        textureMov.setFile(f);
+                        tableModelTexture.getLines().add(new TableModelTexture.ModelLine(f, textureMov,
+                                TextureMov.class));
+                        done = true;
+                }
+
+                return done;
+            }
+            /**
+             * Cette méthode est invoquée à la fin de l'action DROP
+             * Si des actions sont à faire ensuite, c'est ici qu'il faudra coder le comportement désiré
+             * @param c
+             * @param t
+             * @param action
+             */
+            protected void exportDone(JComponent c, Transferable t, int action){}
+
+            public int getSourceActions(JComponent c) {
+                return COPY;
+            }
+        }
+
+    }
+
+
     private MyObservableList<File> fileList = new MyObservableList<>();
     private Color currentColor;
     public int choiceTexType = 0;
@@ -40,6 +147,8 @@ public class TextureEditor extends JPanel {
                 refreshTable();
             }
         });
+        table1.setDragEnabled(true);
+        table1.setDropMode(DropMode.INSERT_ROWS);
         table1.setModel(tableModelTexture);
      }
 

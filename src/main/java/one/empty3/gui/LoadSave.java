@@ -1,4 +1,24 @@
 /*
+ *
+ *  *  This file is part of Empty3.
+ *  *
+ *  *     Empty3 is free software: you can redistribute it and/or modify
+ *  *     it under the terms of the GNU General Public License as published by
+ *  *     the Free Software Foundation, either version 2 of the License, or
+ *  *     (at your option) any later version.
+ *  *
+ *  *     Empty3 is distributed in the hope that it will be useful,
+ *  *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  *     GNU General Public License for more details.
+ *  *
+ *  *     You should have received a copy of the GNU General Public License
+ *  *     along with Empty3.  If not, see <https://www.gnu.org/licenses/>. 2
+ *
+ *
+ */
+
+/*
  * Created by JFormDesigner on Sun Aug 11 14:34:54 CEST 2019
  */
 
@@ -53,15 +73,12 @@ public class LoadSave extends JPanel {
                 e1.printStackTrace();
             }
             DataModel load = null;
-            try {
-                load = DataModel.load(jFileChooser.getSelectedFile());
+                load = new DataModel(jFileChooser.getSelectedFile());
                 if(load!=null) {
                     main.setDataModel(load);
                     currentDirectory = jFileChooser.getCurrentDirectory();
                 }
-            } catch (FileNotFoundException e1) {
-                e1.printStackTrace();
-            }
+
         }
     }
     private void buttonSaveActionPerformed(ActionEvent e) {
@@ -85,6 +102,11 @@ public class LoadSave extends JPanel {
         // TODO FIND CLASS
         ObjExport objExport = new ObjExport();
     }
+
+    private void button2ActionPerformed(ActionEvent e) {
+        // TODO add your code here
+    }
+
 
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
@@ -115,7 +137,10 @@ public class LoadSave extends JPanel {
 
         //---- buttonNew ----
         buttonNew.setText("new");
-        buttonNew.addActionListener(e -> buttonNewActionPerformed(e));
+        buttonNew.addActionListener(e -> {
+			buttonNewActionPerformed(e);
+			buttonNewActionPerformed(e);
+		});
         add(buttonNew, "cell 0 0");
 
         //======== scrollPane1 ========

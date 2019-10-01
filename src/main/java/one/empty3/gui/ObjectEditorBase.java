@@ -1,4 +1,24 @@
 /*
+ *
+ *  *  This file is part of Empty3.
+ *  *
+ *  *     Empty3 is free software: you can redistribute it and/or modify
+ *  *     it under the terms of the GNU General Public License as published by
+ *  *     the Free Software Foundation, either version 2 of the License, or
+ *  *     (at your option) any later version.
+ *  *
+ *  *     Empty3 is distributed in the hope that it will be useful,
+ *  *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  *     GNU General Public License for more details.
+ *  *
+ *  *     You should have received a copy of the GNU General Public License
+ *  *     along with Empty3.  If not, see <https://www.gnu.org/licenses/>. 2
+ *
+ *
+ */
+
+/*
  * Created by JFormDesigner on Mon Jul 01 11:05:51 CEST 2019
  */
 
@@ -70,26 +90,32 @@ public class ObjectEditorBase extends JPanel implements RepresentableEditor {
     private void initValues(Representable r, JTextField[] point3d, JTextField[] jTextFieldMatrix, JTextArea textAreaPoint3D,
                             JTextArea textAreaMatrix33,
                             JTextField[] jTextFieldsScale) {
-        Rotation rotation = r.getRotation();
-        Point3D centreRot = rotation.getCentreRot();
-        Matrix33 rot = rotation.getRot();
-        Point3D scale =r.getScale();
-        textAreaMatrix33.setText(rot.toString());
-        try {
-            for (int i = 0; i < 3; i++)
-                point3d[i].setText(
-                        "" + centreRot.get(i));
-            for(int i=0; i<9; i++)
-            jTextFieldMatrix[i].setText(String.valueOf(rot.get((i/3), (i%3))));
-            textAreaPoint3D.setText(""+centreRot.toString());
-            for(int i = 0; i<3; i++)
-                jTextFieldsScale[i].setText(""+scale.get(i));
-        } catch (NullPointerException ex)
+        if(r!=null)
         {
-            ex.printStackTrace();
+            Rotation rotation = r.getRotation();
+            if(rotation!=null) {
+                Point3D centreRot = rotation.getCentreRot();
+                if (centreRot != null) {
+                    Matrix33 rot = rotation.getRot();
+                    Point3D scale = r.getScale();
+                    if (rot != null && scale != null) {
+                        textAreaMatrix33.setText(rot.toString());
+                        try {
+                            for (int i = 0; i < 3; i++)
+                                point3d[i].setText(
+                                        "" + centreRot.get(i));
+                            for (int i = 0; i < 9; i++)
+                                jTextFieldMatrix[i].setText(String.valueOf(rot.get((i / 3), (i % 3))));
+                            textAreaPoint3D.setText("" + centreRot.toString());
+                            for (int i = 0; i < 3; i++)
+                                jTextFieldsScale[i].setText("" + scale.get(i));
+                        } catch (NullPointerException ex) {
+                            ex.printStackTrace();
+                        }
+                    }
+                }
+            }
         }
-
-
 
     }
     private void saveValues(Representable r, JTextField[] point3d, JTextField[] jTextFieldMatrix, JTextArea textAreaPoint3D,

@@ -4,14 +4,14 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>one.empty3.apps</groupId>
   <artifactId>empty3-library-3d-gui</artifactId>
-  <version>2019.2</version>
+  <version>2019.3</version>
   <name>Empty3_GUI</name>
   <description>3D rendering engine. Plus modelling.</description>
   <distributionManagement>
     <repository>
       <id>if2</id>
       <name>empty3.one</name>
-      <url>ftp://ftp.empty3.one/Downloads/maven</url>
+      <url>ftp://ftp.empty3.one/downloads/maven</url>
     </repository>
   </distributionManagement>
   <properties>
@@ -229,7 +229,7 @@
       </testResource>
     </testResources>
     <directory>G:\Apps\IdeaProjects\E3GUI\target</directory>
-    <finalName>empty3-library-3d-gui-2019.2</finalName>
+    <finalName>empty3-library-3d-gui-2019.3</finalName>
     <pluginManagement>
       <plugins>
         <plugin>

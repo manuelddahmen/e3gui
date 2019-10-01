@@ -11,7 +11,7 @@
 
     <groupId>one.empty3.apps</groupId>
     <artifactId>empty3-library-3d-gui</artifactId>
-    <version>2019.2</version>
+    <version>2019.3</version>
     <description>3D rendering engine. Plus modelling.</description>
     <packaging>jar</packaging>
 
@@ -19,7 +19,7 @@
         <repository>
             <id>if2</id>
             <name>empty3.one</name>
-            <url>ftp://ftp.empty3.one/Downloads/maven</url>
+            <url>ftp://ftp.empty3.one/downloads/maven</url>
         </repository>
     </distributionManagement>
 
