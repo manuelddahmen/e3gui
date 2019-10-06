@@ -46,10 +46,11 @@ public class ZRunnerMain extends Thread implements PropertyChangeListener {
     private ZBufferImpl zBuffer;
     private boolean propertyChanged = false;
     private boolean updateGraphics = false;
-    private Main ff;
+    private Main main;
     private Scene scene;
     private PropertyChangeListener changeListener;
     private boolean stopCurrentRender;
+    private boolean graphicalEditing;
 
 
     public ZRunnerMain() {
@@ -58,14 +59,9 @@ public class ZRunnerMain extends Thread implements PropertyChangeListener {
         running = true;
         zBuffer = null;
         System.out.println("ZRunner new instance");
-        setUpdateView(ff);
         start();
     }
 
-    public void setUpdateView(Main ff) {
-
-        this.ff = ff;
-    }
 
     public LineSegment getClick(int x, int y) {
         throw new UnsupportedOperationException("No click");
@@ -107,9 +103,13 @@ public class ZRunnerMain extends Thread implements PropertyChangeListener {
                 }
             }
         }.start();
+        ThreadGraphicalEditor threadGraphicalEditor = new ThreadGraphicalEditor();
+        threadGraphicalEditor.setMain(getMain());
+        threadGraphicalEditor.start();
+        changeSupport.addPropertyChangeListener(threadGraphicalEditor);
         while (isRunning()) {
-            if (ff != null)
-                updateViewMain = ff.getUpdateView();
+            if (main != null)
+                updateViewMain = main.getUpdateView();
             if (updateViewMain != null && updateViewMain.getWidth() > 0 && updateViewMain.getHeight() > 0) {
 
                 try {
@@ -126,7 +126,7 @@ public class ZRunnerMain extends Thread implements PropertyChangeListener {
                 //zBuffer.setDimension(updateViewMain.getWidth(), updateViewMain.getHeight());
 
                 try {
-                    Scene scene = ff.getDataModel().getScene();
+                    Scene scene = getMain().getDataModel().getScene();
 
                     zBuffer.scene(scene);
 
@@ -136,20 +136,20 @@ public class ZRunnerMain extends Thread implements PropertyChangeListener {
                     zBuffer.next();
                     zBuffer.draw(scene);
                     lastImage = zBuffer.image();
-                    changeSupport.firePropertyChange("renderedImageOK", renderedImageOK, true);
+                    changeSupport.firePropertyChange("renderedImageOK", null , lastImage);
                     renderedImageOK = true;
                     propertyChanged = false;
                     updateGraphics = false;
                     drawSuccess();
                 } catch (NullPointerException ex)
                 {
-                    changeSupport.firePropertyChange("renderedImageOK", renderedImageOK, false);
+                    changeSupport.firePropertyChange("renderedImageOK", null, null);
                     drawFailed();
                     renderedImageOK = true;
                     ex.printStackTrace();
                 }
                 catch (ConcurrentModificationException ex) {
-                    changeSupport.firePropertyChange("renderedImageOK", renderedImageOK, false);
+                    changeSupport.firePropertyChange("renderedImageOK", null, null);
                     drawFailed();
                     renderedImageOK = true;
                     log.warning("Wait concurrent modification");
@@ -157,7 +157,7 @@ public class ZRunnerMain extends Thread implements PropertyChangeListener {
                 {
                     ex.printStackTrace();
                     drawFailed();
-                    changeSupport.firePropertyChange("renderedImageOK", renderedImageOK, false);
+                    changeSupport.firePropertyChange("renderedImageOK", null, null);
                 }
             }
             try {
@@ -241,5 +241,21 @@ public class ZRunnerMain extends Thread implements PropertyChangeListener {
 
     public void setzBuffer(ZBufferImpl zBuffer) {
         this.zBuffer = zBuffer;
+    }
+
+    public void setGraphicalEditing(boolean graphicalEditing) {
+        this.graphicalEditing = graphicalEditing;
+    }
+
+    public boolean isGraphicalEditing() {
+        return graphicalEditing;
+    }
+
+    public Main getMain() {
+        return main;
+    }
+
+    public void setMain(Main main) {
+        this.main = main;
     }
 }

@@ -41,7 +41,7 @@ public class UpdateViewMain extends JPanel implements RepresentableEditor {
     public void setFF(Main ff )
     {
         this.ff = ff;
-        this.getzRunner().setUpdateView(ff);
+        this.getzRunner().setMain(ff);
     }
 
     private FunctionView view;

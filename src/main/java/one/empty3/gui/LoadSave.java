@@ -25,6 +25,7 @@
 package one.empty3.gui;
 
 import net.miginfocom.swing.MigLayout;
+import one.empty3.library.Scene;
 import one.empty3.library.core.export.ObjExport;
 import one.empty3.library.core.export.STLExport;
 
@@ -41,7 +42,7 @@ import java.io.IOException;
  */
 public class LoadSave extends JPanel {
     private Main main;
-    private  DataModel dataModel;
+    private DataModel dataModel;
     private File currentDirectory = new File("./");
 
     public LoadSave() {
@@ -59,6 +60,13 @@ public class LoadSave extends JPanel {
             e1.printStackTrace();
         }
         main.setDataModel(new DataModel());
+        reinit(main.getDataModel().getScene());
+    }
+
+    public void reinit(Scene scene)
+    {
+        main.getEditor().history.clear();
+        main.getEditor().init(scene);
     }
 
 
@@ -66,24 +74,28 @@ public class LoadSave extends JPanel {
         JFileChooser jFileChooser = new JFileChooser();
         jFileChooser.setCurrentDirectory(currentDirectory);
         jFileChooser.showDialog(this, "Load");
-        if(jFileChooser.getSelectedFile()!=null) {
+        File selectedFile = jFileChooser.getSelectedFile();
+        if (selectedFile != null) {
+            System.out.println("Try to save back");
             try {
                 main.getDataModel().save(null);
+                System.out.println("Save back");
             } catch (IOException e1) {
                 e1.printStackTrace();
             }
-            DataModel load = null;
-                load = new DataModel(jFileChooser.getSelectedFile());
-                if(load!=null) {
-                    main.setDataModel(load);
-                    currentDirectory = jFileChooser.getCurrentDirectory();
-                }
+            System.out.println("Load file"+selectedFile.toString());
+
+            main.setDataModel(new DataModel(selectedFile));
+           currentDirectory = jFileChooser.getCurrentDirectory();
+            reinit(main.getDataModel().getScene());
 
         }
     }
+
     private void buttonSaveActionPerformed(ActionEvent e) {
         try {
             main.getDataModel().save(null);
+            reinit(main.getDataModel().getScene());
         } catch (IOException e1) {
             e1.printStackTrace();
         }
@@ -92,6 +104,7 @@ public class LoadSave extends JPanel {
     private void buttonEstlActionPerformed(ActionEvent e) {
         try {
             STLExport.save(new File(main.getDataModel().getNewStlFile()), getDataModel().getScene(), false);
+            reinit(main.getDataModel().getScene());
         } catch (IOException e1) {
             e1.printStackTrace();
         }
@@ -113,7 +126,7 @@ public class LoadSave extends JPanel {
         buttonNew = new JButton();
         scrollPane1 = new JScrollPane();
         tableLatest = new JTable();
-        button2 = new JButton();
+        buttonLoad = new JButton();
         button3 = new JButton();
         button4 = new JButton();
         buttonEstl = new JButton();
@@ -174,10 +187,10 @@ public class LoadSave extends JPanel {
         }
         add(scrollPane1, "cell 1 0 1 7");
 
-        //---- button2 ----
-        button2.setText("load");
-        button2.addActionListener(e -> buttonLoadActionPerformed(e));
-        add(button2, "cell 0 1");
+        //---- buttonLoad ----
+        buttonLoad.setText("load");
+        buttonLoad.addActionListener(e -> buttonLoadActionPerformed(e));
+        add(buttonLoad, "cell 0 1");
 
         //---- button3 ----
         button3.setText("save");
@@ -202,6 +215,7 @@ public class LoadSave extends JPanel {
         add(buttonEobj, "cell 0 5");
         // JFormDesigner - End of component initialization  //GEN-END:initComponents
     }
+
     public void setMain(Main main) {
         this.main = main;
     }
@@ -210,7 +224,7 @@ public class LoadSave extends JPanel {
     private JButton buttonNew;
     private JScrollPane scrollPane1;
     private JTable tableLatest;
-    private JButton button2;
+    private JButton buttonLoad;
     private JButton button3;
     private JButton button4;
     private JButton buttonEstl;

@@ -15,7 +15,7 @@
  *  *     You should have received a copy of the GNU General Public License
  *  *     along with Empty3.  If not, see <https://www.gnu.org/licenses/>. 2
  *
- *
+
  */
 
 package one.empty3.gui;
@@ -48,8 +48,6 @@ import java.util.zip.ZipOutputStream;
  * Created by manue on 22-07-19.
  */
 public class DataModel implements PropertyChangeListener {
-    private TreeScene treeScene;
-    private REditor rEditor;
     private ArrayList<ITexture> textures = new ArrayList();
     private String fileModel;
     private File newImageFile;
@@ -70,102 +68,130 @@ public class DataModel implements PropertyChangeListener {
                 Document build = new Builder().build(inputEcXml);
                 Element rootElement = build.getRootElement();
 
-                browseRoot(rootElement);
+                browser(rootElement, new Scene());
             } catch (ParsingException e) {
                 e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
+        System.out.println(this);
         Logger.getAnonymousLogger().log(Level.INFO, "Model loaded");
     }
 
-    private void browseRoot(Element element) {
+    private void browser(Element element, MatrixPropertiesObject representable) {
         ClassLoader systemClassLoader = ClassLoader.getSystemClassLoader();
         Attribute aClass = element.getAttribute("class");
         try {
             Class<?> aClass1 = systemClassLoader.loadClass(aClass.getValue());
-            aClass1.newInstance();
-            if (aClass1.isAssignableFrom(Scene.class)) {
+            if (aClass1.equals(Scene.class)) {
                 this.scene = new Scene();
-                browser(element, scene);
+                representable = scene;
             }
-
+            {
+                if (representable instanceof Representable)
+                    ((Representable) representable).declareProperties();
+                // TODO TEST EQUALITY CLASSES
+            }
+            for (int i = 0; i < element.getChildElements().size(); i++) {
+                Element element1 = element.getChildElements().get(i);
+                String name = element1.getAttributeValue("name");
+                /*if (name != null) {
+                    if (name.contains("/"))
+                        name = name.split("/")[0];*/
+                StructureMatrix declaredProperty = representable.getDeclaredProperty(name);
+                if (declaredProperty == null)
+                    System.err.println("Element: " + element.toString() + "Element class: " + element.getAttributeValue("class") + "\nStructureMatrix : null \nelement1: name=" + name + "\nElement1= " + element1.toString());
+                else
+                    browser(element1, declaredProperty);
+                //}
+            }
 
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InstantiationException e) {
+        } catch (ClassesNotEqualException e) {
             e.printStackTrace();
         }
 
     }
 
-    private void browser(Element structureElement, StructureMatrix sm) {
-        Element data = structureElement.getFirstChildElement("Data");
-        for (int i = 0; i < data.getChildElements().size(); i++) {
-            int l, c;
-            Element child = data.getChildElements().get(i);
-            if (child.getLocalName().equals("Cell")) {
-                l = Integer.parseInt(child.getAttributeValue("l"));
-                c = Integer.parseInt(child.getAttributeValue("c"));
-                Object value = null;
-                Object elemLc = browser(child.getChildElements().get(0), sm, l, c);
-                Object valueOf = valueOf(child);
-                /*if(valueOf!=null||elemLc!=null)
-                {
-                    switch (sm.getDim())
-                    {
-                        case 0:
-                            if(valueOf!=null)
-                            {
-                                sm.setElem(valueOf);
-
-                            }
-                            else {
-                                sm.setElem(elemLc);
-                            }
-                            break;
-                        case 1:
-                            if(valueOf!=null)
-                            {
-                                sm.setElem(valueOf, l);
-
-                            }
-                            else {
-                                sm.setElem(elemLc, l);
-                            }
-                            break;
-                        case 2:
-                            if(valueOf!=null)
-                            {
-                                sm.setElem(valueOf, l, c);
-
-                            }
-                            else {
-                                sm.setElem(elemLc, l, c);
-                            }
-                            break;
-                    }
-                }*/
+    private void browser(Element structureElement, StructureMatrix sm) throws ClassNotFoundException, ClassesNotEqualException {
+        if (structureElement == null || sm == null)
+            try {
+                throw new ClassesNotEqualException(structureElement == null ? null : structureElement.getClass(), sm == null ? null : sm.getClass());
+            } catch (ClassesNotEqualException e) {
+                e.printStackTrace();
             }
+        if (!structureElement.getAttributeValue("class").equals(StructureMatrix.class.getName()))
+            throw new ClassesNotEqualException(Class.forName(structureElement.getAttributeValue("class")), StructureMatrix.class);
 
+        String smClassName = structureElement.getAttributeValue("typeClass");
+        try {
+            Class<?> aClass = Class.forName(smClassName);
+            Element data = structureElement.getFirstChildElement("Data");
+            int dim = Integer.parseInt(data.getAttributeValue("dim"));
+            //sm.init(dim, aClass);
+            int size = data.getChildElements("Cell").size();
+            for (int i = 0; i < size; i++) {
+                int l, c;
+                Element cell = data.getChildElements("Cell").get(i);
+                l = Integer.parseInt(cell.getAttributeValue("l"));
+                c = Integer.parseInt(cell.getAttributeValue("c"));
+                if (cell.getChildElements().size() > 0) {
+
+                    Object valueOf = null;
+                    valueOf = valueOf(cell.getChildElements().get(0));
+                    Object elemLc = null;
+                    if (valueOf == null)
+                        elemLc = browser(cell.getChildElements().get(0), sm, dim, l, c);
+                    if (valueOf != null || elemLc != null) {
+
+                        if(valueOf instanceof Representable && size>0 && size==3)
+                        {
+                            System.out.println(valueOf.toString());
+                        }
+
+
+                        switch (dim) {
+                            case 0:
+                                if (valueOf != null) {
+                                    sm.setElem(valueOf);
+
+                                } else {
+                                    sm.setElem(elemLc);
+                                }
+                                break;
+                            case 1:
+                                if (valueOf != null) {
+                                    sm.setElem(valueOf, c);
+
+                                } else {
+                                    sm.setElem(elemLc, c);
+                                }
+                                break;
+                            case 2:
+                                if (valueOf != null) {
+                                    sm.setElem(valueOf, l, c);
+
+                                } else {
+                                    sm.setElem(elemLc, l, c);
+                                }
+                                break;
+                        }
+                    }
+                }
+
+            }
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
         }
 
     }
 
-    private Object valueOf(Element cell) {
-        String localName = cell.getLocalName();
-        String value = cell.getValue();
+    private Object valueOf(Element simple) {
+        String localName = simple.getLocalName();
+        String value = simple.getValue();
         switch (localName) {
-            case "StructureMatrix":
-                break;
-            case "Representable":
-
-                break;
-            case "Data":
-                break;
             case "Double":
                 return Double.parseDouble(value);
             case "Integer":
@@ -181,49 +207,46 @@ public class DataModel implements PropertyChangeListener {
 
     }
 
-    private Object browser(Element cell, StructureMatrix sm, int l, int c) {
-        switch (cell.getChildElements().get(0).getAttributeValue("class")) {
-            case "Representable":
-                try {
-                    Class<?> aClass = Class.forName(cell.getChildElements().get(0).getAttributeValue("class"));
-                    Object o = aClass.newInstance();
-                    switch (sm.getDim()) {
-                        case 0:
-                            sm.setElem(o);
-                            browser(cell.getChildElements().get(0), (Representable) o);
-                            break;
-                        case 1:
-                            sm.setElem(o, l);
-                            browser(cell.getChildElements().get(0), (Representable) o);
-                            break;
-                        case 2:
-                            sm.setElem(o, l, c);
-                            browser(cell.getChildElements().get(0), (Representable) o);
-                            break;
-                    }
-                } catch (ClassNotFoundException e) {
-                    e.printStackTrace();
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                } catch (InstantiationException e) {
-                    e.printStackTrace();
-                }
+    private Object browser(Element matrixContainedObjet, StructureMatrix sm, int dim, int l, int c) {
 
-                break;
-            case "ITexture":
-                try {
-                    return Class.forName(cell.getAttributeValue("class"));
+        try {
 
-                } catch (ClassNotFoundException e) {
-                    e.printStackTrace();
+            Class<?> rClass = Class.forName(matrixContainedObjet.getAttributeValue("class"));
+            Object o = rClass.newInstance();
+            if (rClass.getMethod("getDeclaredProperty", String.class) != null) {
+                if (o instanceof Representable) {
+                    ((Representable) o).declareProperties();
                 }
-                break;
-            default:
-                break;
+                switch (dim) {
+                    case 0:
+                        sm.setElem(o);
+                        browser(matrixContainedObjet, (MatrixPropertiesObject) o);
+                        break;
+                    case 1:
+                        sm.setElem(o, c);
+                        browser(matrixContainedObjet, (MatrixPropertiesObject) o);
+                        break;
+                    case 2:
+                        sm.setElem(o, l, c);
+                        browser(matrixContainedObjet, (MatrixPropertiesObject) o);
+                        break;
+                }
+            } else {
+                throw new ClassesNotEqualException(rClass, (Class<? extends MatrixPropertiesObject>) o.getClass());
+            }
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        } catch (ClassesNotEqualException e) {
+            e.printStackTrace();
         }
         return null;
     }
-
     /*
             switch (localName)
             {
@@ -246,48 +269,6 @@ public class DataModel implements PropertyChangeListener {
             }
 
      */
-    private void browser(Element element, Representable representable) {
-        String localName = element.getLocalName();
-        String classAttributeName = element.getAttributeValue("name");
-        ClassLoader systemClassLoader = ClassLoader.getSystemClassLoader();
-        String aClass = element.getAttributeValue("class");
-        try {
-            Class<?> aClass1 = systemClassLoader.loadClass(aClass);
-            Class<?> aClass2 = null;
-            aClass1.newInstance();
-            if (aClass1.isAssignableFrom(StructureMatrix.class)) {
-                StructureMatrix o = (StructureMatrix) aClass1.newInstance();
-                Attribute type = element.getAttribute("typeClass");
-                aClass2 = Class.forName(type.getLocalName());
-                o.setClassType(aClass2);
-                representable.setProperty(classAttributeName.split("/")[0], o);
-                browser(element, (StructureMatrix) aClass2.newInstance());
-                browser(element, o);
-
-            } else if (aClass1.isAssignableFrom(ITexture.class)) {
-                Attribute type = element.getAttribute("typeClass");
-                aClass2 = Class.forName(type.getLocalName());
-
-            } else if (aClass1.isAssignableFrom(Representable.class)) {
-                Attribute type = element.getAttribute("typeClass");
-                aClass2 = Class.forName(type.getLocalName());
-                browser(element, (Representable) aClass2.newInstance());
-
-            }
-
-
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        }
-    }
 
     private Scene scene;
 
@@ -321,92 +302,22 @@ public class DataModel implements PropertyChangeListener {
 
     public void save(String fileModel) throws IOException {
         Logger.getAnonymousLogger().info("Save Data Model");
-        if (fileModel == null)
-            fileModel = getFileModel();
 
-        FileOutputStream fos = new FileOutputStream(getFileModel());
-        ZipOutputStream zipOut = new ZipOutputStream(fos);
-
-        File file1 = new File(getDefaultFilename() + ".mood");
-        new Loader().saveTxt(file1, scene);
-        final FileInputStream[] fis = {new FileInputStream(file1)};
-        final ZipEntry[] zipEntry = {new ZipEntry("scenes/" + file1.getName())};
-        zipEntry[0].setComment("Text scene description");
-        addFile(zipOut, fis[0], zipEntry[0]);
-        fis[0].close();
-
-
-        textures.forEach(iTexture ->
-
-        {
-            fis[0] = null;
-            File file3 = null;
-            File s = null;
-            String s2 = "";
-            try {
-                new File(getDirectory(false) + "/textures/").mkdirs();
-                s2 += "text_" + iTexture.getClass();
-                if (iTexture instanceof TextureImg)
-                    try {
-                        s2 += ".jpg";
-
-                        ImageIO.write(((TextureImg) iTexture).getImage(), "jpg", new File(s2));
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                if (iTexture instanceof TextureMov) {
-                    copy(file3, new File(getDirectory(false) + "/textures/" + file3.getName()));
-                }
-                fis[0] = new FileInputStream(file3);
-                zipEntry[0] = new ZipEntry("textures/" + file3.getName());
-                zipEntry[0].setComment("Texture { class: " + iTexture.getClass() + ", string : " + iTexture.toString());
-
-                addFile(zipOut, fis[0], zipEntry[0]);
-                fis[0].close();
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        });
-
-
-        File file2 = new File(getDefaultFilename() + ".txt");
-        PrintWriter printWriter = new PrintWriter(file2);
-        printWriter.println(getScene().toString());
-
-        String fileSceneRaw = getDefaultFilename() + ".raw";
-        /*XMLEncoder xmlEncoder = new XMLEncoder(new FileOutputStream(fileSceneRaw));
-        xmlEncoder.writeObject(getScene());
-        xmlEncoder.close();
-        */
-        BrowseScene browseScene = new BrowseScene(fileSceneRaw);
-
-        browseScene.encode(getScene());
-
-        XStream xStream = new XStream();
-        String xml = xStream.toXML(scene);
-        File file = new File(fileSceneRaw + "_xtream.xml");
-        PrintWriter pw = new PrintWriter(file);
-        pw.print(xml);
-        pw.close();
-
-
-        zipOut.close();
-        fos.close();
-/*
-        Gson gson = new Gson();
-        ArrayList<MoodModelCell> cellsFromRepresentable = createCellsFromRepresentable(scene);
 
         try {
-         System.out.println(gson.toJson(cellsFromRepresentable));
-        } catch (java.lang.StackOverflowError ex)
-        { ex.printStackTrace();}
-        try {
-            //System.out.println(gson.toJson(scene));
-        } catch (java.lang.StackOverflowError ex)
-        { ex.printStackTrace();}
-*/
+            Scene scene = getScene();
+            StringBuilder stringBuilder = new StringBuilder();
+            scene.xmlRepresentation(getDirectory(false), (MatrixPropertiesObject) scene, stringBuilder, (Representable) scene);
+
+            File out = new File(getDefaultFilename() + ".xml");
+            String xml = stringBuilder.toString();
+            PrintWriter pw = new PrintWriter(out);
+            pw.print(xml);
+            pw.close();
+        } catch (NullPointerException ex) {
+            ex.printStackTrace();
+        }
+
     }
 
     public void copy(File a, File b)
@@ -450,79 +361,6 @@ public class DataModel implements PropertyChangeListener {
         this.textures.add(sel);
     }
 
-
-    public ArrayList<MoodModelCell> createCellsFromRepresentable(Representable representable) {
-        ArrayList<MoodModelCell> cells = new ArrayList<>();
-        representable.declareProperties();
-
-        representable.declarations().forEach(new BiConsumer<String, Object>() {
-            @Override
-            public void accept(String s, Object o) {
-                MoodModelCell moodModelCell = new MoodModelCell();
-                if (o instanceof Double || o instanceof Integer || o instanceof Boolean || o instanceof Representable || o instanceof ITexture) {
-                    moodModelCell.setArrayType(false);
-                    moodModelCell.setListType(false);
-                    moodModelCell.setPropertyDim("0");
-                    moodModelCell.setFullObjectClassName(o.getClass().getCanonicalName());
-                    moodModelCell.setPropertyName(s.split("/")[0]);
-                    moodModelCell.setPropertyDescription(s.split("/")[1]);
-                    moodModelCell.setPropertyValue(o);
-
-                } else if (o instanceof Double[] || o instanceof Representable[] || o instanceof Integer[] || o instanceof Boolean[] || o instanceof ITexture[]) {
-                    moodModelCell.setArrayType(true);
-                    moodModelCell.setListType(false);
-                    moodModelCell.setPropertyDim("1");
-                    moodModelCell.setArrayFullObjectClassName(o.getClass().getCanonicalName());
-                    moodModelCell.setListType(false);
-                    moodModelCell.setFullObjectClassName(o.getClass().getCanonicalName());
-                    moodModelCell.setPropertyName(s.split("/")[0]);
-                    moodModelCell.setPropertyDescription(s.split("/")[1]);
-                    moodModelCell.setPropertyValue(o);
-                    cells.add(moodModelCell);
-
-                    /*
-                    Object[] t = ((Object[]) o);
-                    Arrays.stream(t).forEach(new Consumer<Object>() {
-                        @Override
-                        public void accept(Object o) {
-
-                        }
-                    });*/
-                } else if (o instanceof Double[][] || o instanceof Representable[][] || o instanceof Integer[][] || o instanceof Boolean[][] || o instanceof ITexture[][]) {
-                    moodModelCell.setArrayType(true);
-                    moodModelCell.setListType(false);
-                    moodModelCell.setPropertyDim("2");
-                    moodModelCell.setArrayFullObjectClassName(o.getClass().getCanonicalName());
-                    moodModelCell.setListType(false);
-                    moodModelCell.setFullObjectClassName(o.getClass().getCanonicalName());
-                    moodModelCell.setPropertyName(s.split("/")[0]);
-                    moodModelCell.setPropertyDescription(s.split("/")[1]);
-                    moodModelCell.setPropertyValue(o);
-                    cells.add(moodModelCell);
-                } else if (o instanceof ArrayList) {
-                    moodModelCell.setArrayType(false);
-                    moodModelCell.setListType(true);
-                    moodModelCell.setListFullObjectClassName(o.getClass().getCanonicalName());
-                    moodModelCell.setPropertyDim("1");
-                    moodModelCell.setListType(true);
-                    moodModelCell.setFullObjectClassName(o.getClass().getCanonicalName());
-                    moodModelCell.setPropertyName(s.split("/")[0]);
-                    moodModelCell.setPropertyDescription(s.split("/")[1]);
-                    moodModelCell.setPropertyValue(o);
-                    cells.add(moodModelCell);
-
-                }
-            }
-        });
-        {
-
-        }
-        return cells;
-    }
-
-    public Representable getRepresentableFromCells(ArrayList<MoodModelCell> cells) {
-        return null;
-    }
 
     public String getNewImageFile() {
         return getDefaultFilename() + ".jpg";
@@ -658,4 +496,13 @@ public class DataModel implements PropertyChangeListener {
 
     }
 
+
+    @Override
+    public String toString() {
+        Scene scene = getScene();
+        StringBuilder stringBuilder = new StringBuilder();
+        scene.xmlRepresentation(getDirectory(false), (MatrixPropertiesObject) scene, stringBuilder, (Representable) scene);
+        String xml = stringBuilder.toString();
+        return xml;
+    }
 }

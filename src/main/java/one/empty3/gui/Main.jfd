@@ -42,7 +42,6 @@ new FormModel {
 					add( new FormComponent( "javax.swing.JMenuItem" ) {
 						name: "menuItemLoad"
 						"text": "Load"
-						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "menuItemLoadActionPerformed", true ) )
 					} )
 					add( new FormComponent( "javax.swing.JMenuItem" ) {
 						name: "menuItemSave"
@@ -60,7 +59,7 @@ new FormModel {
 						add( new FormComponent( "one.empty3.gui.REditor" ) {
 							name: "editor"
 							auxiliary() {
-								"JavaCodeGenerator.customCreateCode": "new REditor(dataModel, dataModel.getScene());"
+								"JavaCodeGenerator.customCreateCode": "new REditor(this, dataModel.getScene());"
 							}
 							addEvent( new FormEvent( "java.beans.PropertyChangeListener", "propertyChange", "editorPropertyChange", true ) )
 						}, new FormLayoutConstraints( class java.lang.String ) {
@@ -172,9 +171,6 @@ new FormModel {
 							add( new FormComponent( "javax.swing.JButton" ) {
 								name: "buttonSaveR"
 								"text": "Save"
-								addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "buttonSaveRActionPerformed", true ) )
-								addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "buttonSaveRActionPerformed", true ) )
-								addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "buttonSaveRActionPerformed", true ) )
 								addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "buttonSaveRActionPerformed", true ) )
 							}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
 								"value": "cell 1 3"

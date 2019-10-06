@@ -92,11 +92,11 @@ public class ObjectEditorBase extends JPanel implements RepresentableEditor {
                             JTextField[] jTextFieldsScale) {
         if(r!=null)
         {
-            Rotation rotation = r.getRotation();
+            Rotation rotation = r.getRotation().getElem();
             if(rotation!=null) {
-                Point3D centreRot = rotation.getCentreRot();
+                Point3D centreRot = rotation.getCentreRot().getElem();
                 if (centreRot != null) {
-                    Matrix33 rot = rotation.getRot();
+                    Matrix33 rot = rotation.getRot().getElem();
                     Point3D scale = r.getScale();
                     if (rot != null && scale != null) {
                         textAreaMatrix33.setText(rot.toString());
@@ -135,7 +135,7 @@ public class ObjectEditorBase extends JPanel implements RepresentableEditor {
         for(int i = 0; i<3; i++)
             scale.set(i, Double.parseDouble(jTextFieldsScale[i].getText()));
 
-        r.setRotation(new Rotation(rot, centreRot));
+        r.getRotation().setElem(new Rotation(rot, centreRot));
         r.setScale(scale);
     }
 

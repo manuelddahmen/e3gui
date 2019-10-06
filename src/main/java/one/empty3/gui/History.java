@@ -35,7 +35,11 @@ public class History {
     public List<RPropertyDetailsRow> getHistory() {
         return history;
     }
-
+    public void clear()
+    {
+        current = -1;
+        history.clear();
+    }
 
     public void addToHistory(RPropertyDetailsRow row)
     {
@@ -81,6 +85,7 @@ public class History {
             if(current>=0) {
                 RPropertyDetailsRow rPropertyDetailsRow = history.get(i);
                 return rPropertyDetailsRow;
+
         }
         return null;
     }

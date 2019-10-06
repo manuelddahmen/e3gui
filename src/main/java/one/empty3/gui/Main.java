@@ -130,7 +130,7 @@ public class Main implements PropertyChangeListener {
     private void ScriptPanelPropertyChange(PropertyChangeEvent e) {
         // TODO add your code here
     }
-
+/*
     private void menuItemLoadActionPerformed(ActionEvent e) {
         JFileChooser jFileChooser = new JFileChooser(".");
         jFileChooser.setDialogTitle("Open file");
@@ -140,15 +140,14 @@ public class Main implements PropertyChangeListener {
         Scene scene = new Scene();
         try {
             new Loader().load(selectedFile, scene);
-            dataModel = new DataModel(selectedFile);
-            dataModel.setScene(scene);
+            setDataModel(new DataModel(selectedFile));
         } catch (VersionNonSupporteeException e1) {
             e1.printStackTrace();
         } catch (ExtensionFichierIncorrecteException e1) {
             e1.printStackTrace();
         }
     }
-
+*/
     private void menuItemSaveActionPerformed(ActionEvent e) {
         JFileChooser jFileChooser = new JFileChooser(".");
         jFileChooser.setDialogTitle("Save file");
@@ -207,6 +206,7 @@ public class Main implements PropertyChangeListener {
     private void buttonSaveRActionPerformed(ActionEvent e) {
         SwingUtilities.invokeLater(new Thread()
         {
+
             @Override
             public void run() {
                 super.run();
@@ -267,7 +267,7 @@ public class Main implements PropertyChangeListener {
                         try {
                             Scene scene = getDataModel().getScene();
                             StringBuilder stringBuilder = new StringBuilder();
-                            scene.xmlRepresentation(getDataModel().getDirectory(false), scene, stringBuilder, scene);
+                            scene.xmlRepresentation(getDataModel().getDirectory(false),(MatrixPropertiesObject) scene, stringBuilder,(Representable) scene);
 
                             textAreaXML.setText(stringBuilder.toString());
 
@@ -305,10 +305,12 @@ public class Main implements PropertyChangeListener {
         if(e.getStateChange()== ItemEvent.SELECTED)
         {
             System.out.println("Graphical edition enabled");
+            getUpdateView().getzRunner().setGraphicalEditing(true);
         }
         else if(e.getStateChange()== ItemEvent.DESELECTED)
         {
             System.out.println("Graphical edition disabled");
+            getUpdateView().getzRunner().setGraphicalEditing(false);
         }
     }
 
@@ -344,7 +346,7 @@ public class Main implements PropertyChangeListener {
         this.menuItemSave = new JMenuItem();
         this.panel5 = new JSplitPane();
         this.panel4 = new JSplitPane();
-        this.editor = new REditor(dataModel, dataModel.getScene());
+        this.editor = new REditor(this, dataModel.getScene());
         this.updateViewMain = new UpdateViewMain();
         this.tabbedPane1 = new JTabbedPane();
         this.textureEditor1 = new TextureEditor();
@@ -421,7 +423,6 @@ public class Main implements PropertyChangeListener {
 
                     //---- menuItemLoad ----
                     this.menuItemLoad.setText("Load");
-                    this.menuItemLoad.addActionListener(e -> menuItemLoadActionPerformed(e));
                     this.menu1.add(this.menuItemLoad);
 
                     //---- menuItemSave ----
@@ -545,12 +546,7 @@ public class Main implements PropertyChangeListener {
 
                             //---- buttonSaveR ----
                             this.buttonSaveR.setText("Save");
-                            this.buttonSaveR.addActionListener(e -> {
-			buttonSaveRActionPerformed(e);
-			buttonSaveRActionPerformed(e);
-			buttonSaveRActionPerformed(e);
-			buttonSaveRActionPerformed(e);
-		});
+                            this.buttonSaveR.addActionListener(e -> buttonSaveRActionPerformed(e));
                             this.panel2.add(this.buttonSaveR, "cell 1 3");
                         }
                         this.tabbedPane1.addTab("Rendu", this.panel2);
@@ -698,7 +694,7 @@ public class Main implements PropertyChangeListener {
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        Logger.getAnonymousLogger().info("Property main changed= "+evt.getPropertyName());
+        //Logger.getAnonymousLogger().info("Property main changed= "+evt.getPropertyName());
         if (evt.getPropertyName().equals("representable")) {
             Logger.getAnonymousLogger().info("representable changed");
             RepresentableEditor[] representableEditors = {getEditor(), getUpdateView(), getPositionEditor()};
@@ -709,7 +705,7 @@ public class Main implements PropertyChangeListener {
                 }
             }
         } else if (evt.getPropertyName().equals("renderedImageOK")) {
-            if ((boolean) evt.getNewValue()) {
+            if (evt.getNewValue()!=null) {
             } else {
                 this.MainWindow.setBackground(Color.BLACK);
                 try {

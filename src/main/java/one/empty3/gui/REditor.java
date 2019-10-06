@@ -64,12 +64,12 @@ public class REditor extends JPanel implements PropertyChangeListener, Represent
     History history = new History();
 
     private RPropertyDetailsRow tableModel;
-    private DataModel dataModel ;
+    private Main main;
 
 
-    public REditor(DataModel dataModel, Representable re) {
+    public REditor(Main main, Representable re) {
         super();
-        this.dataModel = dataModel;
+        this.main = main;
         initComponents();
         init(re);
         history.addToHistory(tableModel);
@@ -99,7 +99,7 @@ public class REditor extends JPanel implements PropertyChangeListener, Represent
             @Override
             public void tableChanged(TableModelEvent e) {
                 try {
-                    getDataModel().save(null);
+                    getMain().getDataModel().save(null);
                 } catch (IOException e1) {
                     e1.printStackTrace();
                 }
@@ -200,7 +200,9 @@ public class REditor extends JPanel implements PropertyChangeListener, Represent
     }
 
     private void button1ActionPerformed(ActionEvent e) {
-        init(history.get(0));
+
+        history.clear();
+        init(getMain().getDataModel().getScene());
     }
 
     private void button2ActionPerformed(ActionEvent e) {
@@ -688,12 +690,12 @@ public class REditor extends JPanel implements PropertyChangeListener, Represent
         init(representable);
     }
 
-    public DataModel getDataModel() {
-        return dataModel;
+    public Main getMain() {
+        return main;
     }
 
-    public void setDataModel(DataModel dataModel) {
-        this.dataModel = dataModel;
+    public void setMain(Main main) {
+        this.main = main;
     }
 
     public Representable getRepresentable() {
