@@ -102,7 +102,7 @@ public class Main implements PropertyChangeListener {
     private TextureEditor getTextureEditor() {
         return textureEditor1;
     }
-    
+
     public DataModel getDataModel() {
         return dataModel;
     }
@@ -267,7 +267,7 @@ public class Main implements PropertyChangeListener {
                         try {
                             Scene scene = getDataModel().getScene();
                             StringBuilder stringBuilder = new StringBuilder();
-                            scene.xmlRepresentation(getDataModel().getDirectory(false),(MatrixPropertiesObject) scene, stringBuilder,(Representable) scene);
+                            scene.xmlRepresentation(getDataModel().getDirectory(false), scene, stringBuilder);
 
                             textAreaXML.setText(stringBuilder.toString());
 
@@ -312,6 +312,33 @@ public class Main implements PropertyChangeListener {
             System.out.println("Graphical edition disabled");
             getUpdateView().getzRunner().setGraphicalEditing(false);
         }
+    }
+
+    private void buttonXMLActionPerformed(ActionEvent e) {
+        new Thread() {
+            @Override
+            public void run() {
+                while (isRunning()) {
+                    if (isRefreshXMLactioned())
+                        try {
+                            Scene scene = getDataModel().getScene();
+                            StringBuilder stringBuilder = new StringBuilder();
+                            scene.xmlRepresentation(getDataModel().getDirectory(false),(Representable) scene, stringBuilder);
+
+                            textAreaXML.setText(stringBuilder.toString());
+
+                            setRefreshXMLactioned(false);
+                        } catch (NullPointerException ex) {
+                            ex.printStackTrace();
+                        }
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException e1) {
+                        e1.printStackTrace();
+                    }
+                }
+            }
+        }.start();
     }
 
     class ThreadDrawingCoords  extends Thread {
@@ -365,6 +392,7 @@ public class Main implements PropertyChangeListener {
         this.panel3 = new JPanel();
         this.loadSave1 = new LoadSave();
         this.panel7 = new JPanel();
+        this.buttonXML = new JButton();
         this.buttonRefreshXML = new JButton();
         this.scrollPane1 = new JScrollPane();
         this.textAreaXML = new JTextArea();
@@ -581,6 +609,14 @@ public class Main implements PropertyChangeListener {
                                 "[]" +
                                 "[]"));
 
+                            //---- buttonXML ----
+                            this.buttonXML.setText("Open");
+                            this.buttonXML.addActionListener(e -> {
+			buttonXMLActionPerformed(e);
+			buttonXMLActionPerformed(e);
+		});
+                            this.panel7.add(this.buttonXML, "cell 0 0");
+
                             //---- buttonRefreshXML ----
                             this.buttonRefreshXML.setText("Refresh");
                             this.buttonRefreshXML.addActionListener(e -> buttonRefreshXMLActionPerformed(e));
@@ -675,6 +711,7 @@ public class Main implements PropertyChangeListener {
     private JPanel panel3;
     private LoadSave loadSave1;
     private JPanel panel7;
+    private JButton buttonXML;
     private JButton buttonRefreshXML;
     private JScrollPane scrollPane1;
     private JTextArea textAreaXML;
@@ -682,12 +719,12 @@ public class Main implements PropertyChangeListener {
     private JCheckBox checkBoxActive;
     private BindingGroup bindingGroup;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
-    
-    
+
+
     public REditor getEditor() {
         return editor;
     }
-    
+
     public void setEditor(REditor editor) {
         this.editor = editor;
     }
@@ -699,7 +736,7 @@ public class Main implements PropertyChangeListener {
             Logger.getAnonymousLogger().info("representable changed");
             RepresentableEditor[] representableEditors = {getEditor(), getUpdateView(), getPositionEditor()};
             for (RepresentableEditor representableEditor : representableEditors) {
-                if (!evt.getSource().equals(representableEditor)) {
+                if (!evt.getSource().equals(representableEditor) && evt.getNewValue() instanceof Representable) {
                     representableEditor.initValues((Representable) evt.getNewValue());
                     Logger.getAnonymousLogger().info(representableEditor.getClass().getName()+".initValue()");
                 }

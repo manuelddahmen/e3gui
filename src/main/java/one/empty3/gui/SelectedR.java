@@ -20,15 +20,24 @@
 
 package one.empty3.gui;
 
-import one.empty3.library.MatrixPropertiesObject;
+import one.empty3.library.Representable;
 
 /**
- * Created by manue on 06-10-19.
+ * Created by manue on 12-10-19.
  */
-public class ClassesNotEqualException extends Exception {
-    public ClassesNotEqualException(Class aClass1, Class aClass) {
-        System.err.println(this.getClass().getName());
-        System.err.println("Class A (element class attribute) : " + (aClass1==null?"NULL": aClass1.getCanonicalName()));
-        System.err.println("Class B (MatrixPropertiesObject)  : " +( aClass==null?"NULL":aClass.getCanonicalName()));
+public class SelectedR {
+    public static final int CREATE = 0;
+    public static final int SELECT = 1;
+    public static final int UPDATE = 2;
+    public static final int DELETE = 3;
+
+    private Class selClass = null;
+    private Class representableObject = null;
+    private int level = -1;
+    private Object value = null;
+
+    public SelectedR(Representable representable)
+    {
+
     }
 }

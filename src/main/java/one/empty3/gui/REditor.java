@@ -24,13 +24,11 @@
 
 package one.empty3.gui;
 
-import java.lang.reflect.Type;
+import java.lang.annotation.Repeatable;
 import java.util.*;
 
-import com.sun.org.apache.regexp.internal.RE;
 import net.miginfocom.swing.MigLayout;
 import one.empty3.library.*;
-import one.empty3.library.core.EcArrays;
 
 import javax.swing.*;
 import javax.swing.event.TableModelEvent;
@@ -60,7 +58,7 @@ public class REditor extends JPanel implements PropertyChangeListener, Represent
     private static final int DELETE_AT = 6;
     private static final int DELETE_COL = 7;
 
-    private  Representable r;
+    private MatrixPropertiesObject r;
     History history = new History();
 
     private RPropertyDetailsRow tableModel;
@@ -121,17 +119,17 @@ public class REditor extends JPanel implements PropertyChangeListener, Represent
         ObjectDetailDescription objectDetailDescription = tableModel.getObjectDetailDescriptions().get(selectedRow);
         if(e.getButton()==1) {
             if (tableModel.getItemList(selectedRow) != null) {
-                if (tableModel.getItemList(selectedRow) instanceof Representable) {
+                if (tableModel.getItemList(selectedRow) instanceof MatrixPropertiesObject) {
                     boolean isNew = tableModel.getValueAt(selectedRow, 1) != null && tableModel.getValueAt(selectedRow, 1).toString().equals("NEW");
-                    Representable newR = (Representable) tableModel.getItemList(selectedRow);
-                    Representable oldR = r;
+                    MatrixPropertiesObject newR = (MatrixPropertiesObject) tableModel.getItemList(selectedRow);
+                    MatrixPropertiesObject oldR = r;
                     if (isNew) {
                         if (oldR instanceof Scene) {
-                            ((Scene) oldR).add(newR);
+                            ((Scene) oldR).add((Representable)newR);
                             System.out.print("Added to scene" + newR.toString());
                         }
                         if (oldR instanceof RepresentableConteneur) {
-                            ((RepresentableConteneur) oldR).add(newR);
+                            ((RepresentableConteneur) oldR).add((Representable)newR);
                             System.out.print("Added to scene" + newR.toString());
                         }
 
@@ -183,7 +181,8 @@ public class REditor extends JPanel implements PropertyChangeListener, Represent
     public void propertyChange(PropertyChangeEvent evt) {
         if (evt.getNewValue() instanceof ITexture) {
             try {
-                tableModel.getRepresentable().setProperty(evt.getPropertyName(), evt.getNewValue());
+
+                ((Representable)tableModel.getRepresentable()).setProperty(evt.getPropertyName(), evt.getNewValue());
             } catch (InvocationTargetException e) {
                 e.printStackTrace();
             } catch (IllegalAccessException e) {
@@ -239,7 +238,7 @@ public class REditor extends JPanel implements PropertyChangeListener, Represent
         ObjectDetailDescription description = tableModel.getObjectDetailDescriptions().get(tableObjectDetails.getSelectedRow());
         Logger.getAnonymousLogger().info("+++"+ description);
         try {
-            Object property = getRepresentable().getProperty(description.getName());
+            Object property = ((Representable)getRepresentable()).getProperty(description.getName());
             if(property instanceof StructureMatrix)
             {
                 return (StructureMatrix)property;
@@ -698,7 +697,7 @@ public class REditor extends JPanel implements PropertyChangeListener, Represent
         this.main = main;
     }
 
-    public Representable getRepresentable() {
+    public MatrixPropertiesObject getRepresentable() {
         return r;
     }
 

@@ -20,9 +20,9 @@
 
 package one.empty3.gui;
 
+import com.sun.org.apache.regexp.internal.RE;
 import one.empty3.library.*;
 
-import javax.security.sasl.SaslServer;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
@@ -44,14 +44,16 @@ public class RPropertyDetailsRow implements TableModel {
     public static final int TYPE_REPRESENTABLE = 0;
     public static final int TYPE_DOUBLE = 1;
     public static final int TYPE_TEXTURE = 2;
-    private Representable representable;
+    private MatrixPropertiesObject representable;
     String[] columnNames = {"Formal Name", "Description", "Dim", "Indices", "ObjectType", "Data"};
     Class<?>[] columnClass = {String.class, String.class, String.class, String.class, String.class, Object.class};
     private TableModelListener listener;
 
-    public RPropertyDetailsRow(Representable representable) {
+    public RPropertyDetailsRow(MatrixPropertiesObject representable) {
         this.representable = representable;
-        representable.declareProperties();
+        if(representable instanceof Representable) {
+            ((Representable)representable).declareProperties();
+        }
         emptyTable();
         initTable();
     }
@@ -59,6 +61,7 @@ public class RPropertyDetailsRow implements TableModel {
     public RPropertyDetailsRow(RPropertyDetailsRow rPropertyDetailsRow) {
         this(rPropertyDetailsRow.getRepresentable());
     }
+
 
     private void emptyTable() {
         index = 0;
@@ -81,8 +84,9 @@ public class RPropertyDetailsRow implements TableModel {
 
     public void initTable() {
         index = 0;
-        if (representable.getDeclaredDataStructure().size() > 0)
-            representable.getDeclaredDataStructure().forEach(new BiConsumer<String, StructureMatrix>() {
+
+        if (((MatrixPropertiesObject) representable).declarations().size() > 0) {
+            representable.declarations().forEach(new BiConsumer<String, StructureMatrix>() {
                 @Override
                 public void accept(String s, StructureMatrix structureMatrix) {
                     String name = s;
@@ -92,28 +96,28 @@ public class RPropertyDetailsRow implements TableModel {
                     int i = 0;
                     String[] split = split(name);
                     if (data.getDim() == 0) {
-                            objectDetailDescriptions.add(new ObjectDetailDescription(propName[0], propName[1],
-                                    0, "0", data.getElem().getClass(), data.getElem()));
-                             objectList.add(data.getElem());
-                            index++;
+                        objectDetailDescriptions.add(new ObjectDetailDescription(propName[0], propName[1],
+                                0, "0", data.getElem().getClass(), data.getElem()));
+                        objectList.add(data.getElem());
+                        index++;
                     }
                     if (data.getDim() == 1) {
                         for (int ind = 0; ind < data.getData1d().size(); ind++) {
-                               objectDetailDescriptions.add(new ObjectDetailDescription(propName[0], propName[1],
-                                       0, "" + ind, data.getElem(ind).getClass(), data.getElem(ind)));
-                               objectList.add(data.getElem(ind));
-                               index++;
-                       }
+                            objectDetailDescriptions.add(new ObjectDetailDescription(propName[0], propName[1],
+                                    0, "" + ind, data.getElem(ind).getClass(), data.getElem(ind)));
+                            objectList.add(data.getElem(ind));
+                            index++;
+                        }
                     }
                     if (data.getDim() == 2) {
                         for (int ind = 0; ind < data.getData2d().size(); ind++) {
                             for (int ind1 = 0; ind1 < ((List) ((List) data.getData2d()).get(ind)).size(); ind1++) {
 
-                                    objectDetailDescriptions.add(new ObjectDetailDescription(propName[0], propName[1],
-                                            0, "" + ind + "," + ind1, data.getElem(ind, ind1).getClass(), data.getElem(ind, ind1)));
-                                    objectList.add(data.getElem(ind, ind1));
-                                    index++;
-                           }
+                                objectDetailDescriptions.add(new ObjectDetailDescription(propName[0], propName[1],
+                                        0, "" + ind + "," + ind1, data.getElem(ind, ind1).getClass(), data.getElem(ind, ind1)));
+                                objectList.add(data.getElem(ind, ind1));
+                                index++;
+                            }
                         }
 
                     }
@@ -131,30 +135,30 @@ public class RPropertyDetailsRow implements TableModel {
                 }
             });
 */
-        if (representable instanceof Scene || representable instanceof RepresentableConteneur) {
-            MyObservableList<ObjectDescription> objectDescriptions = RepresentableClassList.myList();
-            objectDescriptions.forEach(objectDescription -> {
-                Representable value = null;
-                try {
-                    value = objectDescription.getR().newInstance();
-                } catch (InstantiationException e) {
-                    e.printStackTrace();
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                }
-                objectDetailDescriptions.add(new ObjectDetailDescription(
-                        objectDescription.getName(), "NEW", 1,""+ index, value.getClass(), null));
-                objectList.add(value);
-                index++;
+            if (representable instanceof Scene || representable instanceof RepresentableConteneur) {
+                MyObservableList<ObjectDescription> objectDescriptions = RepresentableClassList.myList();
+                objectDescriptions.forEach(objectDescription -> {
+                    Representable value = null;
+                    try {
+                        value = objectDescription.getR().newInstance();
+                    } catch (InstantiationException e) {
+                        e.printStackTrace();
+                    } catch (IllegalAccessException e) {
+                        e.printStackTrace();
+                    }
+                    objectDetailDescriptions.add(new ObjectDetailDescription(
+                            objectDescription.getName(), "NEW", 1, "" + index, value.getClass(), null));
+                    objectList.add(value);
+                    index++;
 
-            });
+                });
 
 
+            }
+            if (!(objectDetailDescriptions.size() == index && objectList.size() == index))
+                System.exit(1);
         }
-        if(!(objectDetailDescriptions.size() == index && objectList.size()== index ))
-            System.exit(1);
     }
-
 /*
     public void addPoint(String propertyName, String propertyDescr, Point3D p3d, int ind1, int ind2) {
         int i=0;
@@ -209,6 +213,9 @@ public class RPropertyDetailsRow implements TableModel {
     @Override
     public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
         if(rowIndex<objectDetailDescriptions.size()&&rowIndex>=0) {
+            if(representable instanceof StructureMatrix)
+                return;
+            Representable representable  = (Representable)this.representable;
             ObjectDetailDescription descr = objectDetailDescriptions.get(rowIndex);
             Object property = null;
             Class propertyClass = null;
@@ -295,7 +302,7 @@ public class RPropertyDetailsRow implements TableModel {
                     if (propertyType.equals(Integer.class))
                         aValue = Integer.parseInt((String) aValue);
                     System.out.println("Property type : " + propertyType.getName() + " Property name " + aValue);
-                    representable.setProperty(descr.getName(),
+                    ((Representable)representable).setProperty(descr.getName(),
                             aValue);
                     refresh();
                     descr.set(columnIndex, aValue);
@@ -328,7 +335,7 @@ public class RPropertyDetailsRow implements TableModel {
                         }
                     }
                     System.out.println("Property type : " + propertyType.getName() + " Property name " + descr.getName());
-                    representable.setProperty(descr.getName(),
+                    ((Representable)representable).setProperty(descr.getName(),
                             aValue);
                     refresh();
                     descr.set(columnIndex, aValue);
@@ -362,7 +369,7 @@ public class RPropertyDetailsRow implements TableModel {
         return objectList.get(current);
     }
 
-    public Representable getRepresentable() {
+    public MatrixPropertiesObject getRepresentable() {
         return representable;
     }
 

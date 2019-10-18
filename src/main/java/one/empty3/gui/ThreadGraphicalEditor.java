@@ -34,10 +34,19 @@ import java.util.List;
  * Created by manue on 02-10-19.
  */
 public class ThreadGraphicalEditor extends Thread implements PropertyChangeListener {
-    private int[][] pixelsRepresentableInt;
-    private HashMap<Integer,Representable> pixelsRepresentable;
-    private List<Point3D> editablePoints;
+    class Map {
+        private int[] pixelsRepresentableInt;
+        private HashMap<Integer, Representable> pixelsRepresentable;
+        private List<Point3D> editablePoints;
+        private Scene scene;
+        private Representable currentObject;
+        private Point3D currentPoint;
 
+        public Map(UpdateViewMain updateViewMain)
+        {
+
+        }
+    }
     private static final int DRAW_POINTS = 1;
     private Main main;
     private Image image;
@@ -61,6 +70,8 @@ public class ThreadGraphicalEditor extends Thread implements PropertyChangeListe
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+
+        Map map = new Map(main.getUpdateView());
         while( main.getUpdateView().getzRunner().isRunning())
             while(main.getUpdateView().getzRunner().isGraphicalEditing())
             {

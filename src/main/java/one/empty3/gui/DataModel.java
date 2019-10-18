@@ -129,8 +129,8 @@ public class DataModel implements PropertyChangeListener {
         try {
             Class<?> aClass = Class.forName(smClassName);
             Element data = structureElement.getFirstChildElement("Data");
-            int dim = Integer.parseInt(data.getAttributeValue("dim"));
-            //sm.init(dim, aClass);
+            int dim = Integer.parseInt(structureElement.getAttributeValue("dim"));
+            sm.init(dim, aClass);
             int size = data.getChildElements("Cell").size();
             for (int i = 0; i < size; i++) {
                 int l, c;
@@ -307,7 +307,7 @@ public class DataModel implements PropertyChangeListener {
         try {
             Scene scene = getScene();
             StringBuilder stringBuilder = new StringBuilder();
-            scene.xmlRepresentation(getDirectory(false), (MatrixPropertiesObject) scene, stringBuilder, (Representable) scene);
+            scene.xmlRepresentation(getDirectory(false), stringBuilder, (Representable) scene);
 
             File out = new File(getDefaultFilename() + ".xml");
             String xml = stringBuilder.toString();
@@ -501,7 +501,7 @@ public class DataModel implements PropertyChangeListener {
     public String toString() {
         Scene scene = getScene();
         StringBuilder stringBuilder = new StringBuilder();
-        scene.xmlRepresentation(getDirectory(false), (MatrixPropertiesObject) scene, stringBuilder, (Representable) scene);
+        scene.xmlRepresentation(getDirectory(false),  stringBuilder, (Representable) scene);
         String xml = stringBuilder.toString();
         return xml;
     }

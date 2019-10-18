@@ -236,7 +236,7 @@ public class TextureEditor extends JPanel {
     }
 
     private void button2ActionPerformed(ActionEvent e) {
-        getMain().getEditor().getRepresentable().setTexture(tableModelTexture.getLines().get(table1.getSelectedRow()).getiTexture());
+        ((Representable) getMain().getEditor().getRepresentable()).setTexture(tableModelTexture.getLines().get(table1.getSelectedRow()).getiTexture());
     }
 
     private void initComponents() {
