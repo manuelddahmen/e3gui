@@ -103,7 +103,7 @@ public class ZRunnerMain extends Thread implements PropertyChangeListener {
                 }
             }
         }.start();
-        ThreadGraphicalEditor threadGraphicalEditor = new ThreadGraphicalEditor();
+        ThreadGraphicalEditor threadGraphicalEditor = new ThreadGraphicalEditor(getMain());
         threadGraphicalEditor.setMain(getMain());
         threadGraphicalEditor.start();
         changeSupport.addPropertyChangeListener(threadGraphicalEditor);
@@ -131,6 +131,7 @@ public class ZRunnerMain extends Thread implements PropertyChangeListener {
                     zBuffer.scene(scene);
 
                     zBuffer.camera(scene.cameraActive());
+                    scene.cameraActive.getElem().calculerMatrice(scene.cameraActive.getElem().getVerticale().getElem());
                     zBuffer.setDisplayType(updateViewMain.getDisplayType());
                     showRepere(zBuffer);
                     zBuffer.next();
@@ -143,13 +144,13 @@ public class ZRunnerMain extends Thread implements PropertyChangeListener {
                     drawSuccess();
                 } catch (NullPointerException ex)
                 {
-                    changeSupport.firePropertyChange("renderedImageOK", null, null);
+                    changeSupport.firePropertyChange("renderedImageOK", null, 0);
                     drawFailed();
                     renderedImageOK = true;
                     ex.printStackTrace();
                 }
                 catch (ConcurrentModificationException ex) {
-                    changeSupport.firePropertyChange("renderedImageOK", null, null);
+                    changeSupport.firePropertyChange("renderedImageOK", null, 0);
                     drawFailed();
                     renderedImageOK = true;
                     log.warning("Wait concurrent modification");
@@ -157,7 +158,7 @@ public class ZRunnerMain extends Thread implements PropertyChangeListener {
                 {
                     ex.printStackTrace();
                     drawFailed();
-                    changeSupport.firePropertyChange("renderedImageOK", null, null);
+                    changeSupport.firePropertyChange("renderedImageOK", null,-1);
                 }
             }
             try {

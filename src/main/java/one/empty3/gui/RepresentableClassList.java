@@ -29,6 +29,7 @@ import one.empty3.library.core.raytracer.tree.TreeNodeEvalException;
 import one.empty3.library.core.script.InterpreteException;
 import one.empty3.library.core.script.InterpretePoint3D;
 import one.empty3.library.core.tribase.TRIEllipsoide;
+import one.empty3.library.core.tribase.TRIExtrusionGeneralisee;
 import one.empty3.library.core.tribase.Tubulaire3;
 
 import javax.swing.*;
@@ -72,6 +73,7 @@ public class RepresentableClassList {
         //add("heightSurfaceXYZ", HeightMapSurfaceXYZ.class);
         add("B-Spline", BSpline.class);
         add("LumierePonctuelle", LumierePonctuelle.class);
+        add("extrusion", TRIExtrusionGeneralisee.class);
         //add("move", Move.class);
         //add("paramCurve", ParametricCurve.class);
         //add("paramSurface", ParametricSurface.class);

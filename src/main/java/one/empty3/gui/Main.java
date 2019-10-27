@@ -40,6 +40,8 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
+import java.util.*;
+import java.util.function.Consumer;
 import java.util.logging.Logger;
 /*
  * Created by JFormDesigner on Thu Jun 27 11:40:57 CEST 2019
@@ -55,6 +57,7 @@ public class Main implements PropertyChangeListener {
     private String toDraw;
     private boolean running = true;
     private boolean refreshXMLactioned;
+    private ThreadGraphicalEditor threadGraphicalEditor;
 
     public static void main(String [] args)
     {
@@ -97,6 +100,7 @@ public class Main implements PropertyChangeListener {
             }
         });
         licence.setVisible(true);
+        running = true;
     }
 
     private TextureEditor getTextureEditor() {
@@ -214,7 +218,7 @@ public class Main implements PropertyChangeListener {
                 Integer imageHeight;
                 try {
                     imageWidth = Integer.parseInt(textFieldXres.getText());
-                    imageHeight = Integer.parseInt(textFieldXres.getText());
+                    imageHeight = Integer.parseInt(textFieldYres.getText());
                 }catch (NumberFormatException ex)
                 {
                     imageWidth = -1;
@@ -306,10 +310,13 @@ public class Main implements PropertyChangeListener {
         {
             System.out.println("Graphical edition enabled");
             getUpdateView().getzRunner().setGraphicalEditing(true);
+            threadGraphicalEditor = new ThreadGraphicalEditor(this);
+            threadGraphicalEditor.start();
         }
         else if(e.getStateChange()== ItemEvent.DESELECTED)
         {
             System.out.println("Graphical edition disabled");
+            threadGraphicalEditor.stop();
             getUpdateView().getzRunner().setGraphicalEditing(false);
         }
     }
@@ -339,6 +346,18 @@ public class Main implements PropertyChangeListener {
                 }
             }
         }.start();
+    }
+
+    private void updateViewMouseDragged(MouseEvent e) {
+        // TODO add your code here
+    }
+
+    private void updateViewMouseMoved(MouseEvent e) {
+        // TODO add your code here
+    }
+
+    private void updateViewMouseWheelMoved(MouseWheelEvent e) {
+        // TODO add your code here
     }
 
     class ThreadDrawingCoords  extends Thread {
@@ -398,6 +417,7 @@ public class Main implements PropertyChangeListener {
         this.textAreaXML = new JTextArea();
         this.panel8 = new JPanel();
         this.checkBoxActive = new JCheckBox();
+        this.checkBoxSelRot = new JCheckBox();
 
         //======== MainWindow ========
         {
@@ -481,6 +501,17 @@ public class Main implements PropertyChangeListener {
                                 updateViewMouseClicked(e);
                             }
                         });
+                        this.updateViewMain.addMouseMotionListener(new MouseMotionAdapter() {
+                            @Override
+                            public void mouseDragged(MouseEvent e) {
+                                updateViewMouseDragged(e);
+                            }
+                            @Override
+                            public void mouseMoved(MouseEvent e) {
+                                updateViewMouseMoved(e);
+                            }
+                        });
+                        this.updateViewMain.addMouseWheelListener(e -> updateViewMouseWheelMoved(e));
                         this.panel4.setRightComponent(this.updateViewMain);
                     }
                     this.panel5.setTopComponent(this.panel4);
@@ -649,6 +680,10 @@ public class Main implements PropertyChangeListener {
                             this.checkBoxActive.setBorderPainted(true);
                             this.checkBoxActive.addItemListener(e -> checkBoxActiveItemStateChanged(e));
                             this.panel8.add(this.checkBoxActive, "cell 0 0");
+
+                            //---- checkBoxSelRot ----
+                            this.checkBoxSelRot.setText("Select and rotate");
+                            this.panel8.add(this.checkBoxSelRot, "cell 0 1");
                         }
                         this.tabbedPane1.addTab("graphical editing", this.panel8);
                     }
@@ -717,6 +752,7 @@ public class Main implements PropertyChangeListener {
     private JTextArea textAreaXML;
     private JPanel panel8;
     private JCheckBox checkBoxActive;
+    private JCheckBox checkBoxSelRot;
     private BindingGroup bindingGroup;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
 
@@ -742,13 +778,23 @@ public class Main implements PropertyChangeListener {
                 }
             }
         } else if (evt.getPropertyName().equals("renderedImageOK")) {
-            if (evt.getNewValue()!=null) {
+            if (evt.getNewValue()==null) {
             } else {
-                this.MainWindow.setBackground(Color.BLACK);
-                try {
-                    this.getUpdateView().getzRunner().setLastImage(ImageIO.read(new File("resources/img/RESULT_FAILURE.png")));
-                } catch (IOException e) {
-                    e.printStackTrace();
+                if(evt.getNewValue().equals(-1))
+                {
+                    try {
+                        this.getUpdateView().getzRunner().setLastImage(ImageIO.read(new File("resources/img/RESULT_FAILURE.JPG")));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                else if(evt.getNewValue().equals(0))
+                {
+                    try {
+                        this.getUpdateView().getzRunner().setLastImage(ImageIO.read(new File("resources/img/WAIT.JPG")));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         }

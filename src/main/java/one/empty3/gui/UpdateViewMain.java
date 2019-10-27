@@ -20,27 +20,66 @@
 
 package one.empty3.gui;
 
+import one.empty3.library.Point3D;
 import one.empty3.library.Representable;
 import one.empty3.library.Scene;
 
 import javax.swing.*;
+import java.awt.*;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionListener;
+import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * Created by manue on 26-06-19.
  */
 public class UpdateViewMain extends JPanel implements RepresentableEditor {
-    private Main ff;
+    private Main main;
     private Scene scene;
     private Representable currentRepresentable;
     private int displayType;
+    private List<ModelBrowser.Cell> cellList;
+
 
     public UpdateViewMain() {
         setView(new FunctionView());
         setzRunner(new ZRunnerMain());
+        addMouseMotionListener(new MouseMotionListener() {
+            public Point3D mousePoint3D;
+            Point mousePoint = null;
+
+            @Override
+            public void mouseDragged(MouseEvent e) {
+                if (main.getUpdateView().getzRunner().isGraphicalEditing()) {
+
+                    if (cellList != null)
+                        cellList.forEach(cell -> {
+                            Point point = getzRunner().getzBuffer().coordonneesPoint2D((Point3D) cell.o);
+                            if (e.getX() - 1 > point.getX() && e.getX() < point.getY() && e.getY() - 1 > point.getY() && e.getY() < point.getY()) {
+                                mousePoint = point;
+                                mousePoint3D = (Point3D) cell.o;
+                            }
+                        });
+
+                }
+            }
+
+            @Override
+            public void mouseMoved(MouseEvent e) {
+                if (mousePoint3D != null) {
+                    mousePoint3D.changeTo(getzRunner().getzBuffer().invert((int) e.getPoint().getX(), (int) e.getPoint().getY(), mousePoint3D.getZ()));
+                }
+
+
+            }
+        });
+
     }
-    public void setFF(Main ff )
-    {
-        this.ff = ff;
+
+
+    public void setFF(Main ff) {
+        this.main = ff;
         this.getzRunner().setMain(ff);
     }
 
@@ -56,9 +95,11 @@ public class UpdateViewMain extends JPanel implements RepresentableEditor {
 
         firePropertyChange("view", old, view);
     }
+
     public void afterSet() {
 
     }
+
     private ZRunnerMain zRunner;
 
     public ZRunnerMain getzRunner() {
@@ -85,4 +126,6 @@ public class UpdateViewMain extends JPanel implements RepresentableEditor {
     public void setDisplayType(int displayType) {
         this.displayType = displayType;
     }
+
+
 }
