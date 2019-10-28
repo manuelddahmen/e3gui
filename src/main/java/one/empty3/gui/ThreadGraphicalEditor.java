@@ -123,7 +123,7 @@ public class ThreadGraphicalEditor extends Thread implements PropertyChangeListe
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        if(evt.getPropertyName().equals("renderedImageOK") &&evt.getNewValue()!=null)
+        if(evt.getPropertyName().equals("renderedImageOK") &&evt.getNewValue().equals(Boolean.TRUE))
         {
             this.image =(Image) (evt.getNewValue() );
 
