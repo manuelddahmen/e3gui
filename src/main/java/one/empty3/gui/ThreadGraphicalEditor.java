@@ -110,8 +110,8 @@ public class ThreadGraphicalEditor extends Thread implements PropertyChangeListe
                 Point point = getMain().getUpdateView().getzRunner()
                         .getzBuffer().coordonneesPoint2D((Point3D)cell.o);
 
-                for(int i=-1; i<=1; i++)
-                    for(int j=-1; j<=1; j++)
+                for(int i=-2; i<=2; i++)
+                    for(int j=-2; j<=2; j++)
                         ((BufferedImage)getMain().getUpdateView().getzRunner().getLastImage())
                                 .setRGB((int)point.getX()+i, (int)point.getY()+j, Color.BLACK.getRGB());
 

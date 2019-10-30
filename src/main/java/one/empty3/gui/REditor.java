@@ -27,6 +27,7 @@ package one.empty3.gui;
 import java.lang.annotation.Repeatable;
 import java.util.*;
 
+import javafx.scene.control.ColorPicker;
 import net.miginfocom.swing.MigLayout;
 import one.empty3.library.*;
 
@@ -139,6 +140,12 @@ public class REditor extends JPanel implements PropertyChangeListener, Represent
                         init(newR);
                         refreshTable();
 
+                } else if(tableModel.getItemList(selectedRow) instanceof Color) {
+                    Color o = (Color) tableModel.getItemList(selectedRow);
+                    JColorChooser jColorChooser = new JColorChooser(o);
+                    jColorChooser.setVisible(true);
+                    o = jColorChooser.getColor();
+                    tableModel.setValueAt(o, selectedRow, 5);
                 }
             }
         }

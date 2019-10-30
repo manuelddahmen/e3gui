@@ -26,8 +26,8 @@ import one.empty3.library.Scene;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionListener;
+import java.awt.event.*;
+import java.awt.image.BufferedImage;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -39,26 +39,59 @@ public class UpdateViewMain extends JPanel implements RepresentableEditor {
     private Scene scene;
     private Representable currentRepresentable;
     private int displayType;
-    private List<ModelBrowser.Cell> cellList;
 
 
     public UpdateViewMain() {
         setView(new FunctionView());
         setzRunner(new ZRunnerMain());
-        addMouseMotionListener(new MouseMotionListener() {
-            public Point3D mousePoint3D;
+        addMouseListener(new MouseAdapter() {
+            public ThreadDrawing threadDrawing;
+
+            class ThreadDrawing extends Thread {
+                boolean running;
+                public void run() {
+                    running = true;
+                    while(isRunning())
+                    {
+                        Point location = MouseInfo.getPointerInfo().getLocation();
+                        SwingUtilities.convertPointFromScreen(location, main.getUpdateView());
+                        mousePoint = location;
+                        drawPoint(mousePoint);
+                    }
+                }
+
+                private boolean isRunning() {
+                    return running;
+                }
+
+                public void setRunning(boolean running) {
+                    this.running = running;
+                }
+            }
+
+
+            Point3D mousePoint3D;
             Point mousePoint = null;
 
-            @Override
-            public void mouseDragged(MouseEvent e) {
-                if (main.getUpdateView().getzRunner().isGraphicalEditing()) {
 
+            @Override
+            public void mousePressed(MouseEvent e) {
+                System.out.println("Mouse Pressed");
+                List<ModelBrowser.Cell> cellList;
+
+                if (main.getUpdateView().getzRunner().isGraphicalEditing()) {
+                    cellList = new ModelBrowser(main.getDataModel().getScene(), Point3D.class).getObjects();
                     if (cellList != null)
                         cellList.forEach(cell -> {
                             Point point = getzRunner().getzBuffer().coordonneesPoint2D((Point3D) cell.o);
-                            if (e.getX() - 1 > point.getX() && e.getX() < point.getY() && e.getY() - 1 > point.getY() && e.getY() < point.getY()) {
+                            if (e!=null && point != null &&
+                                    e.getX() - 2 < point.getX() && e.getX() + 2 > point.getX()
+                                    && e.getY() - 2 < point.getY() && e.getY() + 2 > point.getY()) {
                                 mousePoint = point;
                                 mousePoint3D = (Point3D) cell.o;
+                                threadDrawing  = new ThreadDrawing();
+                                threadDrawing.start();
+                                System.out.println("Point move : " + mousePoint3D);
                             }
                         });
 
@@ -66,14 +99,25 @@ public class UpdateViewMain extends JPanel implements RepresentableEditor {
             }
 
             @Override
-            public void mouseMoved(MouseEvent e) {
-                if (mousePoint3D != null) {
-                    mousePoint3D.changeTo(getzRunner().getzBuffer().invert((int) e.getPoint().getX(), (int) e.getPoint().getY(), mousePoint3D.getZ()));
+            public void mouseReleased(MouseEvent e) {
+                System.out.println("Mouse Released");
+                if(threadDrawing!=null) {
+                    if (mousePoint3D != null) {
+                        mousePoint3D.changeTo(getzRunner().getzBuffer().invert((int) e.getPoint().getX(), (int) e.getPoint().getY(), mousePoint3D.getZ()));
+                    }
+                    threadDrawing.setRunning(false);
                 }
-
+                threadDrawing = null;
 
             }
         });
+    }
+
+    private void drawPoint(Point mousePoint) {
+        for(int i=-2; i<=2; i++)
+            for(int j=-2; j<=2; j++)
+                ((BufferedImage)main.getUpdateView().getzRunner().getLastImage())
+                        .setRGB((int)mousePoint.getX()+i, (int)mousePoint.getY()+j, Color.RED.getRGB());
 
     }
 
