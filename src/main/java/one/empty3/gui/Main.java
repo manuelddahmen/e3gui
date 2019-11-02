@@ -366,11 +366,11 @@ public class Main implements PropertyChangeListener {
             super.run();
             while (true) {
                 try {
-                    if(drawingPointCoords) {
+                    /*if(drawingPointCoords) {
                         Graphics graphics = getUpdateView().getzRunner().getLastImage().getGraphics();
                         graphics.setColor(Color.BLACK);
                         graphics.drawBytes(toDraw.getBytes(), 0, toDraw.getBytes().length, click.x, click.y);
-                    }
+                    }*/
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
@@ -705,12 +705,12 @@ public class Main implements PropertyChangeListener {
             this.updateViewMain, BeanProperty.create("height"),
             this.textFieldYres, BeanProperty.create("text_ON_ACTION_OR_FOCUS_LOST")));
         {
-            Binding binding = Bindings.createAutoBinding(UpdateStrategy.READ_WRITE,
-                this.updateViewMain, BeanProperty.create("displayType"),
-                this.comboBox1, BeanProperty.create("selectedIndex"));
-            binding.setSourceNullValue(-1);
-            binding.setSourceUnreadableValue(-1);
-            binding.setTargetNullValue(-1);
+            Binding binding = Bindings.createAutoBinding(UpdateStrategy.READ,
+                this.comboBox1, BeanProperty.create("selectedIndex"),
+                this.updateViewMain, BeanProperty.create("view.zDiplayType"));
+            binding.setSourceNullValue(0);
+            binding.setSourceUnreadableValue(0);
+            binding.setTargetNullValue(0);
             this.bindingGroup.addBinding(binding);
             binding.bind();
         }

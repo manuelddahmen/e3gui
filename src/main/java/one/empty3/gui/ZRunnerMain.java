@@ -40,7 +40,6 @@ public class ZRunnerMain extends Thread implements PropertyChangeListener {
     private boolean running = true;
     private Image lastImage;
     private ITexture iTexture;
-    private Camera camera = new Camera(Point3D.Z.mult(-100d), Point3D.O0);
     String x = "0", y = "0", z = "0";
     double u0, u1, v0, v1;
     private ZBufferImpl zBuffer;
@@ -132,10 +131,11 @@ public class ZRunnerMain extends Thread implements PropertyChangeListener {
 
                     zBuffer.camera(scene.cameraActive());
                     scene.cameraActive.getElem().calculerMatrice(scene.cameraActive.getElem().getVerticale().getElem());
-                    zBuffer.setDisplayType(updateViewMain.getDisplayType());
+                    zBuffer.setDisplayType(updateViewMain.getView().getzDiplayType());
                     showRepere(zBuffer);
                     zBuffer.next();
                     zBuffer.draw(scene);
+                    addRepere(scene);
                     lastImage = zBuffer.image();
                     changeSupport.firePropertyChange("renderedImageOK", null , lastImage);
                     renderedImageOK = true;

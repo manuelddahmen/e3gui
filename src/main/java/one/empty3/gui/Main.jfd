@@ -268,11 +268,12 @@ new FormModel {
 			"name": "bindingGroup"
 			addBinding( new FormBinding( "updateView", "width", "textFieldXres", "text_ON_ACTION_OR_FOCUS_LOST" ) )
 			addBinding( new FormBinding( "updateView", "height", "textFieldYres", "text_ON_ACTION_OR_FOCUS_LOST" ) )
-			addBinding( new FormBinding( "updateView", "displayType", "comboBox1", "selectedIndex" ) {
-				"sourceNullValue": -1
-				"sourceUnreadableValue": -1
-				"targetNullValue": -1
+			addBinding( new FormBinding( "comboBox1", "selectedIndex", "updateView", "view.zDiplayType" ) {
+				"sourceNullValue": 0
+				"sourceUnreadableValue": 0
+				"targetNullValue": 0
 				"bindImmediately": true
+				"updateStrategy": enum org.jdesktop.beansbinding.AutoBinding$UpdateStrategy READ
 			} )
 		} )
 	}

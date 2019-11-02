@@ -1,4 +1,4 @@
-JFDML JFormDesigner: "7.0.0.3.238" Java: "1.8.0_112-release" encoding: "UTF-8"
+JFDML JFormDesigner: "7.0.0.5.251" Java: "1.8.0_112-release" encoding: "UTF-8"
 
 new FormModel {
 	"i18n.autoExternalize": true
@@ -68,7 +68,7 @@ new FormModel {
 						"doubleBuffered": true
 						add( new FormComponent( "javax.swing.JTable" ) {
 							name: "table1"
-							"autoResizeMode": 0
+							"autoResizeMode": 4
 							"model": new com.jformdesigner.model.SwingTableModel( new java.util.Vector, new java.util.Vector {
 								add( "Texture" )
 								add( "Text type" )
@@ -84,7 +84,7 @@ new FormModel {
 							} )
 							"verifyInputWhenFocusTarget": false
 							"updateSelectionOnSort": false
-							"autoCreateRowSorter": true
+							"selectionMode": 0
 						} )
 					}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
 						"value": "cell 0 3 3 8,dock center"

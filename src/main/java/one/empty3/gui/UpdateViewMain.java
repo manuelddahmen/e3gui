@@ -49,14 +49,17 @@ public class UpdateViewMain extends JPanel implements RepresentableEditor {
 
             class ThreadDrawing extends Thread {
                 boolean running;
+
                 public void run() {
                     running = true;
-                    while(isRunning())
-                    {
+                    while (isRunning()) {
                         Point location = MouseInfo.getPointerInfo().getLocation();
                         SwingUtilities.convertPointFromScreen(location, main.getUpdateView());
                         mousePoint = location;
-                        drawPoint(mousePoint);
+                        try {
+                            drawPoint(mousePoint);
+                        } catch (ArrayIndexOutOfBoundsException ex) {
+                        }
                     }
                 }
 
@@ -78,46 +81,55 @@ public class UpdateViewMain extends JPanel implements RepresentableEditor {
             public void mousePressed(MouseEvent e) {
                 System.out.println("Mouse Pressed");
                 List<ModelBrowser.Cell> cellList;
-
+                /*if(threadDrawing!=null) {
+                    threadDrawing.setRunning(false);
+                    threadDrawing = null;
+                }*/
+                //threadDrawing = null;
                 if (main.getUpdateView().getzRunner().isGraphicalEditing()) {
                     cellList = new ModelBrowser(main.getDataModel().getScene(), Point3D.class).getObjects();
                     if (cellList != null)
                         cellList.forEach(cell -> {
                             Point point = getzRunner().getzBuffer().coordonneesPoint2D((Point3D) cell.o);
-                            if (e!=null && point != null &&
+                            if (e != null && point != null &&
                                     e.getX() - 2 < point.getX() && e.getX() + 2 > point.getX()
                                     && e.getY() - 2 < point.getY() && e.getY() + 2 > point.getY()) {
                                 mousePoint = point;
                                 mousePoint3D = (Point3D) cell.o;
-                                threadDrawing  = new ThreadDrawing();
-                                threadDrawing.start();
-                                System.out.println("Point move : " + mousePoint3D);
+                                if(threadDrawing==null) {
+                                    threadDrawing = new ThreadDrawing();
+                                    threadDrawing.start();
+                                }
                             }
                         });
 
                 }
             }
 
+
             @Override
             public void mouseReleased(MouseEvent e) {
                 System.out.println("Mouse Released");
-                if(threadDrawing!=null) {
-                    if (mousePoint3D != null) {
-                        mousePoint3D.changeTo(getzRunner().getzBuffer().invert((int) e.getPoint().getX(), (int) e.getPoint().getY(), mousePoint3D.getZ()));
-                    }
-                    threadDrawing.setRunning(false);
+                if (mousePoint3D != null) {
+                    mousePoint3D.changeTo(getzRunner().getzBuffer().invert((int) e.getPoint().getX(), (int) e.getPoint().getY(), mousePoint3D, getzRunner().getzBuffer().camera()));
                 }
-                threadDrawing = null;
-
+                System.out.println(mousePoint3D);
+                if (threadDrawing != null) {
+                    threadDrawing.setRunning(false);
+                    threadDrawing.stop();
+                    threadDrawing = null;
+                }
+                mousePoint3D = null;
+                mousePoint = null;
             }
         });
     }
 
     private void drawPoint(Point mousePoint) {
-        for(int i=-2; i<=2; i++)
-            for(int j=-2; j<=2; j++)
-                ((BufferedImage)main.getUpdateView().getzRunner().getLastImage())
-                        .setRGB((int)mousePoint.getX()+i, (int)mousePoint.getY()+j, Color.RED.getRGB());
+        for (int i = -2; i <= 2; i++)
+            for (int j = -2; j <= 2; j++)
+                ((BufferedImage) main.getUpdateView().getzRunner().getLastImage())
+                        .setRGB((int) mousePoint.getX() + i, (int) mousePoint.getY() + j, Color.RED.getRGB());
 
     }
 

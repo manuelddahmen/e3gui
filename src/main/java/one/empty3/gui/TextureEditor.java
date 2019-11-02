@@ -310,7 +310,7 @@ public class TextureEditor extends JPanel {
                     scrollPane1.setDoubleBuffered(true);
 
                     //---- table1 ----
-                    table1.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+                    table1.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
                     table1.setModel(new DefaultTableModel(
                         new Object[][] {
                         },
@@ -320,7 +320,7 @@ public class TextureEditor extends JPanel {
                     ));
                     table1.setVerifyInputWhenFocusTarget(false);
                     table1.setUpdateSelectionOnSort(false);
-                    table1.setAutoCreateRowSorter(true);
+                    table1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
                     scrollPane1.setViewportView(table1);
                 }
                 contentPanel.add(scrollPane1, "cell 0 3 3 8,dock center");
