@@ -50,6 +50,7 @@ public class ZRunnerMain extends Thread implements PropertyChangeListener {
     private PropertyChangeListener changeListener;
     private boolean stopCurrentRender;
     private boolean graphicalEditing;
+    private boolean selRot;
 
 
     public ZRunnerMain() {
@@ -258,5 +259,13 @@ public class ZRunnerMain extends Thread implements PropertyChangeListener {
 
     public void setMain(Main main) {
         this.main = main;
+    }
+
+    public void setSelRot(boolean selRot) {
+        this.selRot = selRot;
+    }
+
+    public boolean getSelRot() {
+        return selRot;
     }
 }

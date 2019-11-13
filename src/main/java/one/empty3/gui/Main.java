@@ -58,6 +58,7 @@ public class Main implements PropertyChangeListener {
     private boolean running = true;
     private boolean refreshXMLactioned;
     private ThreadGraphicalEditor threadGraphicalEditor;
+    private boolean selectAndRotate = false;
 
     public static void main(String [] args)
     {
@@ -97,6 +98,7 @@ public class Main implements PropertyChangeListener {
             @Override
             public void mouseClicked(MouseEvent e) {
                 licence.setVisible(false);
+                licence.dispose();
             }
         });
         licence.setVisible(true);
@@ -233,7 +235,7 @@ public class Main implements PropertyChangeListener {
                 }
                 ZBufferImpl zBuffer = new ZBufferImpl(imageWidth, imageHeight);
                 zBuffer.scene(getDataModel().getScene());
-                zBuffer.setDisplayType(updateViewMain.getDisplayType());
+                zBuffer.setDisplayType(updateViewMain.getView().getzDiplayType());
                 zBuffer.draw();
                 ECBufferedImage image = zBuffer.image();
                 try {
@@ -358,6 +360,14 @@ public class Main implements PropertyChangeListener {
 
     private void updateViewMouseWheelMoved(MouseWheelEvent e) {
         // TODO add your code here
+    }
+
+    public boolean isSelectAndRotate() {
+        return getUpdateView().getzRunner().getSelRot();
+    }
+
+    private void checkBoxSelRotActionPerformed(ActionEvent e) {
+       getUpdateView().getzRunner().setSelRot(((JCheckBox)e.getSource()).isSelected());
     }
 
     class ThreadDrawingCoords  extends Thread {
@@ -683,6 +693,7 @@ public class Main implements PropertyChangeListener {
 
                             //---- checkBoxSelRot ----
                             this.checkBoxSelRot.setText("Select and rotate");
+                            this.checkBoxSelRot.addActionListener(e -> checkBoxSelRotActionPerformed(e));
                             this.panel8.add(this.checkBoxSelRot, "cell 0 1");
                         }
                         this.tabbedPane1.addTab("graphical editing", this.panel8);
