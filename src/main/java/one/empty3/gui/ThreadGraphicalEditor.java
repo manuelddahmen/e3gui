@@ -20,10 +20,7 @@
 
 package one.empty3.gui;
 
-import one.empty3.library.Point3D;
-import one.empty3.library.Representable;
-import one.empty3.library.Scene;
-import one.empty3.library.TextureCol;
+import one.empty3.library.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -107,8 +104,10 @@ public class ThreadGraphicalEditor extends Thread implements PropertyChangeListe
     private void drawPoints(List<ModelBrowser.Cell> objects) {
         objects.forEach(cell -> {
             try {
+                ZBufferImpl zBuffer = getMain().getUpdateView().getzRunner()
+                        .getzBuffer();
                 Point point = getMain().getUpdateView().getzRunner()
-                        .getzBuffer().coordonneesPoint2D((Point3D)cell.o);
+                        .getzBuffer().camera().coordonneesPoint2D((Point3D)cell.o, zBuffer);
 
                 for(int i=-2; i<=2; i++)
                     for(int j=-2; j<=2; j++)
