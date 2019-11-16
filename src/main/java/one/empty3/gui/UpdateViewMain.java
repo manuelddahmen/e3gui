@@ -135,7 +135,8 @@ public class UpdateViewMain extends JPanel implements RepresentableEditor {
                         mousePoint3D.changeTo(getzRunner().getzBuffer().invert((int) e.getPoint().getX(), (int) e.getPoint().getY(), mousePoint3D, getzRunner().getzBuffer().camera()));
                     }
                     System.out.println(mousePoint3D);
-                }
+                } else if(main.isSelectAndRotate())
+                    representable.getRotation().getElem().getRot().getElem().setD(arcBall.matrix());
                 if (threadDrawing != null) {
                     threadDrawing.setRunning(false);
                     threadDrawing = null;
