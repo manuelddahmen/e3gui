@@ -50,6 +50,7 @@ public class FunctionView {
     private ITexture texture = new TextureCol(Colors.random());
     private boolean refresh = true;
     private Scene scene = new Scene();
+    private int graphicEdit =-1;
 
     public FunctionView()
     {
@@ -241,4 +242,11 @@ public class FunctionView {
         this.dataModel = dataModel;
     }
 
+    public int getGraphicEdit() {
+        return graphicEdit;
+    }
+
+    public void setGraphicEdit(int graphicEdit) {
+        this.graphicEdit = graphicEdit;
+    }
 }

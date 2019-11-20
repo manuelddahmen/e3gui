@@ -97,7 +97,7 @@ public class ThreadGraphicalEditor extends Thread implements PropertyChangeListe
     private void browseScene(int drawType) {
         if(image!=null && drawType==DRAW_POINTS)
         {
-            drawPoints(new ModelBrowser(main.getDataModel().getScene(), Point3D.class).getObjects());
+            drawPoints(new ModelBrowser(main.getUpdateView().getzRunner().getzBuffer(), main.getDataModel().getScene(), Point3D.class).getObjects());
         }
     }
 
@@ -107,7 +107,7 @@ public class ThreadGraphicalEditor extends Thread implements PropertyChangeListe
                 ZBufferImpl zBuffer = getMain().getUpdateView().getzRunner()
                         .getzBuffer();
                 Point point = getMain().getUpdateView().getzRunner()
-                        .getzBuffer().camera().coordonneesPoint2D((Point3D)cell.o, zBuffer);
+                        .getzBuffer().camera().coordonneesPoint2D((Point3D)cell.pRot, zBuffer);
 
                 for(int i=-2; i<=2; i++)
                     for(int j=-2; j<=2; j++)

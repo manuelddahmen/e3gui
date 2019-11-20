@@ -59,6 +59,14 @@ public class Main implements PropertyChangeListener {
     private boolean refreshXMLactioned;
     private ThreadGraphicalEditor threadGraphicalEditor;
     private boolean selectAndRotate = false;
+    private boolean translateR;
+    private boolean rotateR;
+    private int graphicEditROTATE = 0;
+    private int graphicEditMOVE = 1;
+    private int graphicEditROTATER = 2;
+    private int graphicEditTRANSLATER = 3;
+    private int graphicEdit = -1;
+    private GraphicalEdit2 graphicalEdit2;
 
     public static void main(String [] args)
     {
@@ -103,6 +111,8 @@ public class Main implements PropertyChangeListener {
         });
         licence.setVisible(true);
         running = true;
+        treeSelIn.setModel(new TreeModelSelection());
+        treeSelOut.setModel(new TreeModelSelection());
     }
 
     private TextureEditor getTextureEditor() {
@@ -367,8 +377,89 @@ public class Main implements PropertyChangeListener {
     }
 
     private void checkBoxSelRotActionPerformed(ActionEvent e) {
-       getUpdateView().getzRunner().setSelRot(((JCheckBox)e.getSource()).isSelected());
+       getUpdateView().getzRunner().setSelRot(((JRadioButton)e.getSource()).isSelected());
+        graphicalEdit2.setSelTypeIn(GraphicalEdit2.SelType.SelectRotate);
     }
+
+    private void checkBoxActiveActionPerformed(ActionEvent e) {
+        graphicalEdit2 = new GraphicalEdit2();
+        graphicalEdit2.setMain(this);
+
+    }
+
+    private void radioButton1ActionPerformed(ActionEvent e) {
+        if(graphicalEdit2!=null) {
+            graphicalEdit2.setRunning(false);
+            graphicalEdit2 = null;
+        }
+
+    }
+
+    public GraphicalEdit2 getGraphicalEdit2() {
+        return graphicalEdit2;
+    }
+
+    public void setGraphicalEdit2(GraphicalEdit2 graphicalEdit2) {
+        this.graphicalEdit2 = graphicalEdit2;
+    }
+
+    private void checkBoxSelMultipleObjectsActionPerformed(ActionEvent e) {
+        graphicalEdit2.setStartSel1(true);
+        graphicalEdit2.setSelectingMultipleObjectsIn(((JCheckBox)e.getSource()).isSelected());
+
+    }
+
+    private void checkBoxSelMultiplePointsActionPerformed(ActionEvent e) {
+        graphicalEdit2.setStartSel1(true);
+        graphicalEdit2.setSelectArbitraryPointsIn(((JCheckBox)e.getSource()).isSelected());
+    }
+
+    private void checkBoxSelArbitraryPointsActionPerformed(ActionEvent e) {
+        graphicalEdit2.setSelectArbitraryPointsIn(((JCheckBox)e.getSource()).isSelected());
+    }
+
+    private void radioButtonTranslateActionPerformed(ActionEvent e) {
+        graphicalEdit2.setSelTypeOut(((JRadioButton)e.getSource()).isSelected()==true?GraphicalEdit2.SelType.Translate:null);
+    }
+
+    private void radioButtonRotateActionPerformed(ActionEvent e) {
+        graphicalEdit2.setSelTypeOut(((JRadioButton)e.getSource()).isSelected()==true?GraphicalEdit2.SelType.Rotate:null);
+    }
+
+    private void checkBoxEndSelActionPerformed(ActionEvent e) {
+        graphicalEdit2.setEndSel1(((JCheckBox)e.getSource()).isSelected());
+    }
+
+    private void buttonDuplicateOnPointsActionPerformed(ActionEvent e) {
+        graphicalEdit2.setActionToPerform(((JRadioButton)e.getSource()).isSelected()==true?GraphicalEdit2.Action.duplicateOnPoints:null);
+    }
+
+    private void buttonDuplicateOnCurveActionPerformed(ActionEvent e) {
+        graphicalEdit2.setActionToPerform(((JRadioButton)e.getSource()).isSelected()==true?GraphicalEdit2.Action.duplicateOnCurve:null);
+    }
+
+    private void buttonDuplicateOnSurfaceActionPerformed(ActionEvent e) {
+        graphicalEdit2.setActionToPerform(((JRadioButton)e.getSource()).isSelected()==true?GraphicalEdit2.Action.duplicateOnSurface:null);
+    }
+
+    private void buttonExtrudeSelActionPerformed(ActionEvent e) {
+        graphicalEdit2.setActionToPerform(((JRadioButton)e.getSource()).isSelected()==true?GraphicalEdit2.Action.extrude:null);
+    }
+
+    private void buttonSelGoActionPerformed(ActionEvent e) {
+        graphicalEdit2.performAction();
+    }
+
+    private void radioButtonSel1ActionPerformed(ActionEvent e) {
+        graphicalEdit2.setActiveSelection(0);
+    }
+
+    private void radioButtonSel2ActionPerformed(ActionEvent e) {
+        graphicalEdit2.setActiveSelection(1);
+    }
+
+
+
 
     class ThreadDrawingCoords  extends Thread {
         @Override
@@ -426,8 +517,28 @@ public class Main implements PropertyChangeListener {
         this.scrollPane1 = new JScrollPane();
         this.textAreaXML = new JTextArea();
         this.panel8 = new JPanel();
-        this.checkBoxActive = new JCheckBox();
-        this.checkBoxSelRot = new JCheckBox();
+        this.checkBoxActive = new JRadioButton();
+        this.label1 = new JLabel();
+        this.radioButtonSel1 = new JRadioButton();
+        this.scrollPane2 = new JScrollPane();
+        this.treeSelIn = new JTree();
+        this.label2 = new JLabel();
+        this.checkBoxSelRot = new JRadioButton();
+        this.checkBoxSelMultipleObjects = new JCheckBox();
+        this.radioButtonSel2 = new JRadioButton();
+        this.buttonDuplicateOnPoints = new JRadioButton();
+        this.radioButton1 = new JRadioButton();
+        this.checkBoxSelMultiplePoints = new JCheckBox();
+        this.buttonDuplicateOnCurve = new JRadioButton();
+        this.checkBoxSelArbitraryPoints = new JCheckBox();
+        this.buttonDuplicateOnSurface = new JRadioButton();
+        this.radioButtonTranslate = new JRadioButton();
+        this.scrollPane3 = new JScrollPane();
+        this.treeSelOut = new JTree();
+        this.buttonExtrudeSel = new JRadioButton();
+        this.radioButtonRotate = new JRadioButton();
+        this.checkBoxEndSel = new JCheckBox();
+        this.button1 = new JButton();
 
         //======== MainWindow ========
         {
@@ -677,8 +788,17 @@ public class Main implements PropertyChangeListener {
                                 "hidemode 3",
                                 // columns
                                 "[fill]" +
+                                "[fill]" +
+                                "[fill]" +
+                                "[fill]" +
+                                "[fill]" +
+                                "[fill]" +
                                 "[fill]",
                                 // rows
+                                "[]" +
+                                "[]" +
+                                "[]" +
+                                "[]" +
                                 "[]" +
                                 "[]" +
                                 "[]" +
@@ -689,12 +809,110 @@ public class Main implements PropertyChangeListener {
                             this.checkBoxActive.setBorder(new SoftBevelBorder(SoftBevelBorder.LOWERED));
                             this.checkBoxActive.setBorderPainted(true);
                             this.checkBoxActive.addItemListener(e -> checkBoxActiveItemStateChanged(e));
+                            this.checkBoxActive.addActionListener(e -> checkBoxActiveActionPerformed(e));
                             this.panel8.add(this.checkBoxActive, "cell 0 0");
+
+                            //---- label1 ----
+                            this.label1.setText("Modify Representaable");
+                            this.panel8.add(this.label1, "cell 2 0");
+
+                            //---- radioButtonSel1 ----
+                            this.radioButtonSel1.setText("Selection 1 (IN)");
+                            this.radioButtonSel1.addActionListener(e -> radioButtonSel1ActionPerformed(e));
+                            this.panel8.add(this.radioButtonSel1, "cell 3 0");
+
+                            //======== scrollPane2 ========
+                            {
+                                this.scrollPane2.setViewportView(this.treeSelIn);
+                            }
+                            this.panel8.add(this.scrollPane2, "cell 4 0 1 4");
+
+                            //---- label2 ----
+                            this.label2.setText("Duplicate");
+                            this.panel8.add(this.label2, "cell 6 0");
 
                             //---- checkBoxSelRot ----
                             this.checkBoxSelRot.setText("Select and rotate");
-                            this.checkBoxSelRot.addActionListener(e -> checkBoxSelRotActionPerformed(e));
+                            this.checkBoxSelRot.addActionListener(e -> {
+			checkBoxSelRotActionPerformed(e);
+			checkBoxSelRotActionPerformed(e);
+		});
                             this.panel8.add(this.checkBoxSelRot, "cell 0 1");
+
+                            //---- checkBoxSelMultipleObjects ----
+                            this.checkBoxSelMultipleObjects.setText("Selection Multiple objects");
+                            this.checkBoxSelMultipleObjects.addActionListener(e -> {
+			checkBoxSelMultipleObjectsActionPerformed(e);
+			checkBoxSelMultipleObjectsActionPerformed(e);
+		});
+                            this.panel8.add(this.checkBoxSelMultipleObjects, "cell 2 1");
+
+                            //---- radioButtonSel2 ----
+                            this.radioButtonSel2.setText("Selection 2 (OUT)");
+                            this.radioButtonSel2.addActionListener(e -> radioButtonSel2ActionPerformed(e));
+                            this.panel8.add(this.radioButtonSel2, "cell 3 1");
+
+                            //---- buttonDuplicateOnPoints ----
+                            this.buttonDuplicateOnPoints.setText("Duplicate object on points");
+                            this.buttonDuplicateOnPoints.addActionListener(e -> buttonDuplicateOnPointsActionPerformed(e));
+                            this.panel8.add(this.buttonDuplicateOnPoints, "cell 6 1");
+
+                            //---- radioButton1 ----
+                            this.radioButton1.setText("Disactivate");
+                            this.radioButton1.addActionListener(e -> radioButton1ActionPerformed(e));
+                            this.panel8.add(this.radioButton1, "cell 0 2");
+
+                            //---- checkBoxSelMultiplePoints ----
+                            this.checkBoxSelMultiplePoints.setText("Select multiple");
+                            this.checkBoxSelMultiplePoints.setActionCommand("Select multiple points");
+                            this.checkBoxSelMultiplePoints.addActionListener(e -> checkBoxSelMultiplePointsActionPerformed(e));
+                            this.panel8.add(this.checkBoxSelMultiplePoints, "cell 2 2");
+
+                            //---- buttonDuplicateOnCurve ----
+                            this.buttonDuplicateOnCurve.setText("on curve");
+                            this.buttonDuplicateOnCurve.addActionListener(e -> buttonDuplicateOnCurveActionPerformed(e));
+                            this.panel8.add(this.buttonDuplicateOnCurve, "cell 6 2");
+
+                            //---- checkBoxSelArbitraryPoints ----
+                            this.checkBoxSelArbitraryPoints.setText("Select arb points");
+                            this.checkBoxSelArbitraryPoints.addActionListener(e -> checkBoxSelArbitraryPointsActionPerformed(e));
+                            this.panel8.add(this.checkBoxSelArbitraryPoints, "cell 2 3");
+
+                            //---- buttonDuplicateOnSurface ----
+                            this.buttonDuplicateOnSurface.setText("on surface");
+                            this.buttonDuplicateOnSurface.addActionListener(e -> buttonDuplicateOnSurfaceActionPerformed(e));
+                            this.panel8.add(this.buttonDuplicateOnSurface, "cell 6 3");
+
+                            //---- radioButtonTranslate ----
+                            this.radioButtonTranslate.setText("Translate");
+                            this.radioButtonTranslate.addActionListener(e -> radioButtonTranslateActionPerformed(e));
+                            this.panel8.add(this.radioButtonTranslate, "cell 2 4");
+
+                            //======== scrollPane3 ========
+                            {
+                                this.scrollPane3.setViewportView(this.treeSelOut);
+                            }
+                            this.panel8.add(this.scrollPane3, "cell 4 4 1 3");
+
+                            //---- buttonExtrudeSel ----
+                            this.buttonExtrudeSel.setText("Extrude selection");
+                            this.buttonExtrudeSel.addActionListener(e -> buttonExtrudeSelActionPerformed(e));
+                            this.panel8.add(this.buttonExtrudeSel, "cell 6 4");
+
+                            //---- radioButtonRotate ----
+                            this.radioButtonRotate.setText("Rotate");
+                            this.radioButtonRotate.addActionListener(e -> radioButtonRotateActionPerformed(e));
+                            this.panel8.add(this.radioButtonRotate, "cell 2 5");
+
+                            //---- checkBoxEndSel ----
+                            this.checkBoxEndSel.setText("End selection");
+                            this.checkBoxEndSel.addActionListener(e -> checkBoxEndSelActionPerformed(e));
+                            this.panel8.add(this.checkBoxEndSel, "cell 2 6");
+
+                            //---- button1 ----
+                            this.button1.setText("GO");
+                            this.button1.addActionListener(e -> buttonSelGoActionPerformed(e));
+                            this.panel8.add(this.button1, "cell 6 6");
                         }
                         this.tabbedPane1.addTab("graphical editing", this.panel8);
                     }
@@ -706,6 +924,26 @@ public class Main implements PropertyChangeListener {
             this.MainWindow.setSize(1620, 1085);
             this.MainWindow.setLocationRelativeTo(this.MainWindow.getOwner());
         }
+
+        //---- buttonGroup1 ----
+        ButtonGroup buttonGroup1 = new ButtonGroup();
+        buttonGroup1.add(this.checkBoxActive);
+        buttonGroup1.add(this.checkBoxSelRot);
+        buttonGroup1.add(this.radioButton1);
+        buttonGroup1.add(this.radioButtonTranslate);
+        buttonGroup1.add(this.radioButtonRotate);
+
+        //---- buttonGroup3 ----
+        ButtonGroup buttonGroup3 = new ButtonGroup();
+        buttonGroup3.add(this.radioButtonSel1);
+        buttonGroup3.add(this.radioButtonSel2);
+
+        //---- buttonGroup2 ----
+        ButtonGroup buttonGroup2 = new ButtonGroup();
+        buttonGroup2.add(this.buttonDuplicateOnPoints);
+        buttonGroup2.add(this.buttonDuplicateOnCurve);
+        buttonGroup2.add(this.buttonDuplicateOnSurface);
+        buttonGroup2.add(this.buttonExtrudeSel);
 
         //---- bindings ----
         this.bindingGroup = new BindingGroup();
@@ -762,8 +1000,28 @@ public class Main implements PropertyChangeListener {
     private JScrollPane scrollPane1;
     private JTextArea textAreaXML;
     private JPanel panel8;
-    private JCheckBox checkBoxActive;
-    private JCheckBox checkBoxSelRot;
+    private JRadioButton checkBoxActive;
+    private JLabel label1;
+    private JRadioButton radioButtonSel1;
+    private JScrollPane scrollPane2;
+    private JTree treeSelIn;
+    private JLabel label2;
+    private JRadioButton checkBoxSelRot;
+    private JCheckBox checkBoxSelMultipleObjects;
+    private JRadioButton radioButtonSel2;
+    private JRadioButton buttonDuplicateOnPoints;
+    private JRadioButton radioButton1;
+    private JCheckBox checkBoxSelMultiplePoints;
+    private JRadioButton buttonDuplicateOnCurve;
+    private JCheckBox checkBoxSelArbitraryPoints;
+    private JRadioButton buttonDuplicateOnSurface;
+    private JRadioButton radioButtonTranslate;
+    private JScrollPane scrollPane3;
+    private JTree treeSelOut;
+    private JRadioButton buttonExtrudeSel;
+    private JRadioButton radioButtonRotate;
+    private JCheckBox checkBoxEndSel;
+    private JButton button1;
     private BindingGroup bindingGroup;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
 
@@ -814,4 +1072,15 @@ public class Main implements PropertyChangeListener {
     public RepresentableEditor getPositionEditor() {
         return objectEditorBase1;
     }
+
+    public boolean isTranslateR()
+    {
+        return translateR;
+    }
+    public boolean isRotateR()
+    {
+        return rotateR;
+    }
+
+
 }

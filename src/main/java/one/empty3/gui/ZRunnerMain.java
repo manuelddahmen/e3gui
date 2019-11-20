@@ -28,6 +28,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.ConcurrentModificationException;
+import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -267,5 +268,9 @@ public class ZRunnerMain extends Thread implements PropertyChangeListener {
 
     public boolean getSelRot() {
         return selRot;
+    }
+
+    public void afterDraw(Thread consumer) {
+        consumer.start();
     }
 }

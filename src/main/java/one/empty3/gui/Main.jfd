@@ -229,25 +229,166 @@ new FormModel {
 						} )
 						add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class net.miginfocom.swing.MigLayout ) {
 							"$layoutConstraints": "hidemode 3"
-							"$columnConstraints": "[fill][fill]"
-							"$rowConstraints": "[][][][]"
+							"$columnConstraints": "[fill][fill][fill][fill][fill][fill][fill]"
+							"$rowConstraints": "[][][][][][][][]"
 						} ) {
 							name: "panel8"
-							add( new FormComponent( "javax.swing.JCheckBox" ) {
+							add( new FormComponent( "javax.swing.JRadioButton" ) {
 								name: "checkBoxActive"
 								"text": "Active graphical editing"
 								"border": new javax.swing.border.SoftBevelBorder( 1, null, null, null, null )
 								"borderPainted": true
+								"$buttonGroup": new FormReference( "buttonGroup1" )
 								addEvent( new FormEvent( "java.awt.event.ItemListener", "itemStateChanged", "checkBoxActiveItemStateChanged", true ) )
+								addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "checkBoxActiveActionPerformed", true ) )
 							}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
 								"value": "cell 0 0"
 							} )
-							add( new FormComponent( "javax.swing.JCheckBox" ) {
+							add( new FormComponent( "javax.swing.JLabel" ) {
+								name: "label1"
+								"text": "Modify Representaable"
+							}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+								"value": "cell 2 0"
+							} )
+							add( new FormComponent( "javax.swing.JRadioButton" ) {
+								name: "radioButtonSel1"
+								"text": "Selection 1 (IN)"
+								"$buttonGroup": new FormReference( "buttonGroup3" )
+								addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "radioButtonSel1ActionPerformed", true ) )
+							}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+								"value": "cell 3 0"
+							} )
+							add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+								name: "scrollPane2"
+								add( new FormComponent( "javax.swing.JTree" ) {
+									name: "treeSelIn"
+								} )
+							}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+								"value": "cell 4 0 1 4"
+							} )
+							add( new FormComponent( "javax.swing.JLabel" ) {
+								name: "label2"
+								"text": "Duplicate"
+							}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+								"value": "cell 6 0"
+							} )
+							add( new FormComponent( "javax.swing.JRadioButton" ) {
 								name: "checkBoxSelRot"
 								"text": "Select and rotate"
+								"$buttonGroup": new FormReference( "buttonGroup1" )
+								addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "checkBoxSelRotActionPerformed", true ) )
 								addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "checkBoxSelRotActionPerformed", true ) )
 							}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
 								"value": "cell 0 1"
+							} )
+							add( new FormComponent( "javax.swing.JCheckBox" ) {
+								name: "checkBoxSelMultipleObjects"
+								"text": "Selection Multiple objects"
+								addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "checkBoxSelMultipleObjectsActionPerformed", true ) )
+								addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "checkBoxSelMultipleObjectsActionPerformed", true ) )
+							}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+								"value": "cell 2 1"
+							} )
+							add( new FormComponent( "javax.swing.JRadioButton" ) {
+								name: "radioButtonSel2"
+								"text": "Selection 2 (OUT)"
+								"$buttonGroup": new FormReference( "buttonGroup3" )
+								addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "radioButtonSel2ActionPerformed", true ) )
+							}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+								"value": "cell 3 1"
+							} )
+							add( new FormComponent( "javax.swing.JRadioButton" ) {
+								name: "buttonDuplicateOnPoints"
+								"text": "Duplicate object on points"
+								"$buttonGroup": new FormReference( "buttonGroup2" )
+								addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "buttonDuplicateOnPointsActionPerformed", true ) )
+							}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+								"value": "cell 6 1"
+							} )
+							add( new FormComponent( "javax.swing.JRadioButton" ) {
+								name: "radioButton1"
+								"text": "Disactivate"
+								"$buttonGroup": new FormReference( "buttonGroup1" )
+								addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "radioButton1ActionPerformed", true ) )
+							}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+								"value": "cell 0 2"
+							} )
+							add( new FormComponent( "javax.swing.JCheckBox" ) {
+								name: "checkBoxSelMultiplePoints"
+								"text": "Select multiple"
+								"actionCommand": "Select multiple points"
+								addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "checkBoxSelMultiplePointsActionPerformed", true ) )
+							}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+								"value": "cell 2 2"
+							} )
+							add( new FormComponent( "javax.swing.JRadioButton" ) {
+								name: "buttonDuplicateOnCurve"
+								"text": "on curve"
+								"$buttonGroup": new FormReference( "buttonGroup2" )
+								addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "buttonDuplicateOnCurveActionPerformed", true ) )
+							}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+								"value": "cell 6 2"
+							} )
+							add( new FormComponent( "javax.swing.JCheckBox" ) {
+								name: "checkBoxSelArbitraryPoints"
+								"text": "Select arb points"
+								addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "checkBoxSelArbitraryPointsActionPerformed", true ) )
+							}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+								"value": "cell 2 3"
+							} )
+							add( new FormComponent( "javax.swing.JRadioButton" ) {
+								name: "buttonDuplicateOnSurface"
+								"text": "on surface"
+								"$buttonGroup": new FormReference( "buttonGroup2" )
+								addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "buttonDuplicateOnSurfaceActionPerformed", true ) )
+							}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+								"value": "cell 6 3"
+							} )
+							add( new FormComponent( "javax.swing.JRadioButton" ) {
+								name: "radioButtonTranslate"
+								"text": "Translate"
+								"$buttonGroup": new FormReference( "buttonGroup1" )
+								addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "radioButtonTranslateActionPerformed", true ) )
+							}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+								"value": "cell 2 4"
+							} )
+							add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+								name: "scrollPane3"
+								add( new FormComponent( "javax.swing.JTree" ) {
+									name: "treeSelOut"
+								} )
+							}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+								"value": "cell 4 4 1 3"
+							} )
+							add( new FormComponent( "javax.swing.JRadioButton" ) {
+								name: "buttonExtrudeSel"
+								"text": "Extrude selection"
+								"$buttonGroup": new FormReference( "buttonGroup2" )
+								addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "buttonExtrudeSelActionPerformed", true ) )
+							}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+								"value": "cell 6 4"
+							} )
+							add( new FormComponent( "javax.swing.JRadioButton" ) {
+								name: "radioButtonRotate"
+								"text": "Rotate"
+								"$buttonGroup": new FormReference( "buttonGroup1" )
+								addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "radioButtonRotateActionPerformed", true ) )
+							}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+								"value": "cell 2 5"
+							} )
+							add( new FormComponent( "javax.swing.JCheckBox" ) {
+								name: "checkBoxEndSel"
+								"text": "End selection"
+								addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "checkBoxEndSelActionPerformed", true ) )
+							}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+								"value": "cell 2 6"
+							} )
+							add( new FormComponent( "javax.swing.JButton" ) {
+								name: "button1"
+								"text": "GO"
+								addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "buttonSelGoActionPerformed", true ) )
+							}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+								"value": "cell 6 6"
 							} )
 						}, new FormLayoutConstraints( null ) {
 							"title": "graphical editing"
@@ -264,6 +405,21 @@ new FormModel {
 		}, new FormLayoutConstraints( null ) {
 			"location": new java.awt.Point( 0, 15 )
 			"size": new java.awt.Dimension( 1620, 1085 )
+		} )
+		add( new FormNonVisual( "javax.swing.ButtonGroup" ) {
+			name: "buttonGroup1"
+		}, new FormLayoutConstraints( null ) {
+			"location": new java.awt.Point( 0, 1116 )
+		} )
+		add( new FormNonVisual( "javax.swing.ButtonGroup" ) {
+			name: "buttonGroup2"
+		}, new FormLayoutConstraints( null ) {
+			"location": new java.awt.Point( 0, 1176 )
+		} )
+		add( new FormNonVisual( "javax.swing.ButtonGroup" ) {
+			name: "buttonGroup3"
+		}, new FormLayoutConstraints( null ) {
+			"location": new java.awt.Point( 0, 1236 )
 		} )
 		addBindingGroup( new FormBindingGroup( class org.jdesktop.beansbinding.BindingGroup ) {
 			"name": "bindingGroup"
