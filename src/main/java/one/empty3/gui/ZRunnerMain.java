@@ -22,11 +22,14 @@ package one.empty3.gui;
 
 import one.empty3.library.*;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.io.File;
+import java.io.IOException;
 import java.util.ConcurrentModificationException;
 import java.util.function.Consumer;
 import java.util.logging.Level;
@@ -175,12 +178,20 @@ public class ZRunnerMain extends Thread implements PropertyChangeListener {
     private void drawSuccess() {
         Graphics graphics = updateViewMain.getGraphics();
         graphics.setColor(Color.GREEN);
-        graphics.fillRect(0, 0, 10, 10);
+        try {
+            graphics.drawImage(ImageIO.read(new File("resources/img/RENDEREDOK.PNG")), 0, 0, 50, 50, null);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
     private void drawFailed() {
         Graphics graphics = updateViewMain.getGraphics();
         graphics.setColor(Color.RED);
-        graphics.fillRect(0, 0, 10, 10);
+        try {
+            graphics.drawImage(ImageIO.read(new File("resources/img/FAILED.PNG")), 0, 0, 50, 50, null);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void addRepere(Scene scene1) {

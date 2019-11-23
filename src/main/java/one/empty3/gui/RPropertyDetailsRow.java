@@ -85,44 +85,41 @@ public class RPropertyDetailsRow implements TableModel {
     public void initTable() {
         index = 0;
 
-        if (((MatrixPropertiesObject) representable).declarations().size() > 0) {
-            representable.declarations().forEach(new BiConsumer<String, StructureMatrix>() {
-                @Override
-                public void accept(String s, StructureMatrix structureMatrix) {
-                    String name = s;
-                    String[] propName = name.split("/");
-                    StructureMatrix data = structureMatrix;
+        if (representable.declarations().size() > 0) {
+            representable.declarations().forEach((s, structureMatrix) -> {
+                String name = s;
+                String[] propName = name.split("/");
+                StructureMatrix data = structureMatrix;
 
-                    int i = 0;
-                    String[] split = split(name);
-                    if (data.getDim() == 0) {
+                int i = 0;
+                String[] split = split(name);
+                if (data.getDim() == 0) {
+                    objectDetailDescriptions.add(new ObjectDetailDescription(propName[0], propName[1],
+                            0, "0", data.getElem().getClass(), data.getElem()));
+                    objectList.add(data.getElem());
+                    index++;
+                }
+                if (data.getDim() == 1) {
+                    for (int ind = 0; ind < data.getData1d().size(); ind++) {
                         objectDetailDescriptions.add(new ObjectDetailDescription(propName[0], propName[1],
-                                0, "0", data.getElem().getClass(), data.getElem()));
-                        objectList.add(data.getElem());
+                                0, "" + ind, data.getElem(ind).getClass(), data.getElem(ind)));
+                        objectList.add(data.getElem(ind));
                         index++;
                     }
-                    if (data.getDim() == 1) {
-                        for (int ind = 0; ind < data.getData1d().size(); ind++) {
+                }
+                if (data.getDim() == 2) {
+                    for (int ind = 0; ind < data.getData2d().size(); ind++) {
+                        for (int ind1 = 0; ind1 < ((List) ((List) data.getData2d()).get(ind)).size(); ind1++) {
+
                             objectDetailDescriptions.add(new ObjectDetailDescription(propName[0], propName[1],
-                                    0, "" + ind, data.getElem(ind).getClass(), data.getElem(ind)));
-                            objectList.add(data.getElem(ind));
+                                    0, "" + ind + "," + ind1, data.getElem(ind, ind1).getClass(), data.getElem(ind, ind1)));
+                            objectList.add(data.getElem(ind, ind1));
                             index++;
                         }
                     }
-                    if (data.getDim() == 2) {
-                        for (int ind = 0; ind < data.getData2d().size(); ind++) {
-                            for (int ind1 = 0; ind1 < ((List) ((List) data.getData2d()).get(ind)).size(); ind1++) {
-
-                                objectDetailDescriptions.add(new ObjectDetailDescription(propName[0], propName[1],
-                                        0, "" + ind + "," + ind1, data.getElem(ind, ind1).getClass(), data.getElem(ind, ind1)));
-                                objectList.add(data.getElem(ind, ind1));
-                                index++;
-                            }
-                        }
-
-                    }
 
                 }
+
             });
         /*
         if (representable.getDeclaredLists().size() > 0)

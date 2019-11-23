@@ -66,7 +66,7 @@ public class Main implements PropertyChangeListener {
     private int graphicEditROTATER = 2;
     private int graphicEditTRANSLATER = 3;
     private int graphicEdit = -1;
-    private GraphicalEdit2 graphicalEdit2;
+    private GraphicalEdit2 graphicalEdit2 = new GraphicalEdit2();
 
     public static void main(String [] args)
     {
@@ -111,8 +111,7 @@ public class Main implements PropertyChangeListener {
         });
         licence.setVisible(true);
         running = true;
-        treeSelIn.setModel(new TreeModelSelection());
-        treeSelOut.setModel(new TreeModelSelection());
+        graphicalEdit2.setMain(this);
     }
 
     private TextureEditor getTextureEditor() {
@@ -374,16 +373,21 @@ public class Main implements PropertyChangeListener {
 
     public boolean isSelectAndRotate() {
         return getUpdateView().getzRunner().getSelRot();
+
     }
 
     private void checkBoxSelRotActionPerformed(ActionEvent e) {
-       getUpdateView().getzRunner().setSelRot(((JRadioButton)e.getSource()).isSelected());
+        getUpdateView().getzRunner().setSelRot(((JRadioButton) e.getSource()).isSelected());
         graphicalEdit2.setSelTypeIn(GraphicalEdit2.SelType.SelectRotate);
+        this.getUpdateView().getzRunner().setGraphicalEditing(false);
+        getUpdateView().getzRunner().setSelRot(true);
     }
 
     private void checkBoxActiveActionPerformed(ActionEvent e) {
         graphicalEdit2 = new GraphicalEdit2();
         graphicalEdit2.setMain(this);
+        this.getUpdateView().getzRunner().setGraphicalEditing(true);
+        getUpdateView().getzRunner().setSelRot(false);
 
     }
 
@@ -392,12 +396,15 @@ public class Main implements PropertyChangeListener {
             graphicalEdit2.setRunning(false);
             graphicalEdit2 = null;
         }
-
+        this.getUpdateView().getzRunner().setGraphicalEditing(false);
+        this.getUpdateView().getzRunner().setSelRot(false);
     }
 
     public GraphicalEdit2 getGraphicalEdit2() {
         return graphicalEdit2;
     }
+
+
 
     public void setGraphicalEdit2(GraphicalEdit2 graphicalEdit2) {
         this.graphicalEdit2 = graphicalEdit2;
@@ -452,13 +459,32 @@ public class Main implements PropertyChangeListener {
 
     private void radioButtonSel1ActionPerformed(ActionEvent e) {
         graphicalEdit2.setActiveSelection(0);
+
     }
 
     private void radioButtonSel2ActionPerformed(ActionEvent e) {
         graphicalEdit2.setActiveSelection(1);
     }
 
+    public void setSelectAndRotate(boolean selectAndRotate) {
+        this.selectAndRotate = selectAndRotate;
+    }
 
+    public JList<Representable> getTreeSelIn() {
+        return treeSelIn;
+    }
+
+    public JList<Representable> getTreeSelOut() {
+        return treeSelOut;
+    }
+
+    public MyObservableList getMyObservableListSelOut() {
+        return this.myObservableListSelOut;
+    }
+
+    public MyObservableList getMyObservableListSelIn() {
+        return this.myObservableListSelIn;
+    }
 
 
     class ThreadDrawingCoords  extends Thread {
@@ -521,7 +547,7 @@ public class Main implements PropertyChangeListener {
         this.label1 = new JLabel();
         this.radioButtonSel1 = new JRadioButton();
         this.scrollPane2 = new JScrollPane();
-        this.treeSelIn = new JTree();
+        this.treeSelIn = new JList<>();
         this.label2 = new JLabel();
         this.checkBoxSelRot = new JRadioButton();
         this.checkBoxSelMultipleObjects = new JCheckBox();
@@ -534,11 +560,13 @@ public class Main implements PropertyChangeListener {
         this.buttonDuplicateOnSurface = new JRadioButton();
         this.radioButtonTranslate = new JRadioButton();
         this.scrollPane3 = new JScrollPane();
-        this.treeSelOut = new JTree();
+        this.treeSelOut = new JList<>();
         this.buttonExtrudeSel = new JRadioButton();
         this.radioButtonRotate = new JRadioButton();
         this.checkBoxEndSel = new JCheckBox();
         this.button1 = new JButton();
+        this.myObservableListSelIn = new MyObservableList();
+        this.myObservableListSelOut = new MyObservableList();
 
         //======== MainWindow ========
         {
@@ -818,11 +846,17 @@ public class Main implements PropertyChangeListener {
 
                             //---- radioButtonSel1 ----
                             this.radioButtonSel1.setText("Selection 1 (IN)");
-                            this.radioButtonSel1.addActionListener(e -> radioButtonSel1ActionPerformed(e));
+                            this.radioButtonSel1.addActionListener(e -> {
+			radioButtonSel1ActionPerformed(e);
+			radioButtonSel1ActionPerformed(e);
+		});
                             this.panel8.add(this.radioButtonSel1, "cell 3 0");
 
                             //======== scrollPane2 ========
                             {
+
+                                //---- treeSelIn ----
+                                this.treeSelIn.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
                                 this.scrollPane2.setViewportView(this.treeSelIn);
                             }
                             this.panel8.add(this.scrollPane2, "cell 4 0 1 4");
@@ -834,6 +868,7 @@ public class Main implements PropertyChangeListener {
                             //---- checkBoxSelRot ----
                             this.checkBoxSelRot.setText("Select and rotate");
                             this.checkBoxSelRot.addActionListener(e -> {
+			checkBoxSelRotActionPerformed(e);
 			checkBoxSelRotActionPerformed(e);
 			checkBoxSelRotActionPerformed(e);
 		});
@@ -859,7 +894,10 @@ public class Main implements PropertyChangeListener {
 
                             //---- radioButton1 ----
                             this.radioButton1.setText("Disactivate");
-                            this.radioButton1.addActionListener(e -> radioButton1ActionPerformed(e));
+                            this.radioButton1.addActionListener(e -> {
+			radioButton1ActionPerformed(e);
+			radioButton1ActionPerformed(e);
+		});
                             this.panel8.add(this.radioButton1, "cell 0 2");
 
                             //---- checkBoxSelMultiplePoints ----
@@ -890,6 +928,9 @@ public class Main implements PropertyChangeListener {
 
                             //======== scrollPane3 ========
                             {
+
+                                //---- treeSelOut ----
+                                this.treeSelOut.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
                                 this.scrollPane3.setViewportView(this.treeSelOut);
                             }
                             this.panel8.add(this.scrollPane3, "cell 4 4 1 3");
@@ -1004,7 +1045,7 @@ public class Main implements PropertyChangeListener {
     private JLabel label1;
     private JRadioButton radioButtonSel1;
     private JScrollPane scrollPane2;
-    private JTree treeSelIn;
+    private JList<Representable> treeSelIn;
     private JLabel label2;
     private JRadioButton checkBoxSelRot;
     private JCheckBox checkBoxSelMultipleObjects;
@@ -1017,11 +1058,13 @@ public class Main implements PropertyChangeListener {
     private JRadioButton buttonDuplicateOnSurface;
     private JRadioButton radioButtonTranslate;
     private JScrollPane scrollPane3;
-    private JTree treeSelOut;
+    private JList<Representable> treeSelOut;
     private JRadioButton buttonExtrudeSel;
     private JRadioButton radioButtonRotate;
     private JCheckBox checkBoxEndSel;
     private JButton button1;
+    private MyObservableList myObservableListSelIn;
+    private MyObservableList myObservableListSelOut;
     private BindingGroup bindingGroup;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
 
@@ -1052,7 +1095,7 @@ public class Main implements PropertyChangeListener {
                 if(evt.getNewValue().equals(-1))
                 {
                     try {
-                        this.getUpdateView().getzRunner().setLastImage(ImageIO.read(new File("resources/img/RESULT_FAILURE.JPG")));
+                        this.getUpdateView().getzRunner().setLastImage(ImageIO.read(new File("resources/img/FAILED.PNG")));
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -1060,7 +1103,7 @@ public class Main implements PropertyChangeListener {
                 else if(evt.getNewValue().equals(0))
                 {
                     try {
-                        this.getUpdateView().getzRunner().setLastImage(ImageIO.read(new File("resources/img/WAIT.JPG")));
+                        this.getUpdateView().getzRunner().setLastImage(ImageIO.read(new File("resources/img/WAITING.PNG")));
                     } catch (IOException e) {
                         e.printStackTrace();
                     }

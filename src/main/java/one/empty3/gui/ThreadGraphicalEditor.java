@@ -20,6 +20,7 @@
 
 package one.empty3.gui;
 
+import javafx.collections.ObservableList;
 import one.empty3.library.*;
 
 import javax.swing.*;
@@ -80,12 +81,8 @@ public class ThreadGraphicalEditor extends Thread implements PropertyChangeListe
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-
-            while (main.getUpdateView().getzRunner().isGraphicalEditing() ) {
-                image = main.getUpdateView().getzRunner().getLastImage();
-                browseScene(DRAW_POINTS);
-
-            }
+            image = main.getUpdateView().getzRunner().getLastImage();
+            browseScene(DRAW_POINTS);
             try {
                 Thread.sleep(100);
             } catch (InterruptedException e) {
@@ -98,6 +95,7 @@ public class ThreadGraphicalEditor extends Thread implements PropertyChangeListe
         if(image!=null && drawType==DRAW_POINTS)
         {
             drawPoints(new ModelBrowser(main.getUpdateView().getzRunner().getzBuffer(), main.getDataModel().getScene(), Point3D.class).getObjects());
+            drawSelection();
         }
     }
 
@@ -119,7 +117,29 @@ public class ThreadGraphicalEditor extends Thread implements PropertyChangeListe
             }
         });
     }
+    private void drawSelection() {
+        MyObservableList list = null;
+        list = (MyObservableList) main.getGraphicalEdit2().getCurrentSelection();
+        if(list!=null) {
+            list.forEach(cell -> {
+                try {
+                    ZBufferImpl zBuffer = getMain().getUpdateView().getzRunner()
+                            .getzBuffer();
+                    if (cell instanceof Point3D) {
+                        Point point = getMain().getUpdateView().getzRunner()
+                                .getzBuffer().camera().coordonneesPoint2D((Point3D) cell, zBuffer);
 
+                        for (int i = -2; i <= 2; i++)
+                            for (int j = -2; j <= 2; j++)
+                                ((BufferedImage) getMain().getUpdateView().getzRunner().getLastImage())
+                                        .setRGB((int) point.getX() + i, (int) point.getY() + j, Color.RED.getRGB());
+                    }
+                } catch (Exception ex) {
+
+                }
+            });
+        }
+    }
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         if(evt.getPropertyName().equals("renderedImageOK") &&evt.getNewValue().equals(Boolean.TRUE))

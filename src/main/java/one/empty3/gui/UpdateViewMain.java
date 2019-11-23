@@ -76,8 +76,11 @@ public class UpdateViewMain extends JPanel implements RepresentableEditor {
                                         }
                                     });
                                     ////System.out.println("Mouse rotation moved");
-                                } else
-                                    drawPoint(mousePoint);
+                                } else {
+                                    //drawPoint(mousePoint);
+
+                                }
+
                             } catch (ArrayIndexOutOfBoundsException ex) {
                                 ex.printStackTrace();
                             }
@@ -131,6 +134,8 @@ public class UpdateViewMain extends JPanel implements RepresentableEditor {
                                     threadDrawing = new ThreadDrawing();
                                     threadDrawing.start();
                                 }
+                                main.getGraphicalEdit2().add(cell.pRot);
+                                main.getGraphicalEdit2().getCurrentSelection().add(cell.pRot);
                             }
                         });
 

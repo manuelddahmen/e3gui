@@ -20,17 +20,27 @@
 
 package one.empty3.gui;
 
+import one.empty3.library.Point3D;
 import one.empty3.library.Representable;
+import one.empty3.library.StructureMatrix;
+import one.empty3.library.core.nurbs.CourbeParametriquePolynomialeBezier;
+import one.empty3.library.core.nurbs.TubeExtrusion;
+
+import javax.swing.*;
+import java.util.ArrayList;
 
 /**
  * Created by manue on 19-11-19.
  */
-public class GraphicalEdit2 extends Thread {
+public class GraphicalEdit2  {
+    private static final int OUT = 1;
+    private static final int IN = 0;
     private Main main;
     private boolean running = true;
     private boolean endSel1;
     private UpdateViewMain panel;
     private int activeSelection;
+    private RepresentableClassList currentSelection;
 
     public boolean isEndSel1() {
         return endSel1;
@@ -52,6 +62,12 @@ public class GraphicalEdit2 extends Thread {
 
     public void setMain(Main main) {
         this.main = main;
+        JList<Representable> treeSelIn = main.getTreeSelIn();
+        treeSelIn.setModel(new ListModelSelection());
+        treeSelIn.setCellRenderer(new Rendu());
+        JList<Representable> treeSelOut = main.getTreeSelOut();
+        treeSelOut.setModel(new ListModelSelection());
+        treeSelOut.setCellRenderer(new Rendu());
     }
 
     public void setSelectingMultipleObjectsIn(boolean selectingMultipleObjectsIn) {
@@ -74,6 +90,26 @@ public class GraphicalEdit2 extends Thread {
         return activeSelection;
     }
 
+    public MyObservableList<Representable> getCurrentSelection() {
+        if(getActiveSelection()==0)
+            return selectionIn;
+        else
+             if(getActiveSelection()==1)
+                 return selectionOut;
+        return null;
+    }
+
+    public JList<Representable> getJList() {
+        switch (getActiveSelection())
+        {
+            case 0:
+                return main.getTreeSelIn();
+            case 1:
+                return main.getTreeSelOut();
+        }
+        return null;
+    }
+
     public enum SelType { SelectRotate, Translate, Rotate};
     public enum Action {duplicateOnPoints,duplicateOnCurve,duplicateOnSurface,extrude};
     private SelType selTypeIn;
@@ -85,9 +121,10 @@ public class GraphicalEdit2 extends Thread {
     private boolean SelectMultipleIn, SelectArbitraryPointsIn, selectingMultipleObjectsIn;
     private boolean SelectMultipleOut, SelectArbitraryPointsOut;
     private Action actionToPerform;
-    private MyObservableList<Representable> selectionIn;
-    private MyObservableList<Representable> selectionOut;
+    private MyObservableList<Representable> selectionIn = new MyObservableList<>();
+    private MyObservableList<Representable> selectionOut = new MyObservableList<>();
     public GraphicalEdit2() {
+
     }
 
     public Main getMain() {
@@ -240,9 +277,50 @@ public class GraphicalEdit2 extends Thread {
 
     }
 
-    public void performAction()
+    private CourbeParametriquePolynomialeBezier getCurve(ArrayList<Representable> rs)
     {
 
+        int l = 0;
+        CourbeParametriquePolynomialeBezier courbeParametriquePolynomialeBezier = new CourbeParametriquePolynomialeBezier();
+        for(int i = 0 ; i<rs.size(); i++)
+            if(rs.get(i) instanceof Point3D)
+            {
+                l++;
+            }
+
+        Point3D [] ps = new Point3D[l];
+        for(int i = 0 ; i<rs.size(); i++)
+            if(rs.get(i) instanceof Point3D)
+            {
+                Point3D p = (Point3D) rs.get(i);
+                ps[i] = p;
+            }
+
+        courbeParametriquePolynomialeBezier.getCoefficients().setAll(ps);
+
+        return courbeParametriquePolynomialeBezier;
+    }
+
+
+    public void performAction()
+    {
+        if(actionToPerform.equals(Action.extrude))
+        {
+            MyObservableList<Representable> selectionIn = getSelectionIn();
+            MyObservableList<Representable> selectionOut = getSelectionOut();
+
+            if(selectionIn.size()>0 && selectionOut.size()>0)
+            {
+                CourbeParametriquePolynomialeBezier curve0 = getCurve(selectionIn);
+                CourbeParametriquePolynomialeBezier curve1 = getCurve(selectionOut);
+                TubeExtrusion tubeExtrusion = new TubeExtrusion();
+                tubeExtrusion.getCurves().data1d.clear();
+                tubeExtrusion.getCurves().add(1, curve0);
+                tubeExtrusion.getCurves().add(1, curve1);
+
+                getMain().getDataModel().getScene().add(tubeExtrusion);
+            }
+        }
     }
 
     public UpdateViewMain getPanel() {
@@ -256,4 +334,31 @@ public class GraphicalEdit2 extends Thread {
     public void run() {
 
     }
+
+
+    public void add(Representable r) {
+        switch(getActiveSelection()) {
+            case IN:
+                ((ListModelSelection)main.getTreeSelIn().getModel()).add(0, r);
+                System.out.println("added to in");
+                break;
+            case OUT:
+                ((ListModelSelection)main.getTreeSelOut().getModel()).add(0, r);
+                System.out.println("added to out");
+                break;
+        }
+    }
+
+    public void remove(Representable r) {
+        switch(getActiveSelection()) {/*
+            case IN:
+                ((ListModelSelection)main.getTreeSelIn().getModel()).remove(r);
+                break;
+            case OUT:
+                ((ListModelSelection)main.getTreeSelOut().getModel()).remove(r);
+                break;*/
+        }
+
+    }
+
 }
