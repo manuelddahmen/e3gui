@@ -36,6 +36,8 @@ public class UpdateViewMain extends JPanel implements RepresentableEditor {
     private Main main;
     private Scene scene;
     private Representable currentRepresentable;
+    private MyObservableList<Representable> translate = null;
+    private boolean graphicalEditing;
 
 
     public UpdateViewMain() {
@@ -55,37 +57,65 @@ public class UpdateViewMain extends JPanel implements RepresentableEditor {
 
                 public void run() {
                     running = true;
-                         while (isRunning()) {
-                             while (isPause()) {
-                                 try {
-                                     Thread.sleep(100);
-                                 } catch (InterruptedException e) {
-                                     e.printStackTrace();
-                                 }
-                             }
-                            Point location = MouseInfo.getPointerInfo().getLocation();
-                            SwingUtilities.convertPointFromScreen(location, main.getUpdateView());
-                            mousePoint = location;
+                    while (isRunning()) {
+                        while (isPause()) {
                             try {
-                                if (main.isSelectAndRotate()) {
-                                    arcBall.moveTo((int) mousePoint.getX(), (int) mousePoint.getY());
-                                    getzRunner().afterDraw(new Thread() {
-                                        @Override
-                                        public void run() {
-                                            //getzRunner().getzBuffer().draw(new Sphere(mousePoint3D, 10.0));
-                                        }
-                                    });
-                                    ////System.out.println("Mouse rotation moved");
-                                } else {
-                                    //drawPoint(mousePoint);
-
-                                }
-
-                            } catch (ArrayIndexOutOfBoundsException ex) {
-                                ex.printStackTrace();
+                                Thread.sleep(100);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
                             }
                         }
+                        Point location = MouseInfo.getPointerInfo().getLocation();
+                        SwingUtilities.convertPointFromScreen(location, main.getUpdateView());
+                        mousePoint = location;
+                        try {
+                            if (main.getGraphicalEdit2().getActionToPerform().equals(GraphicalEdit2.Action.ROTATE)) {
+                                arcBall.moveTo((int) mousePoint.getX(), (int) mousePoint.getY());
+                                ZBufferImpl zBuffer = main.getUpdateView().getzRunner().getzBuffer();
+                                //unit3t2
+                                Point p1 =  zBuffer.camera().coordonneesPoint2D(mousePoint3D.plus(Point3D.random(1.0).norme1()), zBuffer);
+                                Point p2 =  zBuffer.camera().coordonneesPoint2D(mousePoint3D.plus(Point3D.random(1.0).norme1()), zBuffer);
 
+                                double sqrt = Math.sqrt(p1.getX() * p2.getX() + p2.getY() + p2.getY());
+
+
+
+                                Graphics graphics = getGraphics();
+                                graphics.drawOval((int)(location.getX()-sqrt/2), (int)(location.getY()-sqrt/2),
+                                        (int)(location.getX()+sqrt/2),(int)(location.getY()+sqrt/2));
+                                arcBall.setRadius(10*sqrt/getWidth());
+
+                                  //
+                                        //
+                                        //
+                                        //    arcBall.getRadius()), (int)location.getX()+unit3t2(arcBall.getRadius()));
+////System.out.println("Mouse rotation moved");
+                            } else if (main.getGraphicalEdit2().getActionToPerform().equals(GraphicalEdit2.Action.TRANSLATE)) {
+                                main.getGraphicalEdit2().getCurrentSelection().forEach(new Consumer<Representable>() {
+                                    @Override
+                                    public void accept(Representable representable) {
+                                        Point3D elem = null;
+                                        if(representable instanceof Point3D)
+                                            elem = (Point3D) representable;
+                                        else {
+                                            elem = representable.getRotation().getElem().getCentreRot().getElem();
+                                            showAxisMove(representable.getRotation().getElem(), elem);
+                                            System.out.println(representable.getRotation().getElem().toString() + " "+ elem.toString());
+                                        }
+                                        // TODO Manage Move Event
+                                    }
+                                });
+                            }
+
+                        } catch (ArrayIndexOutOfBoundsException ex) {
+                            ex.printStackTrace();
+                        }
+                    }
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
 
                 private boolean isRunning() {
@@ -104,19 +134,33 @@ public class UpdateViewMain extends JPanel implements RepresentableEditor {
 
             @Override
             public void mousePressed(MouseEvent e) {
-                if (main.isSelectAndRotate()) {
+                if (main.getGraphicalEdit2().getActionToPerform()!=null && main.getGraphicalEdit2().getActionToPerform().equals(GraphicalEdit2.Action.ROTATE)) {
                     System.out.println("Mouse Pressed");
                     System.out.println("Mouse starts dragging rotating");
                     mousePoint3D  = zRunner.getzBuffer().clickAt(e.getX(), e.getY());
                     representable = zRunner.getzBuffer().representableAt(e.getX(), e.getY());
-                    arcBall = new ArcBall2(getzRunner().getzBuffer().camera(), mousePoint3D, 10.0, getzRunner().getzBuffer());
+                    arcBall = new ArcBall2(getzRunner().getzBuffer().camera(), mousePoint3D,
+                            Math.atan(2.0*Math.PI*
+                            e.getX()/getWidth()),
+
+                                    getzRunner().getzBuffer());
                     arcBall.init(representable);
                     if (threadDrawing == null) {
                         threadDrawing = new ThreadDrawing();
                         threadDrawing.start();
                     }
-                } else if (main.getUpdateView().getzRunner().isGraphicalEditing()) {
+                } else  {
                     System.out.println("Mouse Pressed");
+                    if(main.getGraphicalEdit2().isSelectArbitraryPointsIn()) {
+                        Point3D selectedPoint = zRunner.getzBuffer().clickAt(e.getX(), e.getY());
+                        if(main.getGraphicalEdit2().isSelectArbitraryPointsIn())
+                            main.getGraphicalEdit2().getSelectionIn().add(selectedPoint);
+                    } else if(main.getGraphicalEdit2().isSelectingMultipleObjectsIn()) {
+                        Representable multiple = zRunner.getzBuffer().representableAt(e.getX(), e.getY());
+                        main.getGraphicalEdit2().getSelectionIn().add(multiple);
+                    }
+
+
                     List<ModelBrowser.Cell> cellList;
                     cellList = new ModelBrowser(getzRunner().getzBuffer(), main.getDataModel().getScene(), Point3D.class).getObjects();
                     if (cellList != null)
@@ -134,24 +178,24 @@ public class UpdateViewMain extends JPanel implements RepresentableEditor {
                                     threadDrawing = new ThreadDrawing();
                                     threadDrawing.start();
                                 }
-                                main.getGraphicalEdit2().add(cell.pRot);
+
+
                                 main.getGraphicalEdit2().getCurrentSelection().add(cell.pRot);
                             }
                         });
 
                 }
             }
-
-
             @Override
             public void mouseReleased(MouseEvent e) {
-                if (main.getUpdateView().getzRunner().isGraphicalEditing()) {
+                if (main.getGraphicalEdit2().getSelection() ) {
                     if (mousePoint3D != null) {
                         System.out.println("Mouse Released");
                         mousePoint3D.changeTo(getzRunner().getzBuffer().invert((int) e.getPoint().getX(), (int) e.getPoint().getY(), mousePoint3D, getzRunner().getzBuffer().camera()));
                         System.out.println(mousePoint3D);
+                        main.getGraphicalEdit2().add(mousePoint3D);
                     }
-                } else if(main.isSelectAndRotate()) {
+                } else if(main.getGraphicalEdit2().getActionToPerform().equals(GraphicalEdit2.Action.ROTATE)) {
                     if(arcBall.matrix()!=null) {
                         System.out.println("Mouse Released");
                         representable.getRotation().getElem().getRot().setElem(arcBall.matrix());
@@ -173,13 +217,24 @@ public class UpdateViewMain extends JPanel implements RepresentableEditor {
             }
         });
     }
+    public void drawGraphicsEdit()
+    {
 
-    private void drawPoint(Point mousePoint) {
-        for (int i = -2; i <= 2; i++)
-            for (int j = -2; j <= 2; j++)
-                ((BufferedImage) main.getUpdateView().getzRunner().getLastImage())
-                        .setRGB((int) mousePoint.getX() + i, (int) mousePoint.getY() + j, Color.RED.getRGB());
+    }
 
+
+    private void showAxisMove(Rotation elem, Point3D elem1) {
+        for (Point3D point3D : elem.getRot().getElem().getColVectors()) {
+            LineSegment lsX =  new LineSegment(point3D.mult(10.0),elem1);
+            LineSegment lsY =  new LineSegment(point3D.mult(10.0),elem1);
+            LineSegment lsZ =  new LineSegment(point3D.mult(10.0),elem1);
+
+
+        }
+    }
+
+    public void setTranslate(MyObservableList<Representable> translate) {
+        this.translate = translate;
     }
 
 
@@ -225,4 +280,16 @@ public class UpdateViewMain extends JPanel implements RepresentableEditor {
     }
 
 
+    public MyObservableList<Representable> getTranslate() {
+        return translate;
+    }
+
+    public void setGraphicalEditing(boolean graphicalEditing) {
+        this.graphicalEditing = graphicalEditing;
+
+    }
+
+    public boolean isGraphicalEditing() {
+        return graphicalEditing;
+    }
 }

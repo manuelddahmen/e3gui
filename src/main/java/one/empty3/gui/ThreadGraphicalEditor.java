@@ -68,31 +68,34 @@ public class ThreadGraphicalEditor extends Thread implements PropertyChangeListe
     @Override
     public void run() {
         while (true) {
-            while (main == null || !main.isRunning()) {
+                while (main == null || !main.isRunning()) {
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+                while (main == null || main.getUpdateView() == null || main.getUpdateView().getzRunner() == null && main.getUpdateView().getzRunner().getLastImage() == null)
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+            if (main.getUpdateView().isGraphicalEditing()) {
+                image = main.getUpdateView().getzRunner().getLastImage();
+                browseScene();
+            }
+
                 try {
                     Thread.sleep(100);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-            }
-            while (main == null || main.getUpdateView() == null || main.getUpdateView().getzRunner() == null && main.getUpdateView().getzRunner().getLastImage()==null)
-                try {
-                    Thread.sleep(100);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            image = main.getUpdateView().getzRunner().getLastImage();
-            browseScene(DRAW_POINTS);
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
         }
     }
 
-    private void browseScene(int drawType) {
-        if(image!=null && drawType==DRAW_POINTS)
+    private void browseScene() {
+        if(image!=null)
         {
             drawPoints(new ModelBrowser(main.getUpdateView().getzRunner().getzBuffer(), main.getDataModel().getScene(), Point3D.class).getObjects());
             drawSelection();

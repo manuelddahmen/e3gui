@@ -20,14 +20,15 @@
 
 package one.empty3.gui;
 
-import one.empty3.library.Point3D;
-import one.empty3.library.Representable;
-import one.empty3.library.StructureMatrix;
+import one.empty3.library.*;
 import one.empty3.library.core.nurbs.CourbeParametriquePolynomialeBezier;
+import one.empty3.library.core.nurbs.ParametricCurve;
+import one.empty3.library.core.nurbs.ParametricSurface;
 import one.empty3.library.core.nurbs.TubeExtrusion;
 
 import javax.swing.*;
 import java.util.ArrayList;
+import java.util.function.Consumer;
 
 /**
  * Created by manue on 19-11-19.
@@ -39,8 +40,9 @@ public class GraphicalEdit2  {
     private boolean running = true;
     private boolean endSel1;
     private UpdateViewMain panel;
-    private int activeSelection;
+    private int activeSelection = 0;
     private RepresentableClassList currentSelection;
+    private boolean selection;
 
     public boolean isEndSel1() {
         return endSel1;
@@ -110,17 +112,26 @@ public class GraphicalEdit2  {
         return null;
     }
 
-    public enum SelType { SelectRotate, Translate, Rotate};
-    public enum Action {duplicateOnPoints,duplicateOnCurve,duplicateOnSurface,extrude};
-    private SelType selTypeIn;
+    public void setSelection(boolean selection) {
+        this.selection = selection;
+    }
+
+    public boolean isSelection() {
+        return selection;
+    }
+
+    public boolean getSelection() {
+        return selection;
+    }
+
+    public enum Action {duplicateOnPoints,duplicateOnCurve,duplicateOnSurface, TRANSLATE, ROTATE, extrude};
     private boolean isSelectingIn;
     private boolean isSelectingMultipleIn;
-    private SelType selTypeOut;
     private boolean isSelectingOut;
     private boolean isSelectingMultipleOut;
     private boolean SelectMultipleIn, SelectArbitraryPointsIn, selectingMultipleObjectsIn;
     private boolean SelectMultipleOut, SelectArbitraryPointsOut;
-    private Action actionToPerform;
+    private Action actionToPerform = Action.TRANSLATE;
     private MyObservableList<Representable> selectionIn = new MyObservableList<>();
     private MyObservableList<Representable> selectionOut = new MyObservableList<>();
     public GraphicalEdit2() {
@@ -135,13 +146,6 @@ public class GraphicalEdit2  {
         return running;
     }
 
-    public SelType getSelTypeIn() {
-        return selTypeIn;
-    }
-
-    public void setSelTypeIn(SelType selTypeIn) {
-        this.selTypeIn = selTypeIn;
-    }
 
     public boolean isSelectingIn() {
         return isSelectingIn;
@@ -159,13 +163,6 @@ public class GraphicalEdit2  {
         isSelectingMultipleIn = selectingMultipleIn;
     }
 
-    public SelType getSelTypeOut() {
-        return selTypeOut;
-    }
-
-    public void setSelTypeOut(SelType selTypeOut) {
-        this.selTypeOut = selTypeOut;
-    }
 
     public boolean isSelectingOut() {
         return isSelectingOut;
@@ -320,7 +317,22 @@ public class GraphicalEdit2  {
 
                 getMain().getDataModel().getScene().add(tubeExtrusion);
             }
+        } else if(actionToPerform.equals(Action.TRANSLATE))
+        {
+            MyObservableList<Representable> selectionIn = getSelectionIn();
+            if(selectionIn.size()>0)
+            {
+                getMain().getUpdateView().setTranslate(selectionIn);
+            }
+        } else if(actionToPerform.equals(Action.ROTATE))
+        {
+            MyObservableList<Representable> selectionIn = getSelectionIn();
+            if(selectionIn.size()>0)
+            {
+                getMain().getUpdateView().setTranslate(selectionIn);
+            }
         }
+
     }
 
     public UpdateViewMain getPanel() {
@@ -340,10 +352,12 @@ public class GraphicalEdit2  {
         switch(getActiveSelection()) {
             case IN:
                 ((ListModelSelection)main.getTreeSelIn().getModel()).add(0, r);
+                getCurrentSelection().add(r);
                 System.out.println("added to in");
                 break;
             case OUT:
                 ((ListModelSelection)main.getTreeSelOut().getModel()).add(0, r);
+                getCurrentSelection().add(r);
                 System.out.println("added to out");
                 break;
         }
@@ -360,5 +374,109 @@ public class GraphicalEdit2  {
         }
 
     }
+    public void copy(Representable representable, Point3D translate)
+    {
+        Representable clone;
+        try {
+            clone = representable.copy();
+            ModelBrowser modelBrowser = new ModelBrowser(getMain().getUpdateView().getzRunner().getzBuffer(),
+                    getMain().getDataModel().getScene(), Point3D.class);
+            modelBrowser.getObjects().forEach(new Consumer<ModelBrowser.Cell>() {
+                @Override
+                public void accept(ModelBrowser.Cell cell) {
+                    if(cell.pRot instanceof Point3D)
+                    {
+                        cell.pRot.changeTo(cell.pRot.plus(translate));
+                    }
+                }
+            });
+        } catch (CopyRepresentableError copyRepresentableError) {
+            copyRepresentableError.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        }
+    }
 
+    private Point3D [] rotateAxis(int rotate, Point3D [] vectors)
+    {
+        Point3D[] point3DS = new Point3D[3];
+        for(int i=0; i<3; i++)
+            point3DS[(i+rotate)%3] = vectors[i];
+        return point3DS;
+    }
+
+    private Rotation adaptToCurve(Representable representable, ParametricCurve curve, double u, int rotate)
+    {
+        Point3D tangente = curve.calculerTangente(u);
+        Point3D normale = curve.calculerNormale(u);
+        Point3D z = tangente.prodVect(normale);
+        Point3D[] point3DS = {tangente, normale, z};
+
+        return new Rotation(new Matrix33(rotateAxis(rotate, point3DS)), curve.calculerPoint3D(u));
+    }
+    private Rotation adaptToSurface(Representable representable, ParametricSurface surface, double u, double v, int rotate)
+    {
+        Point3D tangenteU = surface.calculerTangenteU(u, v);
+        Point3D tangenteV = surface.calculerTangenteV(u, v);
+        Point3D z = tangenteU.prodVect(tangenteV).norme1();
+        Point3D[] point3DS = {tangenteU, tangenteV, z};
+        Point3D[] point3DS1 = rotateAxis(rotate, point3DS);
+        return new Rotation(new Matrix33(point3DS1), surface.calculerPoint3D(u, v));
+    }
+    public void copyOn(Representable representable, ParametricCurve pc, double u, int rotate)
+    {
+        Representable clone;
+        try {
+            clone = representable.copy();
+            ModelBrowser modelBrowser = new ModelBrowser(getMain().getUpdateView().getzRunner().getzBuffer(),
+                    getMain().getDataModel().getScene(), Point3D.class);
+            modelBrowser.getObjects().forEach(new Consumer<ModelBrowser.Cell>() {
+                @Override
+                public void accept(ModelBrowser.Cell cell) {
+                    if(cell.pRot instanceof Point3D)
+                    {
+                        cell.pRot.changeTo(cell.pRot.plus(pc.calculerPoint3D(u)));
+                    }
+                }
+            });
+            adaptToCurve(clone, pc, u, rotate);
+            // TODO ??? orientation Rotation / courbe / surface
+        } catch (CopyRepresentableError copyRepresentableError) {
+            copyRepresentableError.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        }
+
+    }
+    public void copyOn(Representable representable, ParametricSurface surface, double u, double v, int rotate)
+    {
+        Representable clone;
+        try {
+            clone = representable.copy();
+            ModelBrowser modelBrowser = new ModelBrowser(getMain().getUpdateView().getzRunner().getzBuffer(),
+                    getMain().getDataModel().getScene(), Point3D.class);
+            modelBrowser.getObjects().forEach(new Consumer<ModelBrowser.Cell>() {
+                @Override
+                public void accept(ModelBrowser.Cell cell) {
+                    if(cell.pRot instanceof Point3D)
+                    {
+                        cell.pRot.changeTo(cell.pRot.plus(surface.calculerPoint3D(u,v)));
+                    }
+                }
+            });
+            adaptToSurface(clone, surface, u, v, rotate);
+            // TODO ??? orientation Rotation / courbe / surface
+        } catch (CopyRepresentableError copyRepresentableError) {
+            copyRepresentableError.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        }
+
+    }
 }
