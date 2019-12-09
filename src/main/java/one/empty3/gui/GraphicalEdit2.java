@@ -20,6 +20,7 @@
 
 package one.empty3.gui;
 
+import net.miginfocom.layout.AC;
 import one.empty3.library.*;
 import one.empty3.library.core.nurbs.CourbeParametriquePolynomialeBezier;
 import one.empty3.library.core.nurbs.ParametricCurve;
@@ -34,15 +35,28 @@ import java.util.function.Consumer;
  * Created by manue on 19-11-19.
  */
 public class GraphicalEdit2  {
+
+    private boolean selecting;
+
+    public GraphicalEdit2()
+    {
+        selectionIn = new ArrayList<>();
+        selectionOut = new ArrayList<>();
+
+    }
+
+
     private static final int OUT = 1;
     private static final int IN = 0;
     private Main main;
-    private boolean running = true;
+    private boolean activeGraphicalEdit = true;
     private boolean endSel1;
     private UpdateViewMain panel;
     private int activeSelection = 0;
     private RepresentableClassList currentSelection;
     private boolean selection;
+    private boolean transSel;
+    private boolean rotSel;
 
     public boolean isEndSel1() {
         return endSel1;
@@ -58,27 +72,14 @@ public class GraphicalEdit2  {
 
     private boolean startSel1;
 
-    public void setRunning(boolean running) {
-        this.running = running;
+    public void setActiveGraphicalEdit(boolean activeGraphicalEdit) {
+        this.activeGraphicalEdit = activeGraphicalEdit;
     }
 
     public void setMain(Main main) {
         this.main = main;
-        JList<Representable> treeSelIn = main.getTreeSelIn();
-        treeSelIn.setModel(new ListModelSelection());
-        treeSelIn.setCellRenderer(new Rendu());
-        JList<Representable> treeSelOut = main.getTreeSelOut();
-        treeSelOut.setModel(new ListModelSelection());
-        treeSelOut.setCellRenderer(new Rendu());
     }
 
-    public void setSelectingMultipleObjectsIn(boolean selectingMultipleObjectsIn) {
-        this.selectingMultipleObjectsIn = selectingMultipleObjectsIn;
-    }
-
-    public boolean isSelectingMultipleObjectsIn() {
-        return selectingMultipleObjectsIn;
-    }
 
     public void setEndSel1(boolean endSel1) {
         this.endSel1 = endSel1;
@@ -92,7 +93,7 @@ public class GraphicalEdit2  {
         return activeSelection;
     }
 
-    public MyObservableList<Representable> getCurrentSelection() {
+    public ArrayList<Representable> getCurrentSelection() {
         if(getActiveSelection()==0)
             return selectionIn;
         else
@@ -124,26 +125,41 @@ public class GraphicalEdit2  {
         return selection;
     }
 
-    public enum Action {duplicateOnPoints,duplicateOnCurve,duplicateOnSurface, TRANSLATE, ROTATE, extrude};
-    private boolean isSelectingIn;
-    private boolean isSelectingMultipleIn;
-    private boolean isSelectingOut;
-    private boolean isSelectingMultipleOut;
-    private boolean SelectMultipleIn, SelectArbitraryPointsIn, selectingMultipleObjectsIn;
-    private boolean SelectMultipleOut, SelectArbitraryPointsOut;
-    private Action actionToPerform = Action.TRANSLATE;
-    private MyObservableList<Representable> selectionIn = new MyObservableList<>();
-    private MyObservableList<Representable> selectionOut = new MyObservableList<>();
-    public GraphicalEdit2() {
-
+    public void setTransSel(boolean transSel) {
+        this.transSel = transSel;
     }
+
+    public void setRotSel(boolean rotSel) {
+        this.rotSel = rotSel;
+    }
+
+    public boolean isSelectingMultipleObjects() {
+        return selectingMultipleObjects;
+    }
+
+    public void setSelectingMultipleObjects(boolean selectingMultipleObjects) {
+        this.selectingMultipleObjects = selectingMultipleObjects;
+    }
+
+    public boolean isSelecting() {
+        return selecting;
+    }
+
+    public enum Action {duplicateOnPoints,duplicateOnCurve,duplicateOnSurface, TRANSLATE, ROTATE, extrude, SELECT};
+    private boolean isSelectingIn;
+    private boolean isSelectingOut;
+    private boolean selectingMultipleObjects;
+    private boolean SelectArbitraryPoints = false;
+    private Action actionToPerform = Action.SELECT;
+    private ArrayList<Representable> selectionIn ;
+    private ArrayList<Representable> selectionOut ;
 
     public Main getMain() {
         return main;
     }
 
-    public boolean isRunning() {
-        return running;
+    public boolean isActiveGraphicalEdit() {
+        return activeGraphicalEdit;
     }
 
 
@@ -155,13 +171,6 @@ public class GraphicalEdit2  {
         isSelectingIn = selectingIn;
     }
 
-    public boolean isSelectingMultipleIn() {
-        return isSelectingMultipleIn;
-    }
-
-    public void setSelectingMultipleIn(boolean selectingMultipleIn) {
-        isSelectingMultipleIn = selectingMultipleIn;
-    }
 
 
     public boolean isSelectingOut() {
@@ -172,45 +181,17 @@ public class GraphicalEdit2  {
         isSelectingOut = selectingOut;
     }
 
-    public boolean isSelectingMultipleOut() {
-        return isSelectingMultipleOut;
+
+
+    public boolean isSelectArbitraryPoints() {
+        return SelectArbitraryPoints;
     }
 
-    public void setSelectingMultipleOut(boolean selectingMultipleOut) {
-        isSelectingMultipleOut = selectingMultipleOut;
+    public void setSelectArbitraryPointsIn(boolean selectArbitraryPoints) {
+        SelectArbitraryPoints = selectArbitraryPoints;
     }
 
-    public boolean isSelectMultipleIn() {
-        return SelectMultipleIn;
-    }
 
-    public void setSelectMultipleIn(boolean selectMultipleIn) {
-        SelectMultipleIn = selectMultipleIn;
-    }
-
-    public boolean isSelectArbitraryPointsIn() {
-        return SelectArbitraryPointsIn;
-    }
-
-    public void setSelectArbitraryPointsIn(boolean selectArbitraryPointsIn) {
-        SelectArbitraryPointsIn = selectArbitraryPointsIn;
-    }
-
-    public boolean isSelectMultipleOut() {
-        return SelectMultipleOut;
-    }
-
-    public void setSelectMultipleOut(boolean selectMultipleOut) {
-        SelectMultipleOut = selectMultipleOut;
-    }
-
-    public boolean isSelectArbitraryPointsOut() {
-        return SelectArbitraryPointsOut;
-    }
-
-    public void setSelectArbitraryPointsOut(boolean selectArbitraryPointsOut) {
-        SelectArbitraryPointsOut = selectArbitraryPointsOut;
-    }
 
     public Action getActionToPerform() {
         return actionToPerform;
@@ -220,19 +201,19 @@ public class GraphicalEdit2  {
         this.actionToPerform = actionToPerform;
     }
 
-    public MyObservableList<Representable> getSelectionIn() {
+    public ArrayList<Representable> getSelectionIn() {
         return selectionIn;
     }
 
-    public void setSelectionIn(MyObservableList<Representable> selectionIn) {
+    public void setSelectionIn(ArrayList<Representable> selectionIn) {
         this.selectionIn = selectionIn;
     }
 
-    public MyObservableList<Representable> getSelectionOut() {
+    public ArrayList<Representable> getSelectionOut() {
         return selectionOut;
     }
 
-    public void setSelectionOut(MyObservableList<Representable> selectionOut) {
+    public void setSelectionOut(ArrayList<Representable> selectionOut) {
         this.selectionOut = selectionOut;
     }
 
@@ -299,15 +280,12 @@ public class GraphicalEdit2  {
     }
 
 
-    public void performAction()
-    {
-        if(actionToPerform.equals(Action.extrude))
-        {
-            MyObservableList<Representable> selectionIn = getSelectionIn();
-            MyObservableList<Representable> selectionOut = getSelectionOut();
+    public void performAction() {
+        if (actionToPerform.equals(Action.extrude)) {
+            ArrayList<Representable> selectionIn = getSelectionIn();
+            ArrayList<Representable> selectionOut = getSelectionOut();
 
-            if(selectionIn.size()>0 && selectionOut.size()>0)
-            {
+            if (selectionIn.size() > 0 && selectionOut.size() > 0) {
                 CourbeParametriquePolynomialeBezier curve0 = getCurve(selectionIn);
                 CourbeParametriquePolynomialeBezier curve1 = getCurve(selectionOut);
                 TubeExtrusion tubeExtrusion = new TubeExtrusion();
@@ -317,20 +295,35 @@ public class GraphicalEdit2  {
 
                 getMain().getDataModel().getScene().add(tubeExtrusion);
             }
-        } else if(actionToPerform.equals(Action.TRANSLATE))
+        } else if (actionToPerform.equals(Action.TRANSLATE)) {
+        } else if (actionToPerform.equals(Action.ROTATE)) {
+        } else if(actionToPerform.equals(Action.duplicateOnCurve)||actionToPerform.equals(Action.duplicateOnCurve)
+                ||actionToPerform.equals(Action.duplicateOnPoints))
         {
-            MyObservableList<Representable> selectionIn = getSelectionIn();
-            if(selectionIn.size()>0)
-            {
-                getMain().getUpdateView().setTranslate(selectionIn);
-            }
-        } else if(actionToPerform.equals(Action.ROTATE))
+            getSelectionIn().forEach(representable -> {
+                if(!representable.getClass().equals(Point3D.class))
+                {
+                    getSelectionOut().forEach(on -> {
+                        if(on instanceof ParametricCurve) {
+                            ParametricCurve on1 = (ParametricCurve) on;
+                            copyOn(representable, on1, (double)Double.parseDouble(
+                                    main.getJtextfieldU()), 0);
+                        }
+                        else if(on instanceof ParametricSurface) {
+                            copyOn(representable, (ParametricSurface)on, Double.parseDouble(main.getJtextfieldU0()),
+                                    Double.parseDouble(main.getJtextfield0V()), 0);
+                        }
+                        else if(!(on instanceof Point3D))
+                        {
+                            copy(representable, on.getRotation().getElem().getCentreRot().getElem());
+
+                        }
+                    });
+                }
+            });
+        } else if(actionToPerform.equals(Action.duplicateOnSurface))
         {
-            MyObservableList<Representable> selectionIn = getSelectionIn();
-            if(selectionIn.size()>0)
-            {
-                getMain().getUpdateView().setTranslate(selectionIn);
-            }
+
         }
 
     }
@@ -349,18 +342,12 @@ public class GraphicalEdit2  {
 
 
     public void add(Representable r) {
-        switch(getActiveSelection()) {
-            case IN:
-                ((ListModelSelection)main.getTreeSelIn().getModel()).add(0, r);
-                getCurrentSelection().add(r);
-                System.out.println("added to in");
-                break;
-            case OUT:
-                ((ListModelSelection)main.getTreeSelOut().getModel()).add(0, r);
-                getCurrentSelection().add(r);
-                System.out.println("added to out");
-                break;
-        }
+        ArrayList<Representable> currentSelection = getCurrentSelection();
+       currentSelection.add(r);
+
+       getJList().add(r.toString(), new JLabel(r.toString()));
+       //getJList().add(getJList().getCellRenderer().getListCellRendererComponent(getJList(), r, getJList().getModel().getSize(),
+       //        false, false));
     }
 
     public void remove(Representable r) {

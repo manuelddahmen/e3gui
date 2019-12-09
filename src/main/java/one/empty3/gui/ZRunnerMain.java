@@ -55,6 +55,7 @@ public class ZRunnerMain extends Thread implements PropertyChangeListener {
     private boolean stopCurrentRender;
     private boolean graphicalEditing;
     private boolean selRot;
+    private Thread consumer;
 
 
     public ZRunnerMain() {
@@ -147,7 +148,8 @@ public class ZRunnerMain extends Thread implements PropertyChangeListener {
                     propertyChanged = false;
                     updateGraphics = false;
                     drawSuccess();
-                } catch (NullPointerException ex)
+
+                    } catch (NullPointerException ex)
                 {
                     changeSupport.firePropertyChange("renderedImageOK", null, 0);
                     drawFailed();
@@ -281,7 +283,4 @@ public class ZRunnerMain extends Thread implements PropertyChangeListener {
         return selRot;
     }
 
-    public void afterDraw(Thread consumer) {
-        consumer.start();
-    }
 }

@@ -64,7 +64,8 @@ public class REditor extends JPanel implements PropertyChangeListener, Represent
 
     private RPropertyDetailsRow tableModel;
     private Main main;
-
+    public REditor()
+    {}
 
     public REditor(Main main, Representable re) {
         super();
@@ -171,6 +172,8 @@ public class REditor extends JPanel implements PropertyChangeListener, Represent
         refreshTable();
 
     }
+
+
 
     public void refreshTable() {
         init(history.getCurrentRow());

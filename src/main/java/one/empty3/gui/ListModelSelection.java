@@ -32,37 +32,43 @@ import java.util.List;
  * Created by manue on 19-11-19.
  */
 public class ListModelSelection extends DefaultListModel<Representable> {
-}
-class Rendu extends JLabel
-        implements ListCellRenderer {
-    ImageIcon icon;
-    ImageIcon selectIcon;
-    Color selectCouleur = Color.RED;
-    public  Rendu(){
-        //icon = new ImageIcon(getClass().getResource("img1.gif"));
-        //selectIcon  = new ImageIcon(getClass().getResource("img2.gif"));
+    public ListModelSelection(ArrayList<Representable> selectionIn) {
+        this.representables = selectionIn;
     }
-    public Component getListCellRendererComponent(JList list,
-                                                  Object value, // valeur à afficher
-                                                  int index, // indice d'item
-                                                  boolean isSelected, // l'item est-il sélectionné
-                                                  boolean cellHasFocus) // La liste a-t-elle le focus
+    List<Representable> representables = new ArrayList<>();
+    @Override
+    public int getSize() {
+        return representables.size();
+    }
+
+    @Override
+    public Representable getElementAt(int index) {
+        return representables.get(index);
+    }
+
+    @Override
+    public void addListDataListener(ListDataListener l) {
+        super.addListDataListener(l);
+    }
+
+    @Override
+    public void removeListDataListener(ListDataListener l) {
+        super.removeListDataListener(l);
+
+    }
+    public void add(Representable representable)
     {
-        String s = value.toString();
-        if (isSelected) {
-            setBackground(list.getSelectionBackground());
-            setForeground(selectCouleur);
-            setText(s+"  "+index);
-            //setIcon(selectIcon);
-        }else{
-            setBackground(list.getBackground());
-            setForeground(list.getForeground());
-            setText(s);
-            //setIcon(icon);
-        }
-        setEnabled(list.isEnabled());
-        setFont(list.getFont());
-        setOpaque(true);
-        return this;
+        representables.add(representable);
+    }
+
+    /**
+     * @param o
+     */
+    @Override
+    public void addElement(Representable o)
+    {
+        super.addElement(o);
+        add(o);
+
     }
 }

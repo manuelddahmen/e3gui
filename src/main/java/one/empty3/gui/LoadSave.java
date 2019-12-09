@@ -65,8 +65,8 @@ public class LoadSave extends JPanel {
 
     public void reinit(Scene scene)
     {
-        main.getEditor().history.clear();
-        main.getEditor().init(scene);
+        main.getREditor().history.clear();
+        main.getREditor().init(scene);
     }
 
 
