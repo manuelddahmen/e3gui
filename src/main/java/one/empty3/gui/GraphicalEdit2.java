@@ -364,7 +364,7 @@ public class GraphicalEdit2  {
     {
         Representable clone;
         try {
-            clone = representable.copy();
+            clone = (Representable)representable.copy();
             ModelBrowser modelBrowser = new ModelBrowser(getMain().getUpdateView().getzRunner().getzBuffer(),
                     getMain().getDataModel().getScene(), Point3D.class);
             modelBrowser.getObjects().forEach(new Consumer<ModelBrowser.Cell>() {
@@ -415,7 +415,7 @@ public class GraphicalEdit2  {
     {
         Representable clone;
         try {
-            clone = representable.copy();
+            clone = (Representable)representable.copy();
             ModelBrowser modelBrowser = new ModelBrowser(getMain().getUpdateView().getzRunner().getzBuffer(),
                     getMain().getDataModel().getScene(), Point3D.class);
             modelBrowser.getObjects().forEach(new Consumer<ModelBrowser.Cell>() {
@@ -442,7 +442,7 @@ public class GraphicalEdit2  {
     {
         Representable clone;
         try {
-            clone = representable.copy();
+            clone = (Representable)representable.copy();
             ModelBrowser modelBrowser = new ModelBrowser(getMain().getUpdateView().getzRunner().getzBuffer(),
                     getMain().getDataModel().getScene(), Point3D.class);
             modelBrowser.getObjects().forEach(new Consumer<ModelBrowser.Cell>() {
