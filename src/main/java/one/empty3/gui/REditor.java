@@ -35,6 +35,7 @@ import javax.swing.*;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumnModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
@@ -75,7 +76,7 @@ public class REditor extends JPanel implements PropertyChangeListener, Represent
         history.addToHistory(tableModel);
         init(history.getCurrentRow());
         this.r = re;
-    }
+            }
 
     public void init(Object re) {
         if(re!=null) {
@@ -85,15 +86,18 @@ public class REditor extends JPanel implements PropertyChangeListener, Represent
                 tableObjectDetails.setModel(tableModel);
                 firePropertyChange("representable", r, tableModel.getRepresentable());
                 this.r  = tableModel.getRepresentable();
-
+                tableObjectDetails.setDefaultRenderer(String.class, new RETableRenderer(tableModel));
             } else if (re instanceof RPropertyDetailsRow) {
                 labelBreadCumbs.setText(((RPropertyDetailsRow) re).getRepresentable().getClass().getSimpleName());
                 RPropertyDetailsRow model = new RPropertyDetailsRow((RPropertyDetailsRow) re);
+
                 this.tableModel = model;
                 tableObjectDetails.setModel(model);
+                labelBreadCumbs.setText(((RPropertyDetailsRow) re).getRepresentable().getClass().getSimpleName());
                 firePropertyChange("representable", r, tableModel.getRepresentable());
                 this.r  = tableModel.getRepresentable();
             }
+            tableModel.setMain(main);
         }
         tableObjectDetails.getModel().addTableModelListener(new TableModelListener() {
             @Override
@@ -160,7 +164,22 @@ public class REditor extends JPanel implements PropertyChangeListener, Represent
     private void objectType(Class<?> aClass) {
 
     }
+/*
+    public String getToolTipText(MouseEvent e) {
+        String tip = null;
+        java.awt.Point p = e.getPoint();
+        int rowIndex = rowAtPoint(p);
+        int colIndex = columnAtPoint(p);
 
+        try {
+            tip = getValueAt(rowIndex, colIndex).toString();
+        } catch (RuntimeException e1) {
+            //catch null pointer exception if mouse is over an empty line
+        }
+
+        return tip;
+    }
+*/
     public void historyBack() {
         history.back();
         refreshTable();

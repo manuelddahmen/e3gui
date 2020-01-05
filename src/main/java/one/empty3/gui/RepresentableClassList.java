@@ -75,6 +75,9 @@ public class RepresentableClassList {
         add("LumierePonctuelle", LumierePonctuelle.class);
         add("extrusion", TRIExtrusionGeneralisee.class);
         add("circle", Circle.class);
+        add("extrusion2+", ExtrusionB1B1.class);
+        add("tour de revolution", TourRevolution.class);
+
         //add("move", Move.class);
         //add("paramCurve", ParametricCurve.class);
         //add("paramSurface", ParametricSurface.class);

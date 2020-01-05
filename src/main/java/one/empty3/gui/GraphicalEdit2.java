@@ -20,7 +20,6 @@
 
 package one.empty3.gui;
 
-import net.miginfocom.layout.AC;
 import one.empty3.library.*;
 import one.empty3.library.core.nurbs.CourbeParametriquePolynomialeBezier;
 import one.empty3.library.core.nurbs.ParametricCurve;
@@ -148,8 +147,8 @@ public class GraphicalEdit2  {
     public enum Action {duplicateOnPoints,duplicateOnCurve,duplicateOnSurface, TRANSLATE, ROTATE, extrude, SELECT};
     private boolean isSelectingIn;
     private boolean isSelectingOut;
-    private boolean selectingMultipleObjects;
-    private boolean SelectArbitraryPoints = false;
+    private boolean selectingMultipleObjects = false;
+    private boolean selectArbitraryPoints = false;
     private Action actionToPerform = Action.SELECT;
     private ArrayList<Representable> selectionIn ;
     private ArrayList<Representable> selectionOut ;
@@ -184,11 +183,11 @@ public class GraphicalEdit2  {
 
 
     public boolean isSelectArbitraryPoints() {
-        return SelectArbitraryPoints;
+        return selectArbitraryPoints;
     }
 
     public void setSelectArbitraryPointsIn(boolean selectArbitraryPoints) {
-        SelectArbitraryPoints = selectArbitraryPoints;
+        this.selectArbitraryPoints = selectArbitraryPoints;
     }
 
 
@@ -345,7 +344,7 @@ public class GraphicalEdit2  {
         ArrayList<Representable> currentSelection = getCurrentSelection();
        currentSelection.add(r);
 
-       getJList().add(r.toString(), new JLabel(r.toString()));
+      // getJList().add(r.toString(), new JLabel(r.toString()));
        //getJList().add(getJList().getCellRenderer().getListCellRendererComponent(getJList(), r, getJList().getModel().getSize(),
        //        false, false));
     }

@@ -543,6 +543,14 @@ public class Main implements PropertyChangeListener {
         return loadSave1;
     }
 
+    public MyObservableList getMyObservableListSelIn() {
+        return this.myObservableListSelIn;
+    }
+
+    public MyObservableList getMyObservableListSelOut() {
+        return this.myObservableListSelOut;
+    }
+
 
     class ThreadDrawingCoords  extends Thread {
         @Override
@@ -989,6 +997,8 @@ public class Main implements PropertyChangeListener {
                             //---- radioButtonTranslate ----
                             this.radioButtonTranslate.setText("Translate");
                             this.radioButtonTranslate.addActionListener(e -> {
+			radioButtonTranslateActionPerformed(e);
+			radioButtonTranslateActionPerformed(e);
 			radioButtonTranslateActionPerformed(e);
 			radioButtonTranslateActionPerformed(e);
 		});
