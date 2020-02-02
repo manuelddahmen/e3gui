@@ -20,10 +20,7 @@
 
 package one.empty3.gui;
 
-import com.sun.org.apache.regexp.internal.RE;
 import one.empty3.library.*;
-import one.empty3.library.core.nurbs.ParametricCurve;
-import one.empty3.library.core.nurbs.ParametricSurface;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -36,6 +33,22 @@ import java.util.function.Consumer;
  */
 public class ModelBrowser {
     private final ZBufferImpl zimpl;
+    private boolean clone = false;
+    private Class classes;
+    private List<Cell> objects = new ArrayList<>();
+
+    public ModelBrowser(Representable representable, ZBufferImpl zimpl) {
+        this.zimpl = zimpl;
+        this.objects = new ArrayList<>();
+        objects.add(new Cell(null, 0, 0, 0, representable, representable));
+    }
+    public ModelBrowser(List<Representable> representables, ZBufferImpl zimpl) {
+        this.zimpl = zimpl;
+        this.objects = new ArrayList<>();
+        if(representables!=null)
+         representables.forEach(representable -> objects.add(new Cell(null, 0, 0, 0, representable, representable)));
+    }
+
 
     public List<Cell> getObjects() {
         return objects;
@@ -69,8 +82,6 @@ public class ModelBrowser {
         }
 
 
-    private List<Cell> objects = Collections.synchronizedList(new ArrayList<>());
-    private Class classes;
 
     public ModelBrowser(ZBufferImpl impl, Scene scene, Class classes)
     {
@@ -181,5 +192,62 @@ public class ModelBrowser {
     public void updateSelection()
     {
 
+    }
+
+    public void translateSelection(Point3D vect)
+    {
+        getObjects().forEach(cell -> {
+            Representable r = cell.ref;
+            if (clone && r!=null && !(r instanceof Point3D)) {
+                    try {
+                        r = (Representable) r.copy();
+                        r.getRotation().getElem().getCentreRot().setElem(vect);
+                    } catch (CopyRepresentableError | IllegalAccessException | InstantiationException copyRepresentableError) {
+                        copyRepresentableError.printStackTrace();
+                    }
+            }
+
+
+            Point3D origin;
+            if (cell.o instanceof Point3D) {
+                origin = (Point3D) cell.o;
+            } else if(cell.ref!=null && cell.ref!=null && !(cell.ref instanceof Point3D)){
+                origin = cell.ref.getRotation().getElem().getCentreRot().getElem();
+            }
+            else {
+                System.out.println("Error in translate selection");
+                return;
+            }
+            if(vect!=null && origin!=null) {
+                origin.changeTo(vect.moins(origin));
+                System.out.println("Moves " + origin + " to " + cell.o);
+            }else {
+                System.out.println("Error in translate selection");
+            }
+        });
+    }
+    public void rotateSelection(Rotation rotation)
+    {
+        getObjects().forEach(cell -> {
+            Representable r = cell.ref;
+            if(clone) {
+                try {
+                    r = (Representable) r.copy();
+
+                } catch (CopyRepresentableError copyRepresentableError) {
+                    copyRepresentableError.printStackTrace();
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                } catch (InstantiationException e) {
+                    e.printStackTrace();
+                }
+            }
+            r.getRotation().setElem(rotation);
+        });
+    }
+    public boolean cloneSelection(boolean clone)
+    {
+        this.clone = clone;
+        return clone;
     }
 }

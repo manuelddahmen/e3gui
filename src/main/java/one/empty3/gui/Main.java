@@ -551,28 +551,32 @@ public class Main implements PropertyChangeListener {
         return this.myObservableListSelOut;
     }
 
+    private void buttonClearSelActionPerformed(ActionEvent e) {
+        getGraphicalEdit2().getCurrentSelection().clear();
+    }
 
-    class ThreadDrawingCoords  extends Thread {
-        @Override
-        public void run() {
-            super.run();
-            while (true) {
-                try {
-                    /*if(drawingPointCoords) {
-                        Graphics graphics = getUpdateView().getzRunner().getLastImage().getGraphics();
-                        graphics.setColor(Color.BLACK);
-                        graphics.drawBytes(toDraw.getBytes(), 0, toDraw.getBytes().length, click.x, click.y);
-                    }*/
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
-                try {
-                    Thread.sleep(20);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
+
+    private class ThreadDrawingCoords  extends Thread {
+//        @Override
+//        public void run() {
+//            super.run();
+//            while (true) {
+//                try {
+//                    /*if(drawingPointCoords) {
+//                        Graphics graphics = getUpdateView().getzRunner().getLastImage().getGraphics();
+//                        graphics.setColor(Color.BLACK);
+//                        graphics.drawBytes(toDraw.getBytes(), 0, toDraw.getBytes().length, click.x, click.y);
+//                    }*/
+//                } catch (Exception ex) {
+//                    ex.printStackTrace();
+//                }
+//                try {
+//                    Thread.sleep(20);
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        }
     }
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
@@ -635,6 +639,7 @@ public class Main implements PropertyChangeListener {
         this.toggleButtonRotSel = new JToggleButton();
         this.scrollPane3 = new JScrollPane();
         this.treeSelOut = new JList<>();
+        this.buttonClearSel = new JButton();
         this.button1 = new JButton();
         this.panel9 = new JPanel();
         this.panel10 = new JPanel();
@@ -1094,6 +1099,11 @@ public class Main implements PropertyChangeListener {
                             }
                             this.panel8.add(this.scrollPane3, "cell 5 5 1 3");
 
+                            //---- buttonClearSel ----
+                            this.buttonClearSel.setText("Clear selection");
+                            this.buttonClearSel.addActionListener(e -> buttonClearSelActionPerformed(e));
+                            this.panel8.add(this.buttonClearSel, "cell 1 6");
+
                             //---- button1 ----
                             this.button1.setText("GO");
                             this.button1.addActionListener(e -> buttonSelGoActionPerformed(e));
@@ -1252,6 +1262,7 @@ public class Main implements PropertyChangeListener {
     private JToggleButton toggleButtonRotSel;
     private JScrollPane scrollPane3;
     private JList<one.empty3.library.Representable> treeSelOut;
+    private JButton buttonClearSel;
     private JButton button1;
     private JPanel panel9;
     private JPanel panel10;

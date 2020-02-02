@@ -295,6 +295,7 @@ public class GraphicalEdit2  {
                 getMain().getDataModel().getScene().add(tubeExtrusion);
             }
         } else if (actionToPerform.equals(Action.TRANSLATE)) {
+            
         } else if (actionToPerform.equals(Action.ROTATE)) {
         } else if(actionToPerform.equals(Action.duplicateOnCurve)||actionToPerform.equals(Action.duplicateOnCurve)
                 ||actionToPerform.equals(Action.duplicateOnPoints))
