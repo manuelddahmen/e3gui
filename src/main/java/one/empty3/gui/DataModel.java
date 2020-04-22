@@ -21,7 +21,7 @@
 package one.empty3.gui;
 
 import com.google.gson.Gson;
-import com.sun.org.apache.regexp.internal.RE;
+//import com.sun.org.apache.regexp.internal.RE;
 //import com.thoughtworks.xstream.XStream;
 //import nu.xom.*;
 import one.empty3.library.*;
