@@ -240,5 +240,50 @@
             <artifactId>gson</artifactId>
             <version>2.8.5</version>
         </dependency>
+                     <dependency>
+            <groupId>one.empty3</groupId>
+            <artifactId>empty3-library-3d</artifactId>
+            <version>2020.2-1-SNAPSHOT</version>
+        </dependency>
+<!-- https://mvnrepository.com/artifact/com.miglayout/miglayout -->
+<dependency>
+    <groupId>com.miglayout</groupId>
+    <artifactId>miglayout</artifactId>
+    <version>3.7.4</version>
+</dependency>
+<!-- https://mvnrepository.com/artifact/org.netbeans.api/org-jdesktop-layout -->
+
+
+<!-- https://mvnrepository.com/artifact/org.openjfx/javafx -->
+<dependency>
+    <groupId>org.openjfx</groupId>
+    <artifactId>javafx</artifactId>
+    <version>11</version>
+    <type>pom</type>
+</dependency>
+<!-- https://mvnrepository.com/artifact/org.openjfx/javafx-media -->
+<dependency>
+    <groupId>org.openjfx</groupId>
+    <artifactId>javafx-media</artifactId>
+    <version>15-ea+4</version>
+</dependency>
+<!-- https://mvnrepository.com/artifact/org.openjfx/javafx-swing -->
+<dependency>
+    <groupId>org.openjfx</groupId>
+    <artifactId>javafx-swing</artifactId>
+    <version>15-ea+4</version>
+</dependency>
+<!-- https://mvnrepository.com/artifact/org.openjfx/javafx-fxml -->
+<dependency>
+    <groupId>org.openjfx</groupId>
+    <artifactId>javafx-fxml</artifactId>
+    <version>15-ea+4</version>
+</dependency>
+<!-- https://mvnrepository.com/artifact/org.jdesktop/beansbinding -->
+<dependency>
+    <groupId>org.jdesktop</groupId>
+    <artifactId>beansbinding</artifactId>
+    <version>1.2.1</version>
+</dependency>
     </dependencies>
 </project>
