@@ -78,7 +78,7 @@ public class DataModel implements PropertyChangeListener {
         System.out.println(this);
         Logger.getAnonymousLogger().log(Level.INFO, "Model loaded");
     }
-
+/*
     private void browser(Element element, MatrixPropertiesObject representable) {
         ClassLoader systemClassLoader = ClassLoader.getSystemClassLoader();
         Attribute aClass = element.getAttribute("class");
@@ -98,7 +98,7 @@ public class DataModel implements PropertyChangeListener {
                 String name = element1.getAttributeValue("name");
                 /*if (name != null) {
                     if (name.contains("/"))
-                        name = name.split("/")[0];*/
+                        name = name.split("/")[0];
                 StructureMatrix declaredProperty = representable.getDeclaredProperty(name);
                 if (declaredProperty == null)
                     System.err.println("Element: " + element.toString() + "Element class: " + element.getAttributeValue("class") + "\nStructureMatrix : null \nelement1: name=" + name + "\nElement1= " + element1.toString());
@@ -268,8 +268,8 @@ public class DataModel implements PropertyChangeListener {
                     break;
             }
 
-     */
-
+     
+*/
     private Scene scene;
 
     public Scene getScene() {
