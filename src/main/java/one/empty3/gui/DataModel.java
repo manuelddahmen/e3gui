@@ -105,6 +105,7 @@ public class DataModel implements PropertyChangeListener {
                 else
                     browser(element1, declaredProperty);
                 //}
+                */
             }
 
         } catch (ClassNotFoundException e) {
@@ -269,7 +270,7 @@ public class DataModel implements PropertyChangeListener {
             }
 
      
-*/
+
     private Scene scene;
 
     public Scene getScene() {
@@ -336,7 +337,7 @@ public class DataModel implements PropertyChangeListener {
         return dataModel;
 
     }
-/*
+
     private void addFile(ZipOutputStream zipOut, FileInputStream fis, ZipEntry zipEntry) throws IOException {
         zipOut.putNextEntry(zipEntry);
         byte[] bytes = new byte[1024];
@@ -349,7 +350,7 @@ public class DataModel implements PropertyChangeListener {
     private static ZipEntry getEntry(ZipFile zipIn, String zipEntry) throws IOException {
         return zipIn.getEntry(zipEntry);
     }
-*/
+
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         switch (evt.getPropertyName()) {
@@ -379,7 +380,7 @@ public class DataModel implements PropertyChangeListener {
         return getDefaultFilename() + ".obj";
     }
 
-/*
+
     class MoodModelCell {
         private String idContainer;
         private String propertyName;
@@ -495,7 +496,7 @@ public class DataModel implements PropertyChangeListener {
         return cell;
 
     }
-*/
+
 
     @Override
     public String toString() {
