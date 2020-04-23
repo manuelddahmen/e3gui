@@ -268,7 +268,6 @@ public class DataModel implements PropertyChangeListener {
             }
 
      */
-    }
     private Scene scene;
 
     public Scene getScene() {
