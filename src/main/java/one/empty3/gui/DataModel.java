@@ -22,7 +22,7 @@ package one.empty3.gui;
 
 import com.google.gson.Gson;
 //import com.sun.org.apache.regexp.internal.RE;
-//import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.XStream;
 //import nu.xom.*;
 import one.empty3.library.*;
 import one.empty3.library.core.script.Loader;
@@ -60,7 +60,7 @@ public class DataModel implements PropertyChangeListener {
         scene.cameraActive(new Camera());
         scene.cameraActive().calculerMatrice(null);
     }
-/*
+
     public DataModel(File inputEcXml) {
         if (!inputEcXml.isDirectory() && inputEcXml.exists()) {
             sceneDirectory = inputEcXml.getParent();
@@ -78,7 +78,7 @@ public class DataModel implements PropertyChangeListener {
         System.out.println(this);
         Logger.getAnonymousLogger().log(Level.INFO, "Model loaded");
     }
-/*
+
     private void browser(Element element, MatrixPropertiesObject representable) {
         ClassLoader systemClassLoader = ClassLoader.getSystemClassLoader();
         Attribute aClass = element.getAttribute("class");
