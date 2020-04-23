@@ -110,8 +110,6 @@ public class DataModel implements PropertyChangeListener {
 
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
-        } catch (ClassesNotEqualException e) {
-            e.printStackTrace();
         }
 
     }
