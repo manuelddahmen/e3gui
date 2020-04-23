@@ -248,7 +248,7 @@ public class DataModel implements PropertyChangeListener {
         }
         return null;
     }
-    
+    /*
             switch (localName)
             {
                 case "StructureMatrix":
@@ -269,7 +269,7 @@ public class DataModel implements PropertyChangeListener {
                     break;
             }
 
-     
+     */
 
     private Scene scene;
 
