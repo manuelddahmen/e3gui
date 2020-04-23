@@ -59,7 +59,7 @@ public class DataModel implements PropertyChangeListener {
         setScene(scene);
         scene.cameraActive(new Camera());
         scene.cameraActive().calculerMatrice(null);
-    
+    }
 /*
     public DataModel(File inputEcXml) {
         if (!inputEcXml.isDirectory() && inputEcXml.exists()) {
@@ -247,7 +247,7 @@ public class DataModel implements PropertyChangeListener {
         }
         return null;
     }
-    /*
+    
             switch (localName)
             {
                 case "StructureMatrix":
