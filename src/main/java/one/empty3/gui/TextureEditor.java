@@ -317,7 +317,7 @@ public class TextureEditor extends JPanel {
                     //---- table1 ----
                     table1.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
                     table1.setModel(new DefaultTableModel(
-                        new Object[][] {
+                        new Object[][] {{"",""}
                         },
                         new String[] {
                             "Texture", "Text type"
