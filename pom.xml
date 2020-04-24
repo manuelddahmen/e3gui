@@ -9,7 +9,7 @@
 
     <name>Empty3_GUI</name>
 
-    <groupId>one.empty3.apps</groupId>
+    <groupId>one.empty3</groupId>
     <artifactId>empty3-library-3d-gui</artifactId>
     <version>2020.1</version>
     <description>3D rendering engine. Plus modelling.</description>
