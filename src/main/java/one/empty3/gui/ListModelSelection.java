@@ -62,7 +62,7 @@ public class ListModelSelection extends DefaultListModel<Representable> {
     }
 
     /**
-     * @param o
+     * 
      */
     @Override
     public void addElement(Representable o)
