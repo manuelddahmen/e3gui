@@ -47,7 +47,7 @@ public class JTablePopUp extends JTable {
     }
 
     /**
-     * @inherited <p>
+     * 
      */
     @Override
     public JPopupMenu getComponentPopupMenu() {
