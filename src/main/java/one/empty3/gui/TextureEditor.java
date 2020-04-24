@@ -316,13 +316,13 @@ public class TextureEditor extends JPanel {
 
                     //---- table1 ----
                     table1.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
-                    table1.setModel(new DefaultTableModel(
+                    table1 = new JTable(
                         new Object[][] {{"",""}
                         },
-                        new String[] {
+                        new Object[] {
                             "Texture", "Text type"
                         }
-                    ));
+                    );
                     table1.setVerifyInputWhenFocusTarget(false);
                     table1.setUpdateSelectionOnSort(false);
                     table1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
