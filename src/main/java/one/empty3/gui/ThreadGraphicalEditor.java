@@ -128,8 +128,10 @@ public class ThreadGraphicalEditor extends Thread implements PropertyChangeListe
                             ZBufferImpl zBuffer = main.getUpdateView().getzRunner().getzBuffer();
                             Point location = MouseInfo.getPointerInfo().getLocation();
                             SwingUtilities.convertPointFromScreen(location, main.getUpdateView());
-                            Axe invert = zBuffer.invert(e.getX(), e.getY(), Point3D.O0, main.getUpdateView().getzRunner().getzBuffer().camera() ) ;//TODO
-                            Point3D elem = invert.getP2().getElem();
+                            PointD invert = zBuffer.invert(e.getX(), e.getY(), Point3D.O0, main.getUpdateView().getzRunner().getzBuffer().camera() ) ;//TODO
+                            Point3D elem = invert
+                                
+               ;
                             System.out.println("Inverted location " + elem);
                             ModelBrowser modelBrowser = new ModelBrowser(getMain().getGraphicalEdit2().getSelectionIn(), zBuffer);
                             if (getMain().getGraphicalEdit2().getActionToPerform().equals(GraphicalEdit2.Action.TRANSLATE)) {
