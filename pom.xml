@@ -106,11 +106,7 @@ scm:git:git://github.com/manuelddahmen/e3gui.git
                 </configuration>
             </plugin>
 
-            <plugin>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <executions>
-                </executions>
-            </plugin>
+            
 
             <plugin>
                 <artifactId>maven-resources-plugin</artifactId>
@@ -220,29 +216,8 @@ scm:git:git://github.com/manuelddahmen/e3gui.git
                 </executions>
             </plugin>
 
-            <plugin>
-                <artifactId>maven-resources-plugin</artifactId>
-                <version>2.6</version>
-                <executions>
-                    <execution>
-                        <id>copy-resources</id>
-                        <!-- here the phase you need -->
-                        <phase>validate</phase>
-                        <goals>
-                            <goal>copy-resources</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>${basedir}/target/</outputDirectory>
-                            <resources>
-                                <resource>
-                                    <directory>runscripts/</directory>
-                                    <filtering>true</filtering>
-                                </resource>
-                            </resources>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>      <plugin>
+            
+		<plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-gpg-plugin</artifactId>
         <version>1.6</version>
