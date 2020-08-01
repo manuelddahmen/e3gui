@@ -45,7 +45,7 @@ public class FunctionView {
     private double vMax=1;
     private int rendererType = RENDERER_E3;
     private boolean ok;
-    private Camera camera =new Camera(Point3D.Z.mult(-100d), Point3D.O0);
+    private Camera camera =new Camera(new Point3D(0.0, 0.0, -100.0), Point3D.O0);
     private int zDiplayType = ZBufferImpl.SURFACE_DISPLAY_LINES;
     private ITexture texture = new TextureCol(Colors.random());
     private boolean refresh = true;

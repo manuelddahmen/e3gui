@@ -24,7 +24,6 @@ import one.empty3.library.*;
 import one.empty3.library.core.nurbs.ParametricCurve;
 import one.empty3.library.core.nurbs.ParametricSurface;
 
-import java.awt.*;
 import java.util.HashMap;
 
 /**
@@ -59,19 +58,19 @@ public class ModifyR {
         if(representable.getClass().isAssignableFrom(ParametricSurface.class))
                 {
                     ParametricSurface ref = (ParametricSurface) representable;
-                    double u = selectedPoint.getData("u");
-                    double v = selectedPoint.getData("v");
+                    //double u = selectedPoint.getData("u");
+                    //double v = selectedPoint.getData("v");
 
 
-                    norme(ref, unit, u, v);
+                    //norme(ref, unit, u, v);
 
 
                 } else
                 if(representable.getClass().isAssignableFrom(ParametricCurve.class))
                 {
                     ParametricCurve ref = (ParametricCurve) representable;
-                    double u = selectedPoint.getData("u");
-                    norme(ref, unit, u);
+                    //double u = selectedPoint.getData("u");
+                    //norme(ref, unit, u);
                 }
 
     }
@@ -127,7 +126,7 @@ public class ModifyR {
         representableConteneur.add(axes[1]);
         representableConteneur.add(axes[2]);
         Sphere sphere = new Sphere(new Point3D(posAxe[0], posAxe[1], posAxe[2]), unit / 100);
-        sphere.addData("modifyR", 1.0);
+        //sphere.addData("modifyR", 1.0);
         representableConteneur.add(sphere);
         return representableConteneur;
     }

@@ -1,0 +1,212 @@
+JFDML JFormDesigner: "7.0.0.5.251" Java: "1.8.0_112-release" encoding: "UTF-8"
+
+new FormModel {
+	"i18n.autoExternalize": true
+	"i18n.bundlePackage": "one.empty3.gui"
+	"i18n.bundleName": "gui"
+	"i18n.keyPrefix": "ObjectEditorBase"
+	contentType: "form/swing"
+	root: new FormRoot {
+		add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.BorderLayout ) ) {
+			name: "this"
+			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.BorderLayout ) ) {
+				name: "dialogPane"
+				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class net.miginfocom.swing.MigLayout ) {
+					"$layoutConstraints": "fillx,insets dialog,hidemode 3"
+					"$columnConstraints": "[fill][fill][fill]"
+					"$rowConstraints": "[][][][][][][][][][][][][][][]"
+				} ) {
+					name: "contentPanel"
+					add( new FormContainer( "javax.swing.JLayeredPane", new FormLayoutManager( class javax.swing.JLayeredPane ) ) {
+						name: "layeredPane1"
+						"alignmentX": 0.0f
+						"alignmentY": 0.0f
+					}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+						"value": "cell 0 0"
+					} )
+					add( new FormComponent( "javax.swing.JLabel" ) {
+						name: "labelClass"
+						"text": "Position"
+						"foreground": sfield java.awt.Color white
+						"background": new java.awt.Color( 51, 51, 255, 255 )
+						"opaque": true
+						"font": &Font0 new java.awt.Font( "Tahoma", 1, 12 )
+						"horizontalAlignment": 0
+					}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+						"value": "cell 0 1 3 1"
+					} )
+					add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+						name: "scrollPane2"
+						add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+							name: "scrollPane1"
+							add( new FormComponent( "javax.swing.JTextArea" ) {
+								name: "textAreaPoint3D"
+								"font": #Font0
+								"enabled": false
+								auxiliary() {
+									"JavaCodeGenerator.customCreateCode": "new JTextArea(new Point3D().toString());"
+								}
+								addEvent( new FormEvent( "java.beans.PropertyChangeListener", "propertyChange", "textAreaPoint3DPropertyChange", true ) )
+							} )
+						} )
+					}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+						"value": "cell 0 2 3 1"
+					} )
+					add( new FormComponent( "javax.swing.JLabel" ) {
+						name: "label2"
+						"text": "X"
+						"labelFor": new FormReference( "textFieldX" )
+					}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+						"value": "cell 0 3"
+					} )
+					add( new FormComponent( "javax.swing.JTextField" ) {
+						name: "textFieldX"
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "textFieldXYZActionPerformed", true ) )
+					}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+						"value": "cell 0 3"
+					} )
+					add( new FormComponent( "javax.swing.JLabel" ) {
+						name: "label3"
+						"text": "Y"
+						"labelFor": new FormReference( "textFieldY" )
+					}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+						"value": "cell 1 3"
+					} )
+					add( new FormComponent( "javax.swing.JTextField" ) {
+						name: "textFieldY"
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "textFieldXYZActionPerformed", true ) )
+					}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+						"value": "cell 1 3"
+					} )
+					add( new FormComponent( "javax.swing.JLabel" ) {
+						name: "label4"
+						"text": new FormMessage( null, "ObjectEditorBase.label4.text" )
+						"labelFor": new FormReference( "textFieldZ" )
+					}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+						"value": "cell 2 3"
+					} )
+					add( new FormComponent( "javax.swing.JTextField" ) {
+						name: "textFieldZ"
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "textFieldXYZActionPerformed", true ) )
+					}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+						"value": "cell 2 3"
+					} )
+					add( new FormComponent( "javax.swing.JLabel" ) {
+						name: "label1"
+						"text": new FormMessage( null, "ObjectEditorBase.label1.text" )
+						"background": new java.awt.Color( 0, 51, 255, 255 )
+						"opaque": true
+						"foreground": sfield java.awt.Color white
+						"horizontalAlignment": 0
+					}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+						"value": "cell 0 4 3 1"
+					} )
+					add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+						name: "scrollPane3"
+						add( new FormComponent( "javax.swing.JTextArea" ) {
+							name: "textAreaMatrix33"
+							"rows": 3
+							"enabled": false
+						} )
+					}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+						"value": "cell 0 5 3 3"
+					} )
+					add( new FormComponent( "javax.swing.JTextField" ) {
+						name: "textField00"
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "textFieldsMatrixActionPerformed", true ) )
+					}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+						"value": "cell 0 8"
+					} )
+					add( new FormComponent( "javax.swing.JTextField" ) {
+						name: "textField01"
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "textFieldsMatrixActionPerformed", true ) )
+					}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+						"value": "cell 1 8"
+					} )
+					add( new FormComponent( "javax.swing.JTextField" ) {
+						name: "textField02"
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "textFieldsMatrixActionPerformed", true ) )
+					}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+						"value": "cell 2 8"
+					} )
+					add( new FormComponent( "javax.swing.JTextField" ) {
+						name: "textField10"
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "textFieldsMatrixActionPerformed", true ) )
+					}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+						"value": "cell 0 9"
+					} )
+					add( new FormComponent( "javax.swing.JTextField" ) {
+						name: "textField11"
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "textFieldsMatrixActionPerformed", true ) )
+					}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+						"value": "cell 1 9"
+					} )
+					add( new FormComponent( "javax.swing.JTextField" ) {
+						name: "textField12"
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "textFieldsMatrixActionPerformed", true ) )
+					}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+						"value": "cell 2 9"
+					} )
+					add( new FormComponent( "javax.swing.JTextField" ) {
+						name: "textField20"
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "textFieldsMatrixActionPerformed", true ) )
+					}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+						"value": "cell 0 10"
+					} )
+					add( new FormComponent( "javax.swing.JTextField" ) {
+						name: "textField21"
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "textFieldsMatrixActionPerformed", true ) )
+					}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+						"value": "cell 1 10"
+					} )
+					add( new FormComponent( "javax.swing.JTextField" ) {
+						name: "textField22"
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "textFieldsMatrixActionPerformed", true ) )
+					}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+						"value": "cell 2 10"
+					} )
+					add( new FormComponent( "javax.swing.JLabel" ) {
+						name: "label5"
+						"text": "Scale"
+						"background": new java.awt.Color( 0, 51, 255, 255 )
+						"opaque": true
+						"foreground": sfield java.awt.Color white
+						"horizontalAlignment": 0
+					}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+						"value": "cell 0 11 3 1"
+					} )
+					add( new FormComponent( "javax.swing.JTextField" ) {
+						name: "textFieldScaleX"
+					}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+						"value": "cell 0 12"
+					} )
+					add( new FormComponent( "javax.swing.JTextField" ) {
+						name: "textFieldScaleY"
+					}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+						"value": "cell 1 12"
+					} )
+					add( new FormComponent( "javax.swing.JTextField" ) {
+						name: "textFieldScaleZ"
+					}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+						"value": "cell 2 12"
+					} )
+					add( new FormComponent( "javax.swing.JButton" ) {
+						name: "button1"
+						"text": "Ok"
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "button1ActionPerformed", true ) )
+						addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "buttonOkActionPerformed", true ) )
+					}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+						"value": "cell 0 13"
+					} )
+				}, new FormLayoutConstraints( class java.lang.String ) {
+					"value": "Center"
+				} )
+			}, new FormLayoutConstraints( class java.lang.String ) {
+				"value": "Center"
+			} )
+		}, new FormLayoutConstraints( null ) {
+			"location": new java.awt.Point( 0, 0 )
+			"size": new java.awt.Dimension( 780, 320 )
+		} )
+	}
+}

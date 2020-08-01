@@ -20,14 +20,13 @@
 
 package one.empty3.gui;
 
-import one.empty3.library.Representable;
-
 import javax.swing.*;
 import java.awt.*;
 
-/**
+/***
  * Created by manue on 26-11-19.
  */
+
 public class Rendu extends JLabel
         implements ListCellRenderer {
     ImageIcon icon;

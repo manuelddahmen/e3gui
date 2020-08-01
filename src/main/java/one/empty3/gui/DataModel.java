@@ -20,8 +20,6 @@
 
 package one.empty3.gui;
 
-import com.google.gson.Gson;
-//import com.sun.org.apache.regexp.internal.RE;
 import com.thoughtworks.xstream.XStream;
 import nu.xom.*;
 import one.empty3.library.*;
@@ -481,18 +479,6 @@ public class DataModel implements PropertyChangeListener {
         }
     }
 
-    public String getJson(MoodModelCell cell) {
-        Gson gson = new Gson();
-        String json = gson.toJson(cell);
-        return json;
-    }
-
-    public MoodModelCell fromJson(String json) {
-        Gson gson = new Gson();
-        MoodModelCell cell = gson.fromJson(json, MoodModelCell.class);
-        return cell;
-
-    }
 
 
     @Override

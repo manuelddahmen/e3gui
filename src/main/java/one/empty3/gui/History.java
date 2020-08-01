@@ -22,7 +22,6 @@ package one.empty3.gui;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Predicate;
 
 /**
  * Created by manue on 17-07-19.
@@ -35,19 +34,17 @@ public class History {
     public List<RPropertyDetailsRow> getHistory() {
         return history;
     }
-    public void clear()
-    {
+
+    public void clear() {
         current = -1;
         history.clear();
     }
 
-    public void addToHistory(RPropertyDetailsRow row)
-    {
+    public void addToHistory(RPropertyDetailsRow row) {
         current++;
         history.add(current, row);
-        if(history.size()>=getCurrent())
-        {
-            for(int i=current+1; i<history.size(); i++)
+        if (history.size() >= getCurrent()) {
+            for (int i = current + 1; i < history.size(); i++)
                 history.remove(i);
         }
     }
@@ -67,26 +64,31 @@ public class History {
 
 
     public void next() {
-        if(current<history.size()-1)
+        if (current < history.size() - 1)
             current++;
     }
 
     public void back() {
-        if(current>0)
+        if (current > 0)
             current--;
     }
 
     public Object getCurrentRow() {
+        if (current < 0)
+            current = 0;
+        if (current >= history.size())
+            current = Math.max(history.size() - 1, 0);
+
         return history.get(current);
     }
 
     public RPropertyDetailsRow get(int i) {
-        if(current<history.size()-1)
-            if(current>=0) {
+        if (current < history.size() - 1)
+            if (current >= 0) {
                 RPropertyDetailsRow rPropertyDetailsRow = history.get(i);
                 return rPropertyDetailsRow;
 
-        }
+            }
         return null;
     }
 }

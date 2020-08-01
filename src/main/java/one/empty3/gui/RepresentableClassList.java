@@ -20,8 +20,8 @@
 
 package one.empty3.gui;
 
-import one.empty3.library.*;
 import one.empty3.library.Polygon;
+import one.empty3.library.*;
 import one.empty3.library.core.nurbs.*;
 import one.empty3.library.core.raytracer.tree.AlgebraicFormulaSyntaxException;
 import one.empty3.library.core.raytracer.tree.AlgebricTree;
@@ -29,8 +29,8 @@ import one.empty3.library.core.raytracer.tree.TreeNodeEvalException;
 import one.empty3.library.core.script.InterpreteException;
 import one.empty3.library.core.script.InterpretePoint3D;
 import one.empty3.library.core.tribase.TRIEllipsoide;
-import one.empty3.library.core.tribase.TRIExtrusionGeneralisee;
 import one.empty3.library.core.tribase.Tubulaire3;
+import one.empty3.library.core.tribase.TubulaireN2cc;
 
 import javax.swing.*;
 import java.awt.*;
@@ -73,9 +73,10 @@ public class RepresentableClassList {
         //add("heightSurfaceXYZ", HeightMapSurfaceXYZ.class);
         add("B-Spline", BSpline.class);
         add("LumierePonctuelle", LumierePonctuelle.class);
-        add("extrusion", TRIExtrusionGeneralisee.class);
+//        add("extrusion", TRIExtrusionGeneralisee.class);
         add("circle", Circle.class);
-        add("extrusion2+", ExtrusionB1B1.class);
+        add("extrusion2+", ExtrusionB1B1.class);///???
+        add("tube rond", TubulaireN2cc.class);///???
         add("tour de revolution", TourRevolution.class);
 
         //add("move", Move.class);
