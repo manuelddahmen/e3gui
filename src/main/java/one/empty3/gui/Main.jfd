@@ -1,4 +1,4 @@
-JFDML JFormDesigner: "7.0.0.5.251" Java: "11.0.7" encoding: "UTF-8"
+JFDML JFormDesigner: "7.0.2.4.305" Java: "11.0.7" encoding: "UTF-8"
 
 new FormModel {
 	"i18n.bundleName": "en"
@@ -221,6 +221,9 @@ new FormModel {
 								name: "scrollPane1"
 								add( new FormComponent( "javax.swing.JTextArea" ) {
 									name: "textAreaXML"
+									"lineWrap": true
+									"tabSize": 4
+									"wrapStyleWord": true
 								} )
 							}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
 								"value": "cell 1 0,dock center"

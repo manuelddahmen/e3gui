@@ -11,8 +11,8 @@
 
     <groupId>one.empty3</groupId>
     <artifactId>empty3-library-3d-gui</artifactId>
-    <version>2020.2</version>
-    <description>3D rendering engine. Plus modelling.</description>
+    <version>2020.3.9-SNAPSHOT</version>
+    <description>3D Graphical User Interface.</description>
     <packaging>jar</packaging>
 
     <url>https://github.com/manuelddahmen/e3gui</url>

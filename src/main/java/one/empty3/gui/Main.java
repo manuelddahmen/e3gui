@@ -928,6 +928,9 @@ public class Main implements PropertyChangeListener {
                                 this.scrollPane1.setName("scrollPane1"); //NON-NLS
 
                                 //---- textAreaXML ----
+                                this.textAreaXML.setLineWrap(true);
+                                this.textAreaXML.setTabSize(4);
+                                this.textAreaXML.setWrapStyleWord(true);
                                 this.textAreaXML.setName("textAreaXML"); //NON-NLS
                                 this.scrollPane1.setViewportView(this.textAreaXML);
                             }
