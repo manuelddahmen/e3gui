@@ -30,13 +30,13 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 /***
  * Created by manue on 02-10-19.
  * Thread . Dessine les points de contrôles des objets de la scène.
  */
 public class ThreadGraphicalEditor extends Thread implements PropertyChangeListener {
-
 
 
     private Main main;
@@ -79,18 +79,22 @@ public class ThreadGraphicalEditor extends Thread implements PropertyChangeListe
                 main.getUpdateView().addMouseListener(new MouseAdapter() {
                     @Override
                     public void mouseClicked(MouseEvent e) {
+                        System.out.println("Mouse clicked in " + this.getClass());
                         if (getMain().getGraphicalEdit2().getActionToPerform().equals(GraphicalEdit2.Action.SELECT)) {
                             if (main.getGraphicalEdit2().isSelectArbitraryPoints()) {
                                 Point3D selectedPoint = getMain().getUpdateView().getzRunner().getzBuffer().clickAt(e.getX(), e.getY());
                                 main.getGraphicalEdit2().add(selectedPoint);
+                                System.out.println("point added" + selectedPoint);
                             } else if (main.getGraphicalEdit2().isSelectingMultipleObjects()) {
                                 Representable multiple = getMain().getUpdateView().getzRunner().getzBuffer().representableAt(e.getX(), e.getY());
                                 main.getGraphicalEdit2().add(multiple);
+                                System.out.println("representable added" + multiple);
                             } else {
                                 List<ModelBrowser.Cell> cellList;
                                 cellList = new ModelBrowser(getMain().getUpdateView().getzRunner().getzBuffer(), main.getDataModel().getScene(), Point3D.class).getObjects();
+                                System.out.println("Select point ADD/REMOVE from selected points list");
 
-                                if (cellList != null)
+                                if (cellList != null) {
                                     cellList.forEach(cell -> {
                                         Point point = getMain().getUpdateView().getzRunner().getzBuffer().camera().coordonneesPoint2D(cell.pRot
                                                 ,
@@ -110,8 +114,19 @@ public class ThreadGraphicalEditor extends Thread implements PropertyChangeListe
                                                 }
                                             }
                                         }
+                                        main.getGraphicalEdit2().getCurrentSelection().forEach(new Consumer<Representable>() {
+                                            @Override
+                                            public void accept(Representable representable) {
+                                                System.out.println("[selection from GraphicalEdit]" + representable);
+                                            }
+
+                                        });
                                     });
-                                System.out.println(main.getGraphicalEdit2().getCurrentSelection());
+
+                                } else {
+                                    System.out.println("cellList == null" + this.getClass());
+                                }
+
                             }
 
 
@@ -128,10 +143,9 @@ public class ThreadGraphicalEditor extends Thread implements PropertyChangeListe
                             ZBufferImpl zBuffer = main.getUpdateView().getzRunner().getzBuffer();
                             Point location = MouseInfo.getPointerInfo().getLocation();
                             SwingUtilities.convertPointFromScreen(location, main.getUpdateView());
-                            Point3D invert = zBuffer.invert(e.getX(), e.getY(), Point3D.O0, main.getUpdateView().getzRunner().getzBuffer().camera() ) ;//TODO
-                            Point3D elem = invert
-                                
-               ;
+                            Point3D invert = zBuffer.invert(new Point3D(location.getX(), location.getY(), 0d),
+                                    main.getUpdateView().getzRunner().getzBuffer().camera());//TODO
+                            Point3D elem = invert;
                             System.out.println("Inverted location " + elem);
                             ModelBrowser modelBrowser = new ModelBrowser(getMain().getGraphicalEdit2().getSelectionIn(), zBuffer);
                             if (getMain().getGraphicalEdit2().getActionToPerform().equals(GraphicalEdit2.Action.TRANSLATE)) {
@@ -140,6 +154,7 @@ public class ThreadGraphicalEditor extends Thread implements PropertyChangeListe
                             }
                         }
                     }
+
                     @Override
                     public void mouseEntered(MouseEvent e) {
                         super.mouseEntered(e);
@@ -270,17 +285,19 @@ public class ThreadGraphicalEditor extends Thread implements PropertyChangeListe
     private void drawPoint(Point3D p, Color color) {
         ZBufferImpl zBuffer = getMain().getUpdateView().getzRunner()
                 .getzBuffer();
-        Point point = getMain().getUpdateView().getzRunner()
-                .getzBuffer().camera().coordonneesPoint2D( p, zBuffer);
-
-        for (int i = -2; i <= 2; i++)
-            for (int j = -2; j <= 2; j++) {
-                int x = (int) point.getX() + i;
-                int y = (int) point.getY() + j;
-                BufferedImage lastImage = (BufferedImage) getMain().getUpdateView().getzRunner().getLastImage();
-                if ((x >= 0) && (x < lastImage.getWidth()) && (y >= 0) && (y < lastImage.getHeight())) {
-                    lastImage.setRGB(x, y, color.getRGB());
-                }
-            }
+        if(zBuffer.camera()!=null) {
+            Point point = zBuffer.camera().coordonneesPoint2D(p, zBuffer);
+            if (point != null)
+                for (int i = -2; i <= 2; i++)
+                    for (int j = -2; j <= 2; j++) {
+                        int x = (int) point.getX() + i;
+                        int y = (int) point.getY() + j;
+                        BufferedImage lastImage = (BufferedImage) getMain().getUpdateView().getzRunner().getLastImage();
+                        if ((x >= 0) && (x < lastImage.getWidth()) && (y >= 0) && (y < lastImage.getHeight())) {
+                            lastImage.setRGB(x, y, color.getRGB());
+                        }
+                    }
+        } else
+                System.out.println("Cmaera Z");
     }
 }

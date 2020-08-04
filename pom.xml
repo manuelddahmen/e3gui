@@ -153,8 +153,8 @@
                 </executions>
                 <configuration>
                     <showDeprecation>true</showDeprecation>
-                    <source>1.8</source>
-                    <target>1.8</target>
+                    <source>14</source>
+                    <target>14</target>
                     <encoding>UTF-8</encoding>
 
                 </configuration>

@@ -227,205 +227,241 @@ public class ObjectEditorBase extends JPanel implements RepresentableEditor {
 
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
-        ResourceBundle bundle = ResourceBundle.getBundle("one.empty3.gui.gui");
-        dialogPane = new JPanel();
-        contentPanel = new JPanel();
-        layeredPane1 = new JLayeredPane();
-        labelClass = new JLabel();
-        scrollPane2 = new JScrollPane();
-        scrollPane1 = new JScrollPane();
-        textAreaPoint3D = new JTextArea(new Point3D().toString());
-        label2 = new JLabel();
-        textFieldX = new JTextField();
-        label3 = new JLabel();
-        textFieldY = new JTextField();
-        label4 = new JLabel();
-        textFieldZ = new JTextField();
-        label1 = new JLabel();
-        scrollPane3 = new JScrollPane();
-        textAreaMatrix33 = new JTextArea();
-        textField00 = new JTextField();
-        textField01 = new JTextField();
-        textField02 = new JTextField();
-        textField10 = new JTextField();
-        textField11 = new JTextField();
-        textField12 = new JTextField();
-        textField20 = new JTextField();
-        textField21 = new JTextField();
-        textField22 = new JTextField();
-        label5 = new JLabel();
-        textFieldScaleX = new JTextField();
-        textFieldScaleY = new JTextField();
-        textFieldScaleZ = new JTextField();
-        button1 = new JButton();
+        this.dialogPane = new JPanel();
+        this.contentPanel = new JPanel();
+        this.layeredPane1 = new JLayeredPane();
+        this.labelClass = new JLabel();
+        this.scrollPane2 = new JScrollPane();
+        this.scrollPane1 = new JScrollPane();
+        this.textAreaPoint3D = new JTextArea(new Point3D().toString());
+        this.label2 = new JLabel();
+        this.textFieldX = new JTextField();
+        this.label3 = new JLabel();
+        this.textFieldY = new JTextField();
+        this.label4 = new JLabel();
+        this.textFieldZ = new JTextField();
+        this.label1 = new JLabel();
+        this.scrollPane3 = new JScrollPane();
+        this.textAreaMatrix33 = new JTextArea();
+        this.textField00 = new JTextField();
+        this.textField01 = new JTextField();
+        this.textField02 = new JTextField();
+        this.textField10 = new JTextField();
+        this.textField11 = new JTextField();
+        this.textField12 = new JTextField();
+        this.textField20 = new JTextField();
+        this.textField21 = new JTextField();
+        this.textField22 = new JTextField();
+        this.label5 = new JLabel();
+        this.textFieldScaleX = new JTextField();
+        this.textFieldScaleY = new JTextField();
+        this.textFieldScaleZ = new JTextField();
+        this.button1 = new JButton();
 
         //======== this ========
+        setName("this"); //NON-NLS
         setLayout(new BorderLayout());
 
         //======== dialogPane ========
         {
-            dialogPane.setLayout(new BorderLayout());
+            this.dialogPane.setName("dialogPane"); //NON-NLS
+            this.dialogPane.setLayout(new BorderLayout());
 
             //======== contentPanel ========
             {
-                contentPanel.setLayout(new MigLayout(
-                    "fillx,insets dialog,hidemode 3",
+                this.contentPanel.setName("contentPanel"); //NON-NLS
+                this.contentPanel.setLayout(new MigLayout(
+                    "fillx,insets dialog,hidemode 3", //NON-NLS
                     // columns
-                    "[fill]" +
-                    "[fill]" +
-                    "[fill]",
+                    "[fill]" + //NON-NLS
+                    "[fill]" + //NON-NLS
+                    "[fill]", //NON-NLS
                     // rows
-                    "[]" +
-                    "[]" +
-                    "[]" +
-                    "[]" +
-                    "[]" +
-                    "[]" +
-                    "[]" +
-                    "[]" +
-                    "[]" +
-                    "[]" +
-                    "[]" +
-                    "[]" +
-                    "[]" +
-                    "[]" +
-                    "[]"));
+                    "[]" + //NON-NLS
+                    "[]" + //NON-NLS
+                    "[]" + //NON-NLS
+                    "[]" + //NON-NLS
+                    "[]" + //NON-NLS
+                    "[]" + //NON-NLS
+                    "[]" + //NON-NLS
+                    "[]" + //NON-NLS
+                    "[]" + //NON-NLS
+                    "[]" + //NON-NLS
+                    "[]" + //NON-NLS
+                    "[]" + //NON-NLS
+                    "[]" + //NON-NLS
+                    "[]" + //NON-NLS
+                    "[]")); //NON-NLS
 
                 //======== layeredPane1 ========
                 {
-                    layeredPane1.setAlignmentX(0.0F);
-                    layeredPane1.setAlignmentY(0.0F);
+                    this.layeredPane1.setAlignmentX(0.0F);
+                    this.layeredPane1.setAlignmentY(0.0F);
+                    this.layeredPane1.setName("layeredPane1"); //NON-NLS
                 }
-                contentPanel.add(layeredPane1, "cell 0 0");
+                this.contentPanel.add(this.layeredPane1, "cell 0 0"); //NON-NLS
 
                 //---- labelClass ----
-                labelClass.setText("Position");
-                labelClass.setForeground(Color.white);
-                labelClass.setBackground(new Color(51, 51, 255));
-                labelClass.setOpaque(true);
-                labelClass.setFont(new Font("Tahoma", Font.BOLD, 12));
-                labelClass.setHorizontalAlignment(SwingConstants.CENTER);
-                contentPanel.add(labelClass, "cell 0 1 3 1");
+                this.labelClass.setText("Position"); //NON-NLS
+                this.labelClass.setForeground(Color.white);
+                this.labelClass.setBackground(new Color(51, 51, 255));
+                this.labelClass.setOpaque(true);
+                this.labelClass.setFont(new Font("Tahoma", Font.BOLD, 12)); //NON-NLS
+                this.labelClass.setHorizontalAlignment(SwingConstants.CENTER);
+                this.labelClass.setName("labelClass"); //NON-NLS
+                this.contentPanel.add(this.labelClass, "cell 0 1 3 1"); //NON-NLS
 
                 //======== scrollPane2 ========
                 {
+                    this.scrollPane2.setName("scrollPane2"); //NON-NLS
 
                     //======== scrollPane1 ========
                     {
+                        this.scrollPane1.setName("scrollPane1"); //NON-NLS
 
                         //---- textAreaPoint3D ----
-                        textAreaPoint3D.setFont(new Font("Tahoma", Font.BOLD, 12));
-                        textAreaPoint3D.setEnabled(false);
-                        textAreaPoint3D.addPropertyChangeListener(e -> textAreaPoint3DPropertyChange(e));
-                        scrollPane1.setViewportView(textAreaPoint3D);
+                        this.textAreaPoint3D.setFont(new Font("Tahoma", Font.BOLD, 12)); //NON-NLS
+                        this.textAreaPoint3D.setEnabled(false);
+                        this.textAreaPoint3D.setName("textAreaPoint3D"); //NON-NLS
+                        this.textAreaPoint3D.addPropertyChangeListener(e -> textAreaPoint3DPropertyChange(e));
+                        this.scrollPane1.setViewportView(this.textAreaPoint3D);
                     }
-                    scrollPane2.setViewportView(scrollPane1);
+                    this.scrollPane2.setViewportView(this.scrollPane1);
                 }
-                contentPanel.add(scrollPane2, "cell 0 2 3 1");
+                this.contentPanel.add(this.scrollPane2, "cell 0 2 3 1"); //NON-NLS
 
                 //---- label2 ----
-                label2.setText("X");
-                label2.setLabelFor(textFieldX);
-                contentPanel.add(label2, "cell 0 3");
+                this.label2.setText("X"); //NON-NLS
+                this.label2.setLabelFor(this.textFieldX);
+                this.label2.setName("label2"); //NON-NLS
+                this.contentPanel.add(this.label2, "cell 0 3"); //NON-NLS
 
                 //---- textFieldX ----
-                textFieldX.addActionListener(e -> textFieldXYZActionPerformed(e));
-                contentPanel.add(textFieldX, "cell 0 3");
+                this.textFieldX.setName("textFieldX"); //NON-NLS
+                this.textFieldX.addActionListener(e -> textFieldXYZActionPerformed(e));
+                this.contentPanel.add(this.textFieldX, "cell 0 3"); //NON-NLS
 
                 //---- label3 ----
-                label3.setText("Y");
-                label3.setLabelFor(textFieldY);
-                contentPanel.add(label3, "cell 1 3");
+                this.label3.setText("Y"); //NON-NLS
+                this.label3.setLabelFor(this.textFieldY);
+                this.label3.setName("label3"); //NON-NLS
+                this.contentPanel.add(this.label3, "cell 1 3"); //NON-NLS
 
                 //---- textFieldY ----
-                textFieldY.addActionListener(e -> textFieldXYZActionPerformed(e));
-                contentPanel.add(textFieldY, "cell 1 3");
+                this.textFieldY.setName("textFieldY"); //NON-NLS
+                this.textFieldY.addActionListener(e -> textFieldXYZActionPerformed(e));
+                this.contentPanel.add(this.textFieldY, "cell 1 3"); //NON-NLS
 
                 //---- label4 ----
-                label4.setText(bundle.getString("ObjectEditorBase.label4.text"));
-                label4.setLabelFor(textFieldZ);
-                contentPanel.add(label4, "cell 2 3");
+                this.label4.setText("Z"); //NON-NLS
+                this.label4.setLabelFor(this.textFieldZ);
+                this.label4.setName("label4"); //NON-NLS
+                this.contentPanel.add(this.label4, "cell 2 3"); //NON-NLS
 
                 //---- textFieldZ ----
-                textFieldZ.addActionListener(e -> textFieldXYZActionPerformed(e));
-                contentPanel.add(textFieldZ, "cell 2 3");
+                this.textFieldZ.setName("textFieldZ"); //NON-NLS
+                this.textFieldZ.addActionListener(e -> textFieldXYZActionPerformed(e));
+                this.contentPanel.add(this.textFieldZ, "cell 2 3"); //NON-NLS
 
                 //---- label1 ----
-                label1.setText(bundle.getString("ObjectEditorBase.label1.text"));
-                label1.setBackground(new Color(0, 51, 255));
-                label1.setOpaque(true);
-                label1.setForeground(Color.white);
-                label1.setHorizontalAlignment(SwingConstants.CENTER);
-                contentPanel.add(label1, "cell 0 4 3 1");
+                this.label1.setText("Rotation"); //NON-NLS
+                this.label1.setBackground(new Color(0, 51, 255));
+                this.label1.setOpaque(true);
+                this.label1.setForeground(Color.white);
+                this.label1.setHorizontalAlignment(SwingConstants.CENTER);
+                this.label1.setName("label1"); //NON-NLS
+                this.contentPanel.add(this.label1, "cell 0 4 3 1"); //NON-NLS
 
                 //======== scrollPane3 ========
                 {
+                    this.scrollPane3.setName("scrollPane3"); //NON-NLS
 
                     //---- textAreaMatrix33 ----
-                    textAreaMatrix33.setRows(3);
-                    textAreaMatrix33.setEnabled(false);
-                    scrollPane3.setViewportView(textAreaMatrix33);
+                    this.textAreaMatrix33.setRows(3);
+                    this.textAreaMatrix33.setEnabled(false);
+                    this.textAreaMatrix33.setName("textAreaMatrix33"); //NON-NLS
+                    this.scrollPane3.setViewportView(this.textAreaMatrix33);
                 }
-                contentPanel.add(scrollPane3, "cell 0 5 3 3");
+                this.contentPanel.add(this.scrollPane3, "cell 0 5 3 3"); //NON-NLS
 
                 //---- textField00 ----
-                textField00.addActionListener(e -> textFieldsMatrixActionPerformed(e));
-                contentPanel.add(textField00, "cell 0 8");
+                this.textField00.setName("textField00"); //NON-NLS
+                this.textField00.addActionListener(e -> textFieldsMatrixActionPerformed(e));
+                this.contentPanel.add(this.textField00, "cell 0 8"); //NON-NLS
 
                 //---- textField01 ----
-                textField01.addActionListener(e -> textFieldsMatrixActionPerformed(e));
-                contentPanel.add(textField01, "cell 1 8");
+                this.textField01.setName("textField01"); //NON-NLS
+                this.textField01.addActionListener(e -> textFieldsMatrixActionPerformed(e));
+                this.contentPanel.add(this.textField01, "cell 1 8"); //NON-NLS
 
                 //---- textField02 ----
-                textField02.addActionListener(e -> textFieldsMatrixActionPerformed(e));
-                contentPanel.add(textField02, "cell 2 8");
+                this.textField02.setName("textField02"); //NON-NLS
+                this.textField02.addActionListener(e -> textFieldsMatrixActionPerformed(e));
+                this.contentPanel.add(this.textField02, "cell 2 8"); //NON-NLS
 
                 //---- textField10 ----
-                textField10.addActionListener(e -> textFieldsMatrixActionPerformed(e));
-                contentPanel.add(textField10, "cell 0 9");
+                this.textField10.setName("textField10"); //NON-NLS
+                this.textField10.addActionListener(e -> textFieldsMatrixActionPerformed(e));
+                this.contentPanel.add(this.textField10, "cell 0 9"); //NON-NLS
 
                 //---- textField11 ----
-                textField11.addActionListener(e -> textFieldsMatrixActionPerformed(e));
-                contentPanel.add(textField11, "cell 1 9");
+                this.textField11.setName("textField11"); //NON-NLS
+                this.textField11.addActionListener(e -> textFieldsMatrixActionPerformed(e));
+                this.contentPanel.add(this.textField11, "cell 1 9"); //NON-NLS
 
                 //---- textField12 ----
-                textField12.addActionListener(e -> textFieldsMatrixActionPerformed(e));
-                contentPanel.add(textField12, "cell 2 9");
+                this.textField12.setName("textField12"); //NON-NLS
+                this.textField12.addActionListener(e -> textFieldsMatrixActionPerformed(e));
+                this.contentPanel.add(this.textField12, "cell 2 9"); //NON-NLS
 
                 //---- textField20 ----
-                textField20.addActionListener(e -> textFieldsMatrixActionPerformed(e));
-                contentPanel.add(textField20, "cell 0 10");
+                this.textField20.setName("textField20"); //NON-NLS
+                this.textField20.addActionListener(e -> textFieldsMatrixActionPerformed(e));
+                this.contentPanel.add(this.textField20, "cell 0 10"); //NON-NLS
 
                 //---- textField21 ----
-                textField21.addActionListener(e -> textFieldsMatrixActionPerformed(e));
-                contentPanel.add(textField21, "cell 1 10");
+                this.textField21.setName("textField21"); //NON-NLS
+                this.textField21.addActionListener(e -> textFieldsMatrixActionPerformed(e));
+                this.contentPanel.add(this.textField21, "cell 1 10"); //NON-NLS
 
                 //---- textField22 ----
-                textField22.addActionListener(e -> textFieldsMatrixActionPerformed(e));
-                contentPanel.add(textField22, "cell 2 10");
+                this.textField22.setName("textField22"); //NON-NLS
+                this.textField22.addActionListener(e -> textFieldsMatrixActionPerformed(e));
+                this.contentPanel.add(this.textField22, "cell 2 10"); //NON-NLS
 
                 //---- label5 ----
-                label5.setText("Scale");
-                label5.setBackground(new Color(0, 51, 255));
-                label5.setOpaque(true);
-                label5.setForeground(Color.white);
-                label5.setHorizontalAlignment(SwingConstants.CENTER);
-                contentPanel.add(label5, "cell 0 11 3 1");
-                contentPanel.add(textFieldScaleX, "cell 0 12");
-                contentPanel.add(textFieldScaleY, "cell 1 12");
-                contentPanel.add(textFieldScaleZ, "cell 2 12");
+                this.label5.setText("Scale"); //NON-NLS
+                this.label5.setBackground(new Color(0, 51, 255));
+                this.label5.setOpaque(true);
+                this.label5.setForeground(Color.white);
+                this.label5.setHorizontalAlignment(SwingConstants.CENTER);
+                this.label5.setName("label5"); //NON-NLS
+                this.contentPanel.add(this.label5, "cell 0 11 3 1"); //NON-NLS
+
+                //---- textFieldScaleX ----
+                this.textFieldScaleX.setName("textFieldScaleX"); //NON-NLS
+                this.contentPanel.add(this.textFieldScaleX, "cell 0 12"); //NON-NLS
+
+                //---- textFieldScaleY ----
+                this.textFieldScaleY.setName("textFieldScaleY"); //NON-NLS
+                this.contentPanel.add(this.textFieldScaleY, "cell 1 12"); //NON-NLS
+
+                //---- textFieldScaleZ ----
+                this.textFieldScaleZ.setName("textFieldScaleZ"); //NON-NLS
+                this.contentPanel.add(this.textFieldScaleZ, "cell 2 12"); //NON-NLS
 
                 //---- button1 ----
-                button1.setText("Ok");
-                button1.addActionListener(e -> {
+                this.button1.setText("Ok"); //NON-NLS
+                this.button1.setName("button1"); //NON-NLS
+                this.button1.addActionListener(e -> {
 			button1ActionPerformed(e);
 			buttonOkActionPerformed(e);
 		});
-                contentPanel.add(button1, "cell 0 13");
+                this.contentPanel.add(this.button1, "cell 0 13"); //NON-NLS
             }
-            dialogPane.add(contentPanel, BorderLayout.CENTER);
+            this.dialogPane.add(this.contentPanel, BorderLayout.CENTER);
         }
-        add(dialogPane, BorderLayout.CENTER);
+        add(this.dialogPane, BorderLayout.CENTER);
         // JFormDesigner - End of component initialization  //GEN-END:initComponents
     }
 

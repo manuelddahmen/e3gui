@@ -1,10 +1,6 @@
-JFDML JFormDesigner: "7.0.0.5.251" Java: "1.8.0_112-release" encoding: "UTF-8"
+JFDML JFormDesigner: "7.0.0.5.251" Java: "11.0.7" encoding: "UTF-8"
 
 new FormModel {
-	"i18n.autoExternalize": true
-	"i18n.bundlePackage": "one.empty3.gui"
-	"i18n.bundleName": "gui"
-	"i18n.keyPrefix": "ObjectEditorBase"
 	contentType: "form/swing"
 	root: new FormRoot {
 		add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.BorderLayout ) ) {
@@ -80,7 +76,7 @@ new FormModel {
 					} )
 					add( new FormComponent( "javax.swing.JLabel" ) {
 						name: "label4"
-						"text": new FormMessage( null, "ObjectEditorBase.label4.text" )
+						"text": "Z"
 						"labelFor": new FormReference( "textFieldZ" )
 					}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
 						"value": "cell 2 3"
@@ -93,7 +89,7 @@ new FormModel {
 					} )
 					add( new FormComponent( "javax.swing.JLabel" ) {
 						name: "label1"
-						"text": new FormMessage( null, "ObjectEditorBase.label1.text" )
+						"text": "Rotation"
 						"background": new java.awt.Color( 0, 51, 255, 255 )
 						"opaque": true
 						"foreground": sfield java.awt.Color white

@@ -20,13 +20,10 @@
 
 package one.empty3.gui;
 
-import javax.swing.border.*;
-
 import net.miginfocom.swing.MigLayout;
 import one.empty3.library.*;
 import one.empty3.library.core.nurbs.ParametricSurface;
 import one.empty3.library.core.script.Loader;
-import org.jdesktop.beansbinding.*;
 import org.jdesktop.beansbinding.AutoBinding.UpdateStrategy;
 import org.jdesktop.beansbinding.BeanProperty;
 import org.jdesktop.beansbinding.BindingGroup;
@@ -34,13 +31,14 @@ import org.jdesktop.beansbinding.Bindings;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.border.SoftBevelBorder;
 import java.awt.*;
 import java.awt.event.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.HashMap;
 import java.util.function.Consumer;
 import java.util.logging.Logger;
 /*
@@ -644,53 +642,58 @@ public class Main implements PropertyChangeListener {
         this.panel9 = new JPanel();
         this.panel10 = new JPanel();
         this.panel11 = new JPanel();
+        this.texturesDrawEditMapOnObjectPart1 = new TexturesDrawEditMapOnObjectPart();
         this.myObservableListSelIn = new MyObservableList();
         this.myObservableListSelOut = new MyObservableList();
 
         //======== MainWindow ========
         {
-            this.MainWindow.setTitle("Empty3");
+            this.MainWindow.setTitle("Empty3"); //NON-NLS
             this.MainWindow.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
             this.MainWindow.setBackground(new Color(204, 255, 255));
             this.MainWindow.setVisible(true);
             this.MainWindow.setModalExclusionType(Dialog.ModalExclusionType.APPLICATION_EXCLUDE);
             this.MainWindow.setMinimumSize(new Dimension(1000, 400));
-            this.MainWindow.setIconImage(new ImageIcon(getClass().getResource("/one/empty3/library/mite.png")).getImage());
-            this.MainWindow.addPropertyChangeListener("fieldFunctionsPropertyChanged", e -> ScriptPanelPropertyChange(e));
+            this.MainWindow.setIconImage(new ImageIcon(getClass().getResource("/one/empty3/library/mite.png")).getImage()); //NON-NLS
+            this.MainWindow.setName("MainWindow"); //NON-NLS
+            this.MainWindow.addPropertyChangeListener("fieldFunctionsPropertyChanged", e -> ScriptPanelPropertyChange(e)); //NON-NLS
             this.MainWindow.addKeyListener(new KeyAdapter() {
                 @Override
                 public void keyPressed(KeyEvent e) {
                     MainWindowKeyPressed(e);
                 }
             });
-            Container MainWindowContentPane = this.MainWindow.getContentPane();
+            var MainWindowContentPane = this.MainWindow.getContentPane();
             MainWindowContentPane.setLayout(new MigLayout(
-                "fill,hidemode 3",
+                "fill,hidemode 3", //NON-NLS
                 // columns
-                "[fill]" +
-                "[fill]",
+                "[fill]" + //NON-NLS
+                "[fill]", //NON-NLS
                 // rows
-                "[]" +
-                "[]" +
-                "[]"));
+                "[]" + //NON-NLS
+                "[]" + //NON-NLS
+                "[]")); //NON-NLS
 
             //======== panel6 ========
             {
+                this.panel6.setName("panel6"); //NON-NLS
                 this.panel6.setLayout(new MigLayout(
-                    "fill,hidemode 3",
+                    "fill,hidemode 3", //NON-NLS
                     // columns
-                    "[fill]",
+                    "[fill]", //NON-NLS
                     // rows
-                    "[]" +
-                    "[]" +
-                    "[]"));
+                    "[]" + //NON-NLS
+                    "[]" + //NON-NLS
+                    "[]")); //NON-NLS
 
                 //======== menu1 ========
                 {
-                    this.menu1.setText("File");
+                    this.menu1.setText("File"); //NON-NLS
+                    this.menu1.setName("menu1"); //NON-NLS
 
                     //---- menuItemNew ----
-                    this.menuItemNew.setText("New");
+                    this.menuItemNew.setText("New"); //NON-NLS
+                    this.menuItemNew.setName("menuItemNew"); //NON-NLS
                     this.menuItemNew.addActionListener(e -> {
 			menuItemNewActionPerformed(e);
 			menuItemNewActionPerformed(e);
@@ -698,30 +701,36 @@ public class Main implements PropertyChangeListener {
                     this.menu1.add(this.menuItemNew);
 
                     //---- menuItemLoad ----
-                    this.menuItemLoad.setText("Load");
+                    this.menuItemLoad.setText("Load"); //NON-NLS
+                    this.menuItemLoad.setName("menuItemLoad"); //NON-NLS
                     this.menu1.add(this.menuItemLoad);
 
                     //---- menuItemSave ----
-                    this.menuItemSave.setText("Save");
+                    this.menuItemSave.setText("Save"); //NON-NLS
+                    this.menuItemSave.setName("menuItemSave"); //NON-NLS
                     this.menuItemSave.addActionListener(e -> menuItemSaveActionPerformed(e));
                     this.menu1.add(this.menuItemSave);
                 }
-                this.panel6.add(this.menu1, "pad 5,cell 0 0 1 3,aligny top,growy 0,wmin 100,hmin 20");
+                this.panel6.add(this.menu1, "pad 5,cell 0 0 1 3,aligny top,growy 0,wmin 100,hmin 20"); //NON-NLS
 
                 //======== panel5 ========
                 {
                     this.panel5.setOrientation(JSplitPane.VERTICAL_SPLIT);
+                    this.panel5.setName("panel5"); //NON-NLS
 
                     //======== panel4 ========
                     {
+                        this.panel4.setName("panel4"); //NON-NLS
 
                         //---- editor ----
+                        this.editor.setName("editor"); //NON-NLS
                         this.editor.addPropertyChangeListener(e -> editorPropertyChange(e));
                         this.panel4.setLeftComponent(this.editor);
 
                         //---- updateViewMain ----
                         this.updateViewMain.setBackground(new Color(204, 255, 204));
                         this.updateViewMain.setMinimumSize(new Dimension(400, 400));
+                        this.updateViewMain.setName("updateViewMain"); //NON-NLS
                         this.updateViewMain.addMouseListener(new MouseAdapter() {
                             @Override
                             public void mouseClicked(MouseEvent e) {
@@ -747,6 +756,7 @@ public class Main implements PropertyChangeListener {
                     //======== tabbedPane1 ========
                     {
                         this.tabbedPane1.setMinimumSize(new Dimension(400, 300));
+                        this.tabbedPane1.setName("tabbedPane1"); //NON-NLS
                         this.tabbedPane1.addContainerListener(new ContainerAdapter() {
                             @Override
                             public void componentAdded(ContainerEvent e) {
@@ -762,171 +772,203 @@ public class Main implements PropertyChangeListener {
 
                         //---- textureEditor1 ----
                         this.textureEditor1.setMinimumSize(new Dimension(400, 300));
-                        this.tabbedPane1.addTab("Textures", this.textureEditor1);
+                        this.textureEditor1.setName("textureEditor1"); //NON-NLS
+                        this.tabbedPane1.addTab("Textures", this.textureEditor1); //NON-NLS
 
                         //======== panel1 ========
                         {
+                            this.panel1.setName("panel1"); //NON-NLS
                             this.panel1.setLayout(new MigLayout(
-                                "hidemode 3",
+                                "hidemode 3", //NON-NLS
                                 // columns
-                                "[fill]" +
-                                "[fill]" +
-                                "[fill]" +
-                                "[fill]" +
-                                "[fill]" +
-                                "[fill]",
+                                "[fill]" + //NON-NLS
+                                "[fill]" + //NON-NLS
+                                "[fill]" + //NON-NLS
+                                "[fill]" + //NON-NLS
+                                "[fill]" + //NON-NLS
+                                "[fill]", //NON-NLS
                                 // rows
-                                "[]" +
-                                "[]" +
-                                "[]" +
-                                "[]" +
-                                "[]" +
-                                "[]"));
-                            this.panel1.add(this.objectEditorBase1, "cell 0 0 6 6,dock center");
+                                "[]" + //NON-NLS
+                                "[]" + //NON-NLS
+                                "[]" + //NON-NLS
+                                "[]" + //NON-NLS
+                                "[]" + //NON-NLS
+                                "[]")); //NON-NLS
+
+                            //---- objectEditorBase1 ----
+                            this.objectEditorBase1.setName("objectEditorBase1"); //NON-NLS
+                            this.panel1.add(this.objectEditorBase1, "cell 0 0 6 6,dock center"); //NON-NLS
                         }
-                        this.tabbedPane1.addTab("Position", this.panel1);
+                        this.tabbedPane1.addTab("Position", this.panel1); //NON-NLS
 
                         //======== panel2 ========
                         {
+                            this.panel2.setName("panel2"); //NON-NLS
                             this.panel2.setLayout(new MigLayout(
-                                "hidemode 3",
+                                "hidemode 3", //NON-NLS
                                 // columns
-                                "[fill]" +
-                                "[fill]" +
-                                "[fill]",
+                                "[fill]" + //NON-NLS
+                                "[fill]" + //NON-NLS
+                                "[fill]", //NON-NLS
                                 // rows
-                                "[]" +
-                                "[]" +
-                                "[]" +
-                                "[]"));
+                                "[]" + //NON-NLS
+                                "[]" + //NON-NLS
+                                "[]" + //NON-NLS
+                                "[]")); //NON-NLS
 
                             //---- labelX ----
-                            this.labelX.setText("res.x");
-                            this.panel2.add(this.labelX, "cell 0 0");
-                            this.panel2.add(this.textFieldXres, "cell 1 0");
+                            this.labelX.setText("res.x"); //NON-NLS
+                            this.labelX.setName("labelX"); //NON-NLS
+                            this.panel2.add(this.labelX, "cell 0 0"); //NON-NLS
+
+                            //---- textFieldXres ----
+                            this.textFieldXres.setName("textFieldXres"); //NON-NLS
+                            this.panel2.add(this.textFieldXres, "cell 1 0"); //NON-NLS
 
                             //---- checkBoxBindToPreview ----
-                            this.checkBoxBindToPreview.setText("Binds to preview");
+                            this.checkBoxBindToPreview.setText("Binds to preview"); //NON-NLS
                             this.checkBoxBindToPreview.setSelected(true);
+                            this.checkBoxBindToPreview.setName("checkBoxBindToPreview"); //NON-NLS
                             this.checkBoxBindToPreview.addActionListener(e -> checkBoxBindToPreviewActionPerformed(e));
-                            this.panel2.add(this.checkBoxBindToPreview, "cell 2 0");
+                            this.panel2.add(this.checkBoxBindToPreview, "cell 2 0"); //NON-NLS
 
                             //---- labelY ----
-                            this.labelY.setText("res.y");
-                            this.panel2.add(this.labelY, "cell 0 1");
-                            this.panel2.add(this.textFieldYres, "cell 1 1");
+                            this.labelY.setText("res.y"); //NON-NLS
+                            this.labelY.setName("labelY"); //NON-NLS
+                            this.panel2.add(this.labelY, "cell 0 1"); //NON-NLS
+
+                            //---- textFieldYres ----
+                            this.textFieldYres.setName("textFieldYres"); //NON-NLS
+                            this.panel2.add(this.textFieldYres, "cell 1 1"); //NON-NLS
 
                             //---- label3 ----
-                            this.label3.setText("Rendering type");
-                            this.panel2.add(this.label3, "cell 0 2");
+                            this.label3.setText("Rendering type"); //NON-NLS
+                            this.label3.setName("label3"); //NON-NLS
+                            this.panel2.add(this.label3, "cell 0 2"); //NON-NLS
 
                             //---- comboBox1 ----
                             this.comboBox1.setModel(new DefaultComboBoxModel<>(new String[] {
-                                "DISPLAY_ALL",
-                                "SURFACE_DISPLAY_TEXT_QUADS",
-                                "SURFACE_DISPLAY_TEXT_TRI",
-                                "SURFACE_DISPLAY_COL_QUADS",
-                                "SURFACE_DISPLAY_COL_TRI",
-                                "SURFACE_DISPLAY_LINES",
-                                "SURFACE_DISPLAY_POINTS"
+                                "DISPLAY_ALL", //NON-NLS
+                                "SURFACE_DISPLAY_TEXT_QUADS", //NON-NLS
+                                "SURFACE_DISPLAY_TEXT_TRI", //NON-NLS
+                                "SURFACE_DISPLAY_COL_QUADS", //NON-NLS
+                                "SURFACE_DISPLAY_COL_TRI", //NON-NLS
+                                "SURFACE_DISPLAY_LINES", //NON-NLS
+                                "SURFACE_DISPLAY_POINTS" //NON-NLS
                             }));
-                            this.panel2.add(this.comboBox1, "cell 1 2");
+                            this.comboBox1.setName("comboBox1"); //NON-NLS
+                            this.panel2.add(this.comboBox1, "cell 1 2"); //NON-NLS
 
                             //---- buttonRender ----
-                            this.buttonRender.setText("Render");
+                            this.buttonRender.setText("Render"); //NON-NLS
+                            this.buttonRender.setName("buttonRender"); //NON-NLS
                             this.buttonRender.addActionListener(e -> buttonRenderActionPerformed(e));
-                            this.panel2.add(this.buttonRender, "cell 0 3");
+                            this.panel2.add(this.buttonRender, "cell 0 3"); //NON-NLS
 
                             //---- buttonSaveR ----
-                            this.buttonSaveR.setText("Save");
+                            this.buttonSaveR.setText("Save"); //NON-NLS
+                            this.buttonSaveR.setName("buttonSaveR"); //NON-NLS
                             this.buttonSaveR.addActionListener(e -> buttonSaveRActionPerformed(e));
-                            this.panel2.add(this.buttonSaveR, "cell 1 3");
+                            this.panel2.add(this.buttonSaveR, "cell 1 3"); //NON-NLS
                         }
-                        this.tabbedPane1.addTab("Rendu", this.panel2);
+                        this.tabbedPane1.addTab("Rendu", this.panel2); //NON-NLS
 
                         //======== panel3 ========
                         {
+                            this.panel3.setName("panel3"); //NON-NLS
                             this.panel3.setLayout(new MigLayout(
-                                "hidemode 3",
+                                "hidemode 3", //NON-NLS
                                 // columns
-                                "[fill]" +
-                                "[fill]",
+                                "[fill]" + //NON-NLS
+                                "[fill]", //NON-NLS
                                 // rows
-                                "[]" +
-                                "[]" +
-                                "[]"));
-                            this.panel3.add(this.loadSave1, "cell 0 0 2 3,dock center");
+                                "[]" + //NON-NLS
+                                "[]" + //NON-NLS
+                                "[]")); //NON-NLS
+
+                            //---- loadSave1 ----
+                            this.loadSave1.setName("loadSave1"); //NON-NLS
+                            this.panel3.add(this.loadSave1, "cell 0 0 2 3,dock center"); //NON-NLS
                         }
-                        this.tabbedPane1.addTab("LOad/save/export", this.panel3);
+                        this.tabbedPane1.addTab("LOad/save/export", this.panel3); //NON-NLS
 
                         //======== panel7 ========
                         {
+                            this.panel7.setName("panel7"); //NON-NLS
                             this.panel7.setLayout(new MigLayout(
-                                "hidemode 3",
+                                "hidemode 3", //NON-NLS
                                 // columns
-                                "[fill]" +
-                                "[fill]" +
-                                "[fill]",
+                                "[fill]" + //NON-NLS
+                                "[fill]" + //NON-NLS
+                                "[fill]", //NON-NLS
                                 // rows
-                                "[]" +
-                                "[]" +
-                                "[]" +
-                                "[]" +
-                                "[]"));
+                                "[]" + //NON-NLS
+                                "[]" + //NON-NLS
+                                "[]" + //NON-NLS
+                                "[]" + //NON-NLS
+                                "[]")); //NON-NLS
 
                             //---- buttonXML ----
-                            this.buttonXML.setText("Open");
+                            this.buttonXML.setText("Open"); //NON-NLS
+                            this.buttonXML.setName("buttonXML"); //NON-NLS
                             this.buttonXML.addActionListener(e -> {
 			buttonXMLActionPerformed(e);
 			buttonXMLActionPerformed(e);
 		});
-                            this.panel7.add(this.buttonXML, "cell 0 0");
+                            this.panel7.add(this.buttonXML, "cell 0 0"); //NON-NLS
 
                             //---- buttonRefreshXML ----
-                            this.buttonRefreshXML.setText("Refresh");
+                            this.buttonRefreshXML.setText("Refresh"); //NON-NLS
+                            this.buttonRefreshXML.setName("buttonRefreshXML"); //NON-NLS
                             this.buttonRefreshXML.addActionListener(e -> buttonRefreshXMLActionPerformed(e));
-                            this.panel7.add(this.buttonRefreshXML, "cell 0 0");
+                            this.panel7.add(this.buttonRefreshXML, "cell 0 0"); //NON-NLS
 
                             //======== scrollPane1 ========
                             {
+                                this.scrollPane1.setName("scrollPane1"); //NON-NLS
+
+                                //---- textAreaXML ----
+                                this.textAreaXML.setName("textAreaXML"); //NON-NLS
                                 this.scrollPane1.setViewportView(this.textAreaXML);
                             }
-                            this.panel7.add(this.scrollPane1, "cell 1 0,dock center");
+                            this.panel7.add(this.scrollPane1, "cell 1 0,dock center"); //NON-NLS
                         }
-                        this.tabbedPane1.addTab("XML", this.panel7);
+                        this.tabbedPane1.addTab("XML", this.panel7); //NON-NLS
 
                         //======== panel8 ========
                         {
+                            this.panel8.setName("panel8"); //NON-NLS
                             this.panel8.setLayout(new MigLayout(
-                                "fill,hidemode 3",
+                                "fill,hidemode 3", //NON-NLS
                                 // columns
-                                "[fill]" +
-                                "[fill]" +
-                                "[fill]" +
-                                "[fill]" +
-                                "[fill]" +
-                                "[fill]" +
-                                "[fill]" +
-                                "[fill]" +
-                                "[fill]" +
-                                "[fill]" +
-                                "[fill]" +
-                                "[fill]",
+                                "[fill]" + //NON-NLS
+                                "[fill]" + //NON-NLS
+                                "[fill]" + //NON-NLS
+                                "[fill]" + //NON-NLS
+                                "[fill]" + //NON-NLS
+                                "[fill]" + //NON-NLS
+                                "[fill]" + //NON-NLS
+                                "[fill]" + //NON-NLS
+                                "[fill]" + //NON-NLS
+                                "[fill]" + //NON-NLS
+                                "[fill]" + //NON-NLS
+                                "[fill]", //NON-NLS
                                 // rows
-                                "[]" +
-                                "[]" +
-                                "[]" +
-                                "[]" +
-                                "[]" +
-                                "[]" +
-                                "[]" +
-                                "[]" +
-                                "[]"));
+                                "[]" + //NON-NLS
+                                "[]" + //NON-NLS
+                                "[]" + //NON-NLS
+                                "[]" + //NON-NLS
+                                "[]" + //NON-NLS
+                                "[]" + //NON-NLS
+                                "[]" + //NON-NLS
+                                "[]" + //NON-NLS
+                                "[]")); //NON-NLS
 
                             //---- checkBoxActive ----
-                            this.checkBoxActive.setText("Active graphical markers");
+                            this.checkBoxActive.setText("Active graphical markers"); //NON-NLS
                             this.checkBoxActive.setBorder(new SoftBevelBorder(SoftBevelBorder.LOWERED));
                             this.checkBoxActive.setBorderPainted(true);
+                            this.checkBoxActive.setName("checkBoxActive"); //NON-NLS
                             this.checkBoxActive.addActionListener(e -> {
 			checkBoxActiveActionPerformed(e);
 			checkBoxActiveActionPerformed(e);
@@ -934,264 +976,305 @@ public class Main implements PropertyChangeListener {
 			checkBoxActiveActionPerformed(e);
 			checkBoxActiveActionPerformed(e);
 		});
-                            this.panel8.add(this.checkBoxActive, "cell 1 0");
+                            this.panel8.add(this.checkBoxActive, "cell 1 0"); //NON-NLS
 
                             //---- label1 ----
-                            this.label1.setText("Selections (1 & 2) options ");
-                            this.panel8.add(this.label1, "cell 3 0");
+                            this.label1.setText("Selections (1 & 2) options "); //NON-NLS
+                            this.label1.setName("label1"); //NON-NLS
+                            this.panel8.add(this.label1, "cell 3 0"); //NON-NLS
 
                             //---- radioButtonSel1 ----
-                            this.radioButtonSel1.setText("Selection 1 (IN)");
+                            this.radioButtonSel1.setText("Selection 1 (IN)"); //NON-NLS
                             this.radioButtonSel1.setSelected(true);
+                            this.radioButtonSel1.setName("radioButtonSel1"); //NON-NLS
                             this.radioButtonSel1.addActionListener(e -> {
 			radioButtonSel1ActionPerformed(e);
 			radioButtonSel1ActionPerformed(e);
 		});
-                            this.panel8.add(this.radioButtonSel1, "cell 4 0");
+                            this.panel8.add(this.radioButtonSel1, "cell 4 0"); //NON-NLS
 
                             //======== scrollPane2 ========
                             {
+                                this.scrollPane2.setName("scrollPane2"); //NON-NLS
 
                                 //---- treeSelIn ----
                                 this.treeSelIn.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+                                this.treeSelIn.setName("treeSelIn"); //NON-NLS
                                 this.scrollPane2.setViewportView(this.treeSelIn);
                             }
-                            this.panel8.add(this.scrollPane2, "cell 5 0 1 4");
+                            this.panel8.add(this.scrollPane2, "cell 5 0 1 4"); //NON-NLS
 
                             //---- label2 ----
-                            this.label2.setText("Duplicate");
-                            this.panel8.add(this.label2, "cell 7 0");
+                            this.label2.setText("Duplicate"); //NON-NLS
+                            this.label2.setName("label2"); //NON-NLS
+                            this.panel8.add(this.label2, "cell 7 0"); //NON-NLS
 
                             //---- radioButton1 ----
-                            this.radioButton1.setText("S\u00e9lection");
+                            this.radioButton1.setText("S\u00e9lection"); //NON-NLS
                             this.radioButton1.setSelected(true);
+                            this.radioButton1.setName("radioButton1"); //NON-NLS
                             this.radioButton1.addActionListener(e -> {
 			radioButton1ActionPerformed(e);
 			radioButton1ActionPerformed(e);
 		});
-                            this.panel8.add(this.radioButton1, "cell 1 1");
+                            this.panel8.add(this.radioButton1, "cell 1 1"); //NON-NLS
 
                             //---- checkBoxSelMultipleObjects ----
-                            this.checkBoxSelMultipleObjects.setText("Selection Multiple objects");
+                            this.checkBoxSelMultipleObjects.setText("Selection Multiple objects"); //NON-NLS
+                            this.checkBoxSelMultipleObjects.setName("checkBoxSelMultipleObjects"); //NON-NLS
                             this.checkBoxSelMultipleObjects.addActionListener(e -> {
 			checkBoxSelMultipleObjectsActionPerformed(e);
 			checkBoxSelMultipleObjectsActionPerformed(e);
 			checkBoxSelMultipleObjectsActionPerformed(e);
 			checkBoxSelMultipleObjectsActionPerformed(e);
 		});
-                            this.panel8.add(this.checkBoxSelMultipleObjects, "cell 3 1");
+                            this.panel8.add(this.checkBoxSelMultipleObjects, "cell 3 1"); //NON-NLS
 
                             //---- radioButtonSel2 ----
-                            this.radioButtonSel2.setText("Selection 2 (OUT)");
+                            this.radioButtonSel2.setText("Selection 2 (OUT)"); //NON-NLS
+                            this.radioButtonSel2.setName("radioButtonSel2"); //NON-NLS
                             this.radioButtonSel2.addActionListener(e -> {
 			radioButtonSel2ActionPerformed(e);
 			radioButtonSel2ActionPerformed(e);
 			radioButtonSel2ActionPerformed(e);
 			radioButtonSel2ActionPerformed(e);
 		});
-                            this.panel8.add(this.radioButtonSel2, "cell 4 1");
+                            this.panel8.add(this.radioButtonSel2, "cell 4 1"); //NON-NLS
 
                             //---- buttonDuplicateOnPoints ----
-                            this.buttonDuplicateOnPoints.setText("Duplicate object on p");
+                            this.buttonDuplicateOnPoints.setText("Duplicate object on p"); //NON-NLS
+                            this.buttonDuplicateOnPoints.setName("buttonDuplicateOnPoints"); //NON-NLS
                             this.buttonDuplicateOnPoints.addActionListener(e -> {
 			buttonDuplicateOnPointsActionPerformed(e);
 			buttonDuplicateOnPointsActionPerformed(e);
 		});
-                            this.panel8.add(this.buttonDuplicateOnPoints, "cell 7 1");
+                            this.panel8.add(this.buttonDuplicateOnPoints, "cell 7 1"); //NON-NLS
 
                             //---- radioButtonTranslate ----
-                            this.radioButtonTranslate.setText("Translate");
+                            this.radioButtonTranslate.setText("Translate"); //NON-NLS
+                            this.radioButtonTranslate.setName("radioButtonTranslate"); //NON-NLS
                             this.radioButtonTranslate.addActionListener(e -> {
 			radioButtonTranslateActionPerformed(e);
 			radioButtonTranslateActionPerformed(e);
 			radioButtonTranslateActionPerformed(e);
 			radioButtonTranslateActionPerformed(e);
 		});
-                            this.panel8.add(this.radioButtonTranslate, "cell 1 2");
+                            this.panel8.add(this.radioButtonTranslate, "cell 1 2"); //NON-NLS
 
                             //---- checkBoxSelMultiplePoints ----
-                            this.checkBoxSelMultiplePoints.setText("Select multiple (?)");
-                            this.checkBoxSelMultiplePoints.setActionCommand("Select multiple points");
+                            this.checkBoxSelMultiplePoints.setText("Select multiple (?)"); //NON-NLS
+                            this.checkBoxSelMultiplePoints.setActionCommand("Select multiple points"); //NON-NLS
+                            this.checkBoxSelMultiplePoints.setName("checkBoxSelMultiplePoints"); //NON-NLS
                             this.checkBoxSelMultiplePoints.addActionListener(e -> checkBoxSelMultiplePointsActionPerformed(e));
-                            this.panel8.add(this.checkBoxSelMultiplePoints, "cell 3 2");
+                            this.panel8.add(this.checkBoxSelMultiplePoints, "cell 3 2"); //NON-NLS
 
                             //---- buttonDuplicateOnCurve ----
-                            this.buttonDuplicateOnCurve.setText("on curve");
+                            this.buttonDuplicateOnCurve.setText("on curve"); //NON-NLS
+                            this.buttonDuplicateOnCurve.setName("buttonDuplicateOnCurve"); //NON-NLS
                             this.buttonDuplicateOnCurve.addActionListener(e -> {
 			buttonDuplicateOnCurveActionPerformed(e);
 			buttonDuplicateOnCurveActionPerformed(e);
 		});
-                            this.panel8.add(this.buttonDuplicateOnCurve, "cell 7 2");
+                            this.panel8.add(this.buttonDuplicateOnCurve, "cell 7 2"); //NON-NLS
 
                             //---- textFieldU ----
-                            this.textFieldU.setToolTipText("u");
-                            this.textFieldU.setText("0.0");
+                            this.textFieldU.setToolTipText("u"); //NON-NLS
+                            this.textFieldU.setText("0.0"); //NON-NLS
+                            this.textFieldU.setName("textFieldU"); //NON-NLS
                             this.textFieldU.addActionListener(e -> {
 			textFieldOnCurveUActionPerformed(e);
 			textField1ActionPerformed(e);
 		});
-                            this.panel8.add(this.textFieldU, "cell 8 2 2 1");
+                            this.panel8.add(this.textFieldU, "cell 8 2 2 1"); //NON-NLS
 
                             //---- label4 ----
-                            this.label4.setText("Translate all selection");
-                            this.panel8.add(this.label4, "cell 1 3");
+                            this.label4.setText("Translate all selection"); //NON-NLS
+                            this.label4.setName("label4"); //NON-NLS
+                            this.panel8.add(this.label4, "cell 1 3"); //NON-NLS
 
                             //---- toggleButtonTransSel ----
-                            this.toggleButtonTransSel.setText("Yes or no");
+                            this.toggleButtonTransSel.setText("Yes or no"); //NON-NLS
+                            this.toggleButtonTransSel.setName("toggleButtonTransSel"); //NON-NLS
                             this.toggleButtonTransSel.addActionListener(e -> toggleButtonTransSelActionPerformed(e));
-                            this.panel8.add(this.toggleButtonTransSel, "cell 1 3");
+                            this.panel8.add(this.toggleButtonTransSel, "cell 1 3"); //NON-NLS
 
                             //---- checkBoxSelArbitraryPoints ----
-                            this.checkBoxSelArbitraryPoints.setText("Select arb points");
+                            this.checkBoxSelArbitraryPoints.setText("Select arb points"); //NON-NLS
+                            this.checkBoxSelArbitraryPoints.setName("checkBoxSelArbitraryPoints"); //NON-NLS
                             this.checkBoxSelArbitraryPoints.addActionListener(e -> checkBoxSelArbitraryPointsActionPerformed(e));
-                            this.panel8.add(this.checkBoxSelArbitraryPoints, "cell 3 3");
+                            this.panel8.add(this.checkBoxSelArbitraryPoints, "cell 3 3"); //NON-NLS
 
                             //---- buttonDuplicateOnSurface ----
-                            this.buttonDuplicateOnSurface.setText("on surface");
+                            this.buttonDuplicateOnSurface.setText("on surface"); //NON-NLS
+                            this.buttonDuplicateOnSurface.setName("buttonDuplicateOnSurface"); //NON-NLS
                             this.buttonDuplicateOnSurface.addActionListener(e -> buttonDuplicateOnSurfaceActionPerformed(e));
-                            this.panel8.add(this.buttonDuplicateOnSurface, "cell 7 3");
+                            this.panel8.add(this.buttonDuplicateOnSurface, "cell 7 3"); //NON-NLS
 
                             //---- textFieldU0 ----
-                            this.textFieldU0.setToolTipText("u");
-                            this.textFieldU0.setText("0.0");
+                            this.textFieldU0.setToolTipText("u"); //NON-NLS
+                            this.textFieldU0.setText("0.0"); //NON-NLS
+                            this.textFieldU0.setName("textFieldU0"); //NON-NLS
                             this.textFieldU0.addActionListener(e -> textFieldOnSurfaceUActionPerformed(e));
-                            this.panel8.add(this.textFieldU0, "cell 8 3 2 1");
+                            this.panel8.add(this.textFieldU0, "cell 8 3 2 1"); //NON-NLS
 
                             //---- textField0V ----
-                            this.textField0V.setToolTipText("v");
-                            this.textField0V.setText("0.0");
+                            this.textField0V.setToolTipText("v"); //NON-NLS
+                            this.textField0V.setText("0.0"); //NON-NLS
+                            this.textField0V.setName("textField0V"); //NON-NLS
                             this.textField0V.addActionListener(e -> textFieldOnSurfaceVActionPerformed(e));
-                            this.panel8.add(this.textField0V, "cell 10 3 2 1");
+                            this.panel8.add(this.textField0V, "cell 10 3 2 1"); //NON-NLS
 
                             //---- radioButtonRotate ----
-                            this.radioButtonRotate.setText("Rotate");
+                            this.radioButtonRotate.setText("Rotate"); //NON-NLS
+                            this.radioButtonRotate.setName("radioButtonRotate"); //NON-NLS
                             this.radioButtonRotate.addActionListener(e -> {
 			radioButtonRotateActionPerformed(e);
 			radioButtonRotateActionPerformed(e);
 		});
-                            this.panel8.add(this.radioButtonRotate, "cell 1 4");
+                            this.panel8.add(this.radioButtonRotate, "cell 1 4"); //NON-NLS
 
                             //---- checkBoxEndSel ----
-                            this.checkBoxEndSel.setText("End selection (?)");
+                            this.checkBoxEndSel.setText("End selection (?)"); //NON-NLS
+                            this.checkBoxEndSel.setName("checkBoxEndSel"); //NON-NLS
                             this.checkBoxEndSel.addActionListener(e -> checkBoxEndSelActionPerformed(e));
-                            this.panel8.add(this.checkBoxEndSel, "cell 3 4");
+                            this.panel8.add(this.checkBoxEndSel, "cell 3 4"); //NON-NLS
 
                             //---- buttonExtrudeSel ----
-                            this.buttonExtrudeSel.setText("Extrude selection");
+                            this.buttonExtrudeSel.setText("Extrude selection"); //NON-NLS
+                            this.buttonExtrudeSel.setName("buttonExtrudeSel"); //NON-NLS
                             this.buttonExtrudeSel.addActionListener(e -> buttonExtrudeSelActionPerformed(e));
-                            this.panel8.add(this.buttonExtrudeSel, "cell 7 4");
+                            this.panel8.add(this.buttonExtrudeSel, "cell 7 4"); //NON-NLS
 
                             //---- label5 ----
-                            this.label5.setText("Rotate all selection");
-                            this.panel8.add(this.label5, "cell 1 5");
+                            this.label5.setText("Rotate all selection"); //NON-NLS
+                            this.label5.setName("label5"); //NON-NLS
+                            this.panel8.add(this.label5, "cell 1 5"); //NON-NLS
 
                             //---- toggleButtonRotSel ----
-                            this.toggleButtonRotSel.setText("Yes or no");
+                            this.toggleButtonRotSel.setText("Yes or no"); //NON-NLS
+                            this.toggleButtonRotSel.setName("toggleButtonRotSel"); //NON-NLS
                             this.toggleButtonRotSel.addActionListener(e -> toggleButtonRotSelActionPerformed(e));
-                            this.panel8.add(this.toggleButtonRotSel, "cell 1 5");
+                            this.panel8.add(this.toggleButtonRotSel, "cell 1 5"); //NON-NLS
 
                             //======== scrollPane3 ========
                             {
+                                this.scrollPane3.setName("scrollPane3"); //NON-NLS
 
                                 //---- treeSelOut ----
                                 this.treeSelOut.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+                                this.treeSelOut.setName("treeSelOut"); //NON-NLS
                                 this.scrollPane3.setViewportView(this.treeSelOut);
                             }
-                            this.panel8.add(this.scrollPane3, "cell 5 5 1 3");
+                            this.panel8.add(this.scrollPane3, "cell 5 5 1 3"); //NON-NLS
 
                             //---- buttonClearSel ----
-                            this.buttonClearSel.setText("Clear selection");
+                            this.buttonClearSel.setText("Clear selection"); //NON-NLS
+                            this.buttonClearSel.setName("buttonClearSel"); //NON-NLS
                             this.buttonClearSel.addActionListener(e -> buttonClearSelActionPerformed(e));
-                            this.panel8.add(this.buttonClearSel, "cell 1 6");
+                            this.panel8.add(this.buttonClearSel, "cell 1 6"); //NON-NLS
 
                             //---- button1 ----
-                            this.button1.setText("GO");
+                            this.button1.setText("GO"); //NON-NLS
+                            this.button1.setName("button1"); //NON-NLS
                             this.button1.addActionListener(e -> buttonSelGoActionPerformed(e));
-                            this.panel8.add(this.button1, "cell 7 7");
+                            this.panel8.add(this.button1, "cell 7 7"); //NON-NLS
                         }
-                        this.tabbedPane1.addTab("Modify", this.panel8);
+                        this.tabbedPane1.addTab("Modify", this.panel8); //NON-NLS
 
                         //======== panel9 ========
                         {
+                            this.panel9.setName("panel9"); //NON-NLS
                             this.panel9.setLayout(new MigLayout(
-                                "hidemode 3",
+                                "hidemode 3", //NON-NLS
                                 // columns
-                                "[fill]" +
-                                "[fill]",
+                                "[fill]" + //NON-NLS
+                                "[fill]", //NON-NLS
                                 // rows
-                                "[]" +
-                                "[]" +
-                                "[]"));
+                                "[]" + //NON-NLS
+                                "[]" + //NON-NLS
+                                "[]")); //NON-NLS
                         }
-                        this.tabbedPane1.addTab("Copy/PasteTranslate/Rotate", this.panel9);
+                        this.tabbedPane1.addTab("Copy/PasteTranslate/Rotate", this.panel9); //NON-NLS
 
                         //======== panel10 ========
                         {
+                            this.panel10.setName("panel10"); //NON-NLS
                             this.panel10.setLayout(new MigLayout(
-                                "hidemode 3",
+                                "hidemode 3", //NON-NLS
                                 // columns
-                                "[fill]" +
-                                "[fill]",
+                                "[fill]" + //NON-NLS
+                                "[fill]", //NON-NLS
                                 // rows
-                                "[]" +
-                                "[]" +
-                                "[]"));
+                                "[]" + //NON-NLS
+                                "[]" + //NON-NLS
+                                "[]")); //NON-NLS
                         }
-                        this.tabbedPane1.addTab("Copy/Paste on Object", this.panel10);
+                        this.tabbedPane1.addTab("Copy/Paste on Object", this.panel10); //NON-NLS
 
                         //======== panel11 ========
                         {
+                            this.panel11.setName("panel11"); //NON-NLS
                             this.panel11.setLayout(new MigLayout(
-                                "hidemode 3",
+                                "hidemode 3", //NON-NLS
                                 // columns
-                                "[fill]" +
-                                "[fill]",
+                                "[fill]" + //NON-NLS
+                                "[fill]", //NON-NLS
                                 // rows
-                                "[]" +
-                                "[]" +
-                                "[]"));
+                                "[]" + //NON-NLS
+                                "[]" + //NON-NLS
+                                "[]")); //NON-NLS
                         }
-                        this.tabbedPane1.addTab("Camera move & orientation", this.panel11);
+                        this.tabbedPane1.addTab("Camera move & orientation", this.panel11); //NON-NLS
+
+                        //---- texturesDrawEditMapOnObjectPart1 ----
+                        this.texturesDrawEditMapOnObjectPart1.setName("texturesDrawEditMapOnObjectPart1"); //NON-NLS
+                        this.tabbedPane1.addTab("map edit draw", this.texturesDrawEditMapOnObjectPart1); //NON-NLS
                     }
                     this.panel5.setBottomComponent(this.tabbedPane1);
                 }
-                this.panel6.add(this.panel5, "cell 0 2,dock center");
+                this.panel6.add(this.panel5, "cell 0 2,dock center"); //NON-NLS
             }
-            MainWindowContentPane.add(this.panel6, "cell 0 0,dock center");
-            this.MainWindow.setSize(1620, 1085);
-            this.MainWindow.setLocationRelativeTo(this.MainWindow.getOwner());
+            MainWindowContentPane.add(this.panel6, "cell 0 0,dock center"); //NON-NLS
         }
 
         //---- buttonGroup3 ----
-        ButtonGroup buttonGroup3 = new ButtonGroup();
+        var buttonGroup3 = new ButtonGroup();
         buttonGroup3.add(this.radioButtonSel1);
         buttonGroup3.add(this.radioButtonSel2);
 
         //---- buttonGroup1 ----
-        ButtonGroup buttonGroup1 = new ButtonGroup();
+        var buttonGroup1 = new ButtonGroup();
         buttonGroup1.add(this.radioButton1);
         buttonGroup1.add(this.radioButtonTranslate);
         buttonGroup1.add(this.radioButtonRotate);
 
         //---- buttonGroup2 ----
-        ButtonGroup buttonGroup2 = new ButtonGroup();
+        var buttonGroup2 = new ButtonGroup();
         buttonGroup2.add(this.buttonDuplicateOnPoints);
         buttonGroup2.add(this.buttonDuplicateOnCurve);
         buttonGroup2.add(this.buttonDuplicateOnSurface);
         buttonGroup2.add(this.buttonExtrudeSel);
 
-        //---- bindings ----
+        this.MainWindow.setSize(1620, 1085);
+        this.MainWindow.setLocationRelativeTo(this.MainWindow.getOwner());
+
+        initComponentBindings();
+        // JFormDesigner - End of component initialization  //GEN-END:initComponents
+    }
+
+    private void initComponentBindings() {
+        // JFormDesigner - Component bindings initialization - DO NOT MODIFY  //GEN-BEGIN:initBindings
         this.bindingGroup = new BindingGroup();
         this.bindingGroup.addBinding(Bindings.createAutoBinding(UpdateStrategy.READ_WRITE,
-            this.updateViewMain, BeanProperty.create("width"),
-            this.textFieldXres, BeanProperty.create("text_ON_ACTION_OR_FOCUS_LOST")));
+            this.updateViewMain, BeanProperty.create("width"), //NON-NLS
+            this.textFieldXres, BeanProperty.create("text_ON_ACTION_OR_FOCUS_LOST"))); //NON-NLS
         this.bindingGroup.addBinding(Bindings.createAutoBinding(UpdateStrategy.READ_WRITE,
-            this.updateViewMain, BeanProperty.create("height"),
-            this.textFieldYres, BeanProperty.create("text_ON_ACTION_OR_FOCUS_LOST")));
+            this.updateViewMain, BeanProperty.create("height"), //NON-NLS
+            this.textFieldYres, BeanProperty.create("text_ON_ACTION_OR_FOCUS_LOST"))); //NON-NLS
         {
-            Binding binding = Bindings.createAutoBinding(UpdateStrategy.READ,
-                this.comboBox1, BeanProperty.create("selectedIndex"),
-                this.updateViewMain, BeanProperty.create("view.zDiplayType"));
+            var binding = Bindings.createAutoBinding(UpdateStrategy.READ,
+                this.comboBox1, BeanProperty.create("selectedIndex"), //NON-NLS
+                this.updateViewMain, BeanProperty.create("view.zDiplayType")); //NON-NLS
             binding.setSourceNullValue(0);
             binding.setSourceUnreadableValue(0);
             binding.setTargetNullValue(0);
@@ -1199,7 +1282,7 @@ public class Main implements PropertyChangeListener {
             binding.bind();
         }
         this.bindingGroup.bind();
-        // JFormDesigner - End of component initialization  //GEN-END:initComponents
+        // JFormDesigner - End of component bindings initialization  //GEN-END:initBindings
     }
 
     // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
@@ -1267,6 +1350,7 @@ public class Main implements PropertyChangeListener {
     private JPanel panel9;
     private JPanel panel10;
     private JPanel panel11;
+    private TexturesDrawEditMapOnObjectPart texturesDrawEditMapOnObjectPart1;
     private MyObservableList myObservableListSelIn;
     private MyObservableList myObservableListSelOut;
     private BindingGroup bindingGroup;

@@ -24,7 +24,6 @@ import one.empty3.library.*;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -206,7 +205,7 @@ public class ModelBrowser {
                         copyRepresentableError.printStackTrace();
                     }
             }
-
+            Point3D origin0 = new Point3D(((Point3D) cell.o));
 
             Point3D origin;
             if (cell.o instanceof Point3D) {
@@ -219,8 +218,8 @@ public class ModelBrowser {
                 return;
             }
             if(vect!=null && origin!=null) {
-                origin.changeTo(vect.moins(origin));
-                System.out.println("Moves " + origin + " to " + cell.o);
+                origin.changeTo(vect.plus(origin));
+                System.out.println("Moves " + origin0 + "\n to \n" + cell.o);
             }else {
                 System.out.println("Error in translate selection");
             }

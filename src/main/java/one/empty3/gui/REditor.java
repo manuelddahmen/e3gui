@@ -24,10 +24,9 @@
 
 package one.empty3.gui;
 
-import java.lang.annotation.Repeatable;
-import java.util.*;
-
-import javafx.scene.control.ColorPicker;
+import net.miginfocom.layout.AC;
+import net.miginfocom.layout.CC;
+import net.miginfocom.layout.LC;
 import net.miginfocom.swing.MigLayout;
 import one.empty3.library.*;
 
@@ -35,7 +34,6 @@ import javax.swing.*;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableColumnModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
@@ -195,7 +193,11 @@ public class REditor extends JPanel implements PropertyChangeListener, Represent
 
 
     public void refreshTable() {
-        init(history.getCurrentRow());
+        Object h = history.getCurrentRow();
+        if(h==null)
+            ;
+        else
+            init(h);
     }
 
     private void buttonNextActionPerformed(ActionEvent e) {
@@ -508,9 +510,100 @@ public class REditor extends JPanel implements PropertyChangeListener, Represent
         tableModel.refresh();
     }
 
+    public JPanel getDialogPane() {
+        return dialogPane;
+    }
+
+    public JPanel getContentPanel() {
+        return contentPanel;
+    }
+
+    public JScrollPane getScrollPane1() {
+        return scrollPane1;
+    }
+
+    public JToolBar getToolBar1() {
+        return toolBar1;
+    }
+
+    public JButton getButtonPrev() {
+        return buttonPrev;
+    }
+
+    public JButton getButton1() {
+        return button1;
+    }
+
+    public JButton getButton2() {
+        return button2;
+    }
+
+    public JButton getButton3() {
+        return button3;
+    }
+
+    public JButton getButton4() {
+        return button4;
+    }
+
+    public JButton getButton6() {
+        return button6;
+    }
+
+    public JButton getButton7() {
+        return button7;
+    }
+
+    public JButton getButtonNext() {
+        return buttonNext;
+    }
+
+    public JLabel getLabelBreadCumbs() {
+        return labelBreadCumbs;
+    }
+
+    public JScrollPane getScrollPane2() {
+        return scrollPane2;
+    }
+
+    public JTablePopUp getTableObjectDetails() {
+        return tableObjectDetails;
+    }
+
+    public JPopupMenu getPopupMenu1() {
+        return popupMenu1;
+    }
+
+    public JMenuItem getMenuItem1() {
+        return menuItem1;
+    }
+
+    public JMenuItem getMenuItemRowAt() {
+        return menuItemRowAt;
+    }
+
+    public JMenuItem getMenuItemColAt() {
+        return menuItemColAt;
+    }
+
+    public JMenuItem getMenuItemRowAfter() {
+        return menuItemRowAfter;
+    }
+
+    public JMenuItem getMenuItemColAfter() {
+        return menuItemColAfter;
+    }
+
+    public JMenuItem getMenuItemDelete() {
+        return menuItemDelete;
+    }
+
+    public JMenuItem getMenuItem2() {
+        return menuItem2;
+    }
+
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
-        ResourceBundle bundle = ResourceBundle.getBundle("one.empty3.gui.gui");
         dialogPane = new JPanel();
         contentPanel = new JPanel();
         scrollPane1 = new JScrollPane();
@@ -536,82 +629,99 @@ public class REditor extends JPanel implements PropertyChangeListener, Represent
         menuItem2 = new JMenuItem();
 
         //======== this ========
+        setName("this"); //NON-NLS
         setLayout(new BorderLayout());
 
         //======== dialogPane ========
         {
+            dialogPane.setName("dialogPane"); //NON-NLS
             dialogPane.setLayout(new BorderLayout());
 
             //======== contentPanel ========
             {
+                contentPanel.setName("contentPanel"); //NON-NLS
                 contentPanel.setLayout(new MigLayout(
-                    "fill,insets dialog,hidemode 3",
+                    new LC().fill().insets("dialog").hideMode(3), //NON-NLS
                     // columns
-                    "[fill]" +
-                    "[fill]" +
-                    "[fill]",
+                    new AC()
+                        .fill().gap()
+                        .fill().gap()
+                        .fill(),
                     // rows
-                    "[]" +
-                    "[]" +
-                    "[]" +
-                    "[]" +
-                    "[]"));
+                    new AC()
+                        .gap()
+                        .gap()
+                        .gap()
+                        .gap()
+                        ));
 
                 //======== scrollPane1 ========
                 {
+                    scrollPane1.setName("scrollPane1"); //NON-NLS
 
                     //======== toolBar1 ========
                     {
+                        toolBar1.setName("toolBar1"); //NON-NLS
 
                         //---- buttonPrev ----
-                        buttonPrev.setText("<<");
+                        buttonPrev.setText("<<"); //NON-NLS
+                        buttonPrev.setName("buttonPrev"); //NON-NLS
                         buttonPrev.addActionListener(e -> buttonBackActionPerformed(e));
                         toolBar1.add(buttonPrev);
 
                         //---- button1 ----
-                        button1.setText("1");
+                        button1.setText("1"); //NON-NLS
+                        button1.setName("button1"); //NON-NLS
                         button1.addActionListener(e -> button1ActionPerformed(e));
                         toolBar1.add(button1);
 
                         //---- button2 ----
-                        button2.setText("2");
+                        button2.setText("2"); //NON-NLS
+                        button2.setName("button2"); //NON-NLS
                         button2.addActionListener(e -> button2ActionPerformed(e));
                         toolBar1.add(button2);
 
                         //---- button3 ----
-                        button3.setText("3");
+                        button3.setText("3"); //NON-NLS
+                        button3.setName("button3"); //NON-NLS
                         button3.addActionListener(e -> button3ActionPerformed(e));
                         toolBar1.add(button3);
 
                         //---- button4 ----
-                        button4.setText("4");
+                        button4.setText("4"); //NON-NLS
+                        button4.setName("button4"); //NON-NLS
                         button4.addActionListener(e -> button4ActionPerformed(e));
                         toolBar1.add(button4);
 
                         //---- button6 ----
-                        button6.setText("5");
+                        button6.setText("5"); //NON-NLS
+                        button6.setName("button6"); //NON-NLS
                         button6.addActionListener(e -> button6ActionPerformed(e));
                         toolBar1.add(button6);
 
                         //---- button7 ----
+                        button7.setName("button7"); //NON-NLS
                         button7.addActionListener(e -> button7ActionPerformed(e));
                         toolBar1.add(button7);
 
                         //---- buttonNext ----
-                        buttonNext.setText(">>");
+                        buttonNext.setText(">>"); //NON-NLS
+                        buttonNext.setName("buttonNext"); //NON-NLS
                         buttonNext.addActionListener(e -> buttonNextActionPerformed(e));
                         toolBar1.add(buttonNext);
                     }
                     scrollPane1.setViewportView(toolBar1);
                 }
-                contentPanel.add(scrollPane1, "cell 0 0 3 2");
+                contentPanel.add(scrollPane1, new CC().cell(0, 0, 3, 2));
 
                 //---- labelBreadCumbs ----
-                labelBreadCumbs.setText("Navigation history");
-                contentPanel.add(labelBreadCumbs, "cell 0 0 3 2");
+                labelBreadCumbs.setText("Navigation history"); //NON-NLS
+                labelBreadCumbs.setName("labelBreadCumbs"); //NON-NLS
+                contentPanel.add(labelBreadCumbs, new CC().cell(0, 0, 3, 2));
 
                 //======== scrollPane2 ========
                 {
+                    scrollPane2.setName("scrollPane2"); //NON-NLS
                     scrollPane2.addMouseListener(new MouseAdapter() {
                         @Override
                         public void mouseClicked(MouseEvent e) {
@@ -626,12 +736,13 @@ public class REditor extends JPanel implements PropertyChangeListener, Represent
                             {null, null, null, null, null},
                         },
                         new String[] {
-                            "Detail name", "Dim", "Indices", "objectType", "object"
+                            "Detail name", "Dim", "Indices", "objectType", "object" //NON-NLS
                         }
                     ));
                     tableObjectDetails.setColumnSelectionAllowed(true);
                     tableObjectDetails.setComponentPopupMenu(popupMenu1);
                     tableObjectDetails.setSelectionForeground(Color.red);
+                    tableObjectDetails.setName("tableObjectDetails"); //NON-NLS
                     tableObjectDetails.addMouseListener(new MouseAdapter() {
                         @Override
                         public void mouseClicked(MouseEvent e) {
@@ -640,7 +751,7 @@ public class REditor extends JPanel implements PropertyChangeListener, Represent
                     });
                     scrollPane2.setViewportView(tableObjectDetails);
                 }
-                contentPanel.add(scrollPane2, "cell 0 2 3 3,dock center");
+                contentPanel.add(scrollPane2, new CC().cell(0, 2, 3, 3).push().grow());
             }
             dialogPane.add(contentPanel, BorderLayout.CENTER);
         }
@@ -648,43 +759,56 @@ public class REditor extends JPanel implements PropertyChangeListener, Represent
 
         //======== popupMenu1 ========
         {
+            popupMenu1.setName("popupMenu1"); //NON-NLS
 
             //---- menuItem1 ----
-            menuItem1.setText("Refresh");
+            menuItem1.setText("Refresh"); //NON-NLS
+            menuItem1.setName("menuItem1"); //NON-NLS
             menuItem1.addActionListener(e -> menuItemRefreshActionPerformed(e));
             popupMenu1.add(menuItem1);
 
             //---- menuItemRowAt ----
-            menuItemRowAt.setText(bundle.getString("RPropertyList.menuItemRowAt.text"));
+            menuItemRowAt.setText("Insert row at"); //NON-NLS
+            menuItemRowAt.setName("menuItemRowAt"); //NON-NLS
             menuItemRowAt.addActionListener(e -> menuItemInsRowActionPerformed(e));
             popupMenu1.add(menuItemRowAt);
 
             //---- menuItemColAt ----
-            menuItemColAt.setText(bundle.getString("RPropertyList.menuItemColAt.text"));
+            menuItemColAt.setText("Insert col at"); //NON-NLS
+            menuItemColAt.setName("menuItemColAt"); //NON-NLS
             menuItemColAt.addActionListener(e -> menuItemInsColActionPerformed(e));
             popupMenu1.add(menuItemColAt);
 
             //---- menuItemRowAfter ----
-            menuItemRowAfter.setText(bundle.getString("RPropertyList.menuItemRowAfter.text"));
+            menuItemRowAfter.setText("Insert row after"); //NON-NLS
+            menuItemRowAfter.setName("menuItemRowAfter"); //NON-NLS
             menuItemRowAfter.addActionListener(e -> menuItemRowAfterActionPerformed(e));
             popupMenu1.add(menuItemRowAfter);
 
             //---- menuItemColAfter ----
-            menuItemColAfter.setText(bundle.getString("RPropertyList.menuItemColAfter.text"));
+            menuItemColAfter.setText("Insert col after"); //NON-NLS
+            menuItemColAfter.setName("menuItemColAfter"); //NON-NLS
             menuItemColAfter.addActionListener(e -> menuItemColAfterActionPerformed(e));
             popupMenu1.add(menuItemColAfter);
 
             //---- menuItemDelete ----
-            menuItemDelete.setText("Delete Row");
+            menuItemDelete.setText("Delete Row"); //NON-NLS
+            menuItemDelete.setName("menuItemDelete"); //NON-NLS
             menuItemDelete.addActionListener(e -> menuItemDeleteRowActionPerformed(e));
             popupMenu1.add(menuItemDelete);
 
             //---- menuItem2 ----
-            menuItem2.setText("Delete column");
+            menuItem2.setText("Delete column"); //NON-NLS
+            menuItem2.setName("menuItem2"); //NON-NLS
             menuItem2.addActionListener(e -> menuItemDeleteColActionPerformed(e));
             popupMenu1.add(menuItem2);
         }
         // JFormDesigner - End of component initialization  //GEN-END:initComponents
+    }
+
+    private void initComponentsI18n() {
+        // JFormDesigner - Component i18n initialization - DO NOT MODIFY  //GEN-BEGIN:initI18n
+        // JFormDesigner - End of component i18n initialization  //GEN-END:initI18n
     }
 
     // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables

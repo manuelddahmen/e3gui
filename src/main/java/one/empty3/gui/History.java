@@ -76,7 +76,7 @@ public class History {
     public Object getCurrentRow() {
         if (current < 0)
             current = 0;
-        if (current >= history.size())
+        if (current >= history.size()-1)
             current = Math.max(history.size() - 1, 0);
 
         return history.get(current);

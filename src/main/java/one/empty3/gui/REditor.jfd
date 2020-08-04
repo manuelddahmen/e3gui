@@ -1,12 +1,13 @@
-JFDML JFormDesigner: "7.0.0.5.251" Java: "1.8.0_112-release" encoding: "UTF-8"
+JFDML JFormDesigner: "7.0.0.5.251" Java: "11.0.7" encoding: "UTF-8"
 
 new FormModel {
-	"i18n.autoExternalize": true
-	"i18n.bundlePackage": "one.empty3.gui"
-	"i18n.bundleName": "gui"
-	"i18n.keyPrefix": "RPropertyList"
 	contentType: "form/swing"
 	root: new FormRoot {
+		auxiliary() {
+			"JavaCodeGenerator.defaultVariableGetter": true
+			"JavaCodeGenerator.memberVariableThis": false
+			"JavaCodeGenerator.migAPIConstraintsDesc": true
+		}
 		add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.BorderLayout ) ) {
 			name: "this"
 			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class java.awt.BorderLayout ) ) {
@@ -145,22 +146,22 @@ new FormModel {
 			} )
 			add( new FormComponent( "javax.swing.JMenuItem" ) {
 				name: "menuItemRowAt"
-				"text": new FormMessage( null, "RPropertyList.menuItemRowAt.text" )
+				"text": "Insert row at"
 				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "menuItemInsRowActionPerformed", true ) )
 			} )
 			add( new FormComponent( "javax.swing.JMenuItem" ) {
 				name: "menuItemColAt"
-				"text": new FormMessage( null, "RPropertyList.menuItemColAt.text" )
+				"text": "Insert col at"
 				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "menuItemInsColActionPerformed", true ) )
 			} )
 			add( new FormComponent( "javax.swing.JMenuItem" ) {
 				name: "menuItemRowAfter"
-				"text": new FormMessage( null, "RPropertyList.menuItemRowAfter.text" )
+				"text": "Insert row after"
 				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "menuItemRowAfterActionPerformed", true ) )
 			} )
 			add( new FormComponent( "javax.swing.JMenuItem" ) {
 				name: "menuItemColAfter"
-				"text": new FormMessage( null, "RPropertyList.menuItemColAfter.text" )
+				"text": "Insert col after"
 				addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "menuItemColAfterActionPerformed", true ) )
 			} )
 			add( new FormComponent( "javax.swing.JMenuItem" ) {

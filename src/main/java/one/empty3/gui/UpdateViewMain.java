@@ -24,10 +24,8 @@ import one.empty3.library.*;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
-import java.awt.image.BufferedImage;
-import java.util.List;
-import java.util.function.Consumer;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 /**
  * Created by manue on 26-06-19.
@@ -55,7 +53,7 @@ public class UpdateViewMain extends JPanel implements RepresentableEditor {
 
             @Override
             public void mousePressed(MouseEvent e) {
-                System.out.println("Mouse Pressed");
+                System.out.println("Mouse Pressed MouseEvent e in select ROTATE");
                 if (threadDrawing != null) {
                     threadDrawing.setRunning(false);
                     threadDrawing.stop();

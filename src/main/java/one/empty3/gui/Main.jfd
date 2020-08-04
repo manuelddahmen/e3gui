@@ -1,4 +1,4 @@
-JFDML JFormDesigner: "7.0.0.5.251" Java: "1.8.0_112-release" encoding: "UTF-8"
+JFDML JFormDesigner: "7.0.0.5.251" Java: "11.0.7" encoding: "UTF-8"
 
 new FormModel {
 	"i18n.bundleName": "en"
@@ -495,6 +495,11 @@ new FormModel {
 							name: "panel11"
 						}, new FormLayoutConstraints( null ) {
 							"title": "Camera move & orientation"
+						} )
+						add( new FormComponent( "one.empty3.gui.TexturesDrawEditMapOnObjectPart" ) {
+							name: "texturesDrawEditMapOnObjectPart1"
+						}, new FormLayoutConstraints( null ) {
+							"title": "map edit draw"
 						} )
 					}, new FormLayoutConstraints( class java.lang.String ) {
 						"value": "right"
