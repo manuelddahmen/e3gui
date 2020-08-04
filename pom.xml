@@ -184,15 +184,6 @@
                             <goal>jar</goal>
                         </goals>
 
-                        <configuration>
-                            <doctitle>My API for ${project.name} ${project.version}
-                            </doctitle> <!-- Used by javadoc:javadoc goal -->
-                            <windowtitle>My API for ${project.name} ${project.version}
-                            </windowtitle> <!-- Used by javadoc:javadoc goal -->
-
-
-                        </configuration>
-
                     </execution>
                 </executions>
             </plugin>
