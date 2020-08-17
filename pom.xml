@@ -299,7 +299,7 @@
         <dependency>
             <groupId>one.empty3</groupId>
             <artifactId>empty3-library-3d</artifactId>
-            <version>2020.3.8.2-SNAPSHOT</version>
+            <version>2020.3.9-SNAPSHOT</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/com.miglayout/miglayout -->
         <dependency>

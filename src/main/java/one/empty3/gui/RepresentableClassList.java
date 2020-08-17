@@ -30,7 +30,6 @@ import one.empty3.library.core.script.InterpreteException;
 import one.empty3.library.core.script.InterpretePoint3D;
 import one.empty3.library.core.tribase.TRIEllipsoide;
 import one.empty3.library.core.tribase.Tubulaire3;
-import one.empty3.library.core.tribase.TubulaireN2cc;
 
 import javax.swing.*;
 import java.awt.*;
@@ -76,7 +75,7 @@ public class RepresentableClassList {
 //        add("extrusion", TRIExtrusionGeneralisee.class);
         add("circle", Circle.class);
         add("extrusion2+", ExtrusionB1B1.class);///???
-        add("tube rond", TubulaireN2cc.class);///???
+        add("tube rond", Tubulaire3.class);///???
         add("tour de revolution", TourRevolution.class);
 
         //add("move", Move.class);
