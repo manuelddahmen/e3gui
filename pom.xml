@@ -12,7 +12,8 @@
     <groupId>one.empty3</groupId>
     <artifactId>empty3-library-3d-gui</artifactId>
     <version>2020.3.9-SNAPSHOT</version>
-    <description>3D Graphical User Interface.</description>
+    <description>3D Graphical User Interface.
+    µ</description>
     <packaging>jar</packaging>
 <properties>
     <maven.compiler.target>14</maven.compiler.target>
