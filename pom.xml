@@ -116,6 +116,9 @@
                         <id>attach-javadocs</id>
                     </execution>
                 </executions>
+                <goals>
+                   <goal>jar</goal>
+                </goals>
             </plugin>
             <plugin>
                 <artifactId>maven-resources-plugin</artifactId>
