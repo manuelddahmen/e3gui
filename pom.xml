@@ -112,7 +112,7 @@
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>3.2.0</version>
                      <goals>
-                              <goal>javadoc</goal>
+                              <goal>site</goal>
                      
                               <goal>jar</goal>
                      </goals>
