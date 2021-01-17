@@ -118,6 +118,7 @@
                 </executions>
                 <goals>
                    <goal>jar</goal>
+                   <goal>javadoc</goal>
                 </goals>
             </plugin>
             <plugin>
