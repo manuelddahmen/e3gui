@@ -19,8 +19,6 @@
  */
 
 package one.empty3.gui;
-
-import com.thoughtworks.xstream.XStream;
 import nu.xom.*;
 import one.empty3.library.*;
 import one.empty3.library.core.script.Loader;
@@ -323,7 +321,7 @@ public class DataModel implements PropertyChangeListener {
         Path originalPath = a.toPath();
         Files.copy(originalPath, copied, StandardCopyOption.REPLACE_EXISTING);
     }
-
+/*
     public static DataModel load(File file) throws FileNotFoundException {
         XStream stream = new XStream();
         DataModel dataModel = new DataModel();
@@ -332,7 +330,7 @@ public class DataModel implements PropertyChangeListener {
         return dataModel;
 
     }
-
+*/
     private void addFile(ZipOutputStream zipOut, FileInputStream fis, ZipEntry zipEntry) throws IOException {
         zipOut.putNextEntry(zipEntry);
         byte[] bytes = new byte[1024];
