@@ -114,10 +114,6 @@
                 <executions>
                     <execution>
                         <id>attach-javadocs</id>
-                        <goals>
-                            <goal>javadoc</goal><!-- default jar -->
-                            <goal>jar</goal>
-                        </goals>
                     </execution>
                 </executions>
             </plugin>
