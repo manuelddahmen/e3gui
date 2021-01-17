@@ -70,7 +70,7 @@
         <defaultGoal>install</defaultGoal>
         <directory>${basedir}/target</directory>
         <finalName>${project.artifactId}-${project.version}</finalName>
-        <resources>
+        <!--<resources>
             <resource>
                 <targetPath>${basedir}/target/classes</targetPath>
                 <filtering>false</filtering>
@@ -83,7 +83,7 @@
                     <exclude>**/*.form</exclude>
                 </excludes>
             </resource>
-        </resources>
+        </resources>-->
         <outputDirectory>${basedir}/target/classes</outputDirectory>
         <testOutputDirectory>${basedir}/target/test-classes</testOutputDirectory>
 
