@@ -1,4 +1,4 @@
-JFDML JFormDesigner: "7.0.2.4.305" Java: "11.0.7" encoding: "UTF-8"
+JFDML JFormDesigner: "7.0.3.0.337" Java: "11.0.10" encoding: "UTF-8"
 
 new FormModel {
 	"i18n.bundleName": "en"
@@ -503,6 +503,38 @@ new FormModel {
 							name: "texturesDrawEditMapOnObjectPart1"
 						}, new FormLayoutConstraints( null ) {
 							"title": "map edit draw"
+						} )
+						add( new FormContainer( "javax.swing.JTabbedPane", new FormLayoutManager( class javax.swing.JTabbedPane ) ) {
+							name: "meshEditPane"
+							add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class net.miginfocom.swing.MigLayout ) {
+								"$layoutConstraints": "fill,hidemode 3"
+								"$columnConstraints": "[fill][fill]"
+								"$rowConstraints": "[][][]"
+							} ) {
+								name: "panel12"
+								add( new FormComponent( "javax.swing.JLabel" ) {
+									name: "label6"
+									"text": "New mesh"
+								}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+									"value": "cell 0 0"
+								} )
+								add( new FormComponent( "javax.swing.JComboBox" ) {
+									name: "meshType"
+									"model": new javax.swing.DefaultComboBoxModel {
+										selectedItem: "Parametric Surface"
+										addElement( "Parametric Surface" )
+										addElement( "Sphere" )
+										addElement( "Cube" )
+										addElement( "Plane" )
+									}
+								}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+									"value": "cell 0 0"
+								} )
+							}, new FormLayoutConstraints( null ) {
+								"title": "text"
+							} )
+						}, new FormLayoutConstraints( null ) {
+							"title": "Mesh editor"
 						} )
 					}, new FormLayoutConstraints( class java.lang.String ) {
 						"value": "right"

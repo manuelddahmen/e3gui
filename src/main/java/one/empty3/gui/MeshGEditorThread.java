@@ -1,30 +1,12 @@
-/*
- *
- *  *  This file is part of Empty3.
- *  *
- *  *     Empty3 is free software: you can redistribute it and/or modify
- *  *     it under the terms of the GNU General Public License as published by
- *  *     the Free Software Foundation, either version 3 of the License, or
- *  *     (at your option) any later version.
- *  *
- *  *     Empty3 is distributed in the hope that it will be useful,
- *  *     but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  *     GNU General Public License for more details.
- *  *
- *  *     You should have received a copy of the GNU General Public License
- *  *     along with Empty3.  If not, see <https://www.gnu.org/licenses/>. 2
- *
- *
- */
-
 package one.empty3.gui;
 
 import one.empty3.library.*;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseWheelEvent;
 import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -32,17 +14,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-/***
- * Created by manue on 02-10-19.
- * Thread . Dessine les points de contrôles des objets de la scène.
- */
-public class ThreadGraphicalEditor extends Thread implements PropertyChangeListener {
+public class MeshGEditorThread extends Thread implements PropertyChangeListener {
 
 
     private Main main;
     private ArrayList<Point3D> pointsTranslate = new ArrayList<Point3D>();
 
-    ThreadGraphicalEditor(Main main) {
+    MeshGEditorThread(Main main) {
         this.main = main;
     }
 
@@ -296,7 +274,7 @@ public class ThreadGraphicalEditor extends Thread implements PropertyChangeListe
     private void drawPoint(Point3D p, Color color) {
         ZBufferImpl zBuffer = getMain().getUpdateView().getzRunner()
                 .getzBuffer();
-        if(zBuffer.camera()!=null) {
+        if (zBuffer.camera() != null) {
             Point point = zBuffer.camera().coordonneesPoint2D(p, zBuffer);
             if (point != null)
                 for (int i = -2; i <= 2; i++)
@@ -309,6 +287,7 @@ public class ThreadGraphicalEditor extends Thread implements PropertyChangeListe
                         }
                     }
         } else
-                System.out.println("Cmaera Z");
+            System.out.println("Cmaera Z");
     }
 }
+

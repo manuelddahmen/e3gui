@@ -325,7 +325,7 @@
         <dependency>
             <groupId>one.empty3</groupId>
             <artifactId>empty3-library-3d</artifactId>
-            <version>2021.1.3-SNAPSHOT</version>
+            <version>2021.2.3-SNAPSHOT</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/com.miglayout/miglayout -->
         <dependency>
@@ -337,31 +337,31 @@
 
 
         <!-- https://mvnrepository.com/artifact/org.openjfx/javafx -->
-        <dependency>
+        <!--<dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx</artifactId>
             <version>11</version>
             <type>pom</type>
-        </dependency>
+        </dependency>-->
         <!-- https://mvnrepository.com/artifact/org.openjfx/javafx-media -->
-        <dependency>
+<!--        <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-media</artifactId>
             <version>15-ea+4</version>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/org.openjfx/javafx-swing -->
-        <dependency>
+    -->    <!-- https://mvnrepository.com/artifact/org.openjfx/javafx-swing -->
+        <!--<dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-swing</artifactId>
             <version>15-ea+4</version>
-        </dependency>
+        </dependency>-->
         <!-- https://mvnrepository.com/artifact/org.openjfx/javafx-fxml -->
-        <dependency>
+   <!--     <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-fxml</artifactId>
             <version>15-ea+4</version>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/org.jdesktop/beansbinding -->
+       --> <!-- https://mvnrepository.com/artifact/org.jdesktop/beansbinding -->
         <dependency>
             <groupId>org.jdesktop</groupId>
             <artifactId>beansbinding</artifactId>
