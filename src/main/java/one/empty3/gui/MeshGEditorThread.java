@@ -1,6 +1,7 @@
 package one.empty3.gui;
 
 import one.empty3.library.*;
+import one.empty3.library.core.nurbs.ParametricSurface;
 
 import javax.swing.*;
 import java.awt.*;
@@ -58,9 +59,21 @@ public class MeshGEditorThread extends Thread implements PropertyChangeListener 
                     @Override
                     public void mouseClicked(MouseEvent e) {
                         System.out.println("Mouse clicked in " + this.getClass());
-                        if (getMain().getGraphicalEdit2().getActionToPerform().equals(GraphicalEdit2.Action.SELECT)) {
+                        if (getMain().getGraphicalEditMesh().getActionToPerform().equals(GraphicalEdit2.Action.SELECT)) {
                             if (main.getGraphicalEdit2().isSelectArbitraryPoints()) {
                                 Point3D selectedPoint = getMain().getUpdateView().getzRunner().getzBuffer().clickAt(e.getX(), e.getY());
+                                Representable selectedObject = getMain().getUpdateView().getzRunner().getzBuffer().getIme().getIME()
+                                        .getrMap()[e.getX()][e.getY()];
+                                if(selectedObject instanceof ParametricSurface) {
+                                    ParametricSurface ps = (ParametricSurface) selectedObject;
+                                    double u = getMain().getUpdateView().getzRunner().getzBuffer().getIme().getIME()
+                                            .getuMap()[e.getX()][e.getY()];
+                                    double v = getMain().getUpdateView().getzRunner().getzBuffer().getIme().getIME()
+                                            .getvMap()[e.getX()][e.getY()];
+
+                                    getMain().getUpdateView().setRuv(ps, u, v);
+
+                                }
                                 main.getGraphicalEdit2().add(selectedPoint);
                                 System.out.println("point added" + selectedPoint);
                             } else if (main.getGraphicalEdit2().isSelectingMultipleObjects()) {
@@ -183,6 +196,7 @@ public class MeshGEditorThread extends Thread implements PropertyChangeListener 
 
         }
     }
+
 
     private void afterDraw() {
         if (main.getGraphicalEdit2().isActiveGraphicalEdit())

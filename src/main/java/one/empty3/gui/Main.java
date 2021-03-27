@@ -71,6 +71,8 @@ public class Main implements PropertyChangeListener {
     private Object threadGrapcalEdition;
     private String jtextfieldU;
     private GraphicalEdit2 loadSave;
+    private MeshGEditorThread meshGeditorThread;
+    private GraphicalEditMesh graphicalEditMesh;
 
     public static void main(String [] args)
     {
@@ -210,7 +212,7 @@ public class Main implements PropertyChangeListener {
                 Point3D point3D = getUpdateView().getzRunner().getzBuffer().clickAt(
                         (int)e.getX(), (int)e.getY());
 
-                if(point3D==null && point3D.equals(ZBufferImpl.INFINI)) {
+                if(point3D==null && point3D.equals(ZBufferImpl.INFINITY)) {
                     toDraw = "background(texture)";
                 }else{
             String[] ps = new String[3];
@@ -553,6 +555,14 @@ public class Main implements PropertyChangeListener {
         getGraphicalEdit2().getCurrentSelection().clear();
     }
 
+    public MeshGEditorThread getMeshGEditorThread() {
+        return meshGeditorThread;
+    }
+
+    public GraphicalEditMesh getGraphicalEditMesh() {
+        return graphicalEditMesh;
+    }
+
 
     private class ThreadDrawingCoords  extends Thread {
 //        @Override
@@ -681,11 +691,11 @@ public class Main implements PropertyChangeListener {
             //======== panel6 ========
             {
                 this.panel6.setBorder (new javax. swing. border. CompoundBorder( new javax .swing .border .TitledBorder (new javax.
-                swing. border. EmptyBorder( 0, 0, 0, 0) , "JF\u006frmDes\u0069gner \u0045valua\u0074ion", javax. swing. border
-                . TitledBorder. CENTER, javax. swing. border. TitledBorder. BOTTOM, new java .awt .Font ("D\u0069alog"
+                swing. border. EmptyBorder( 0, 0, 0, 0) , "JF\u006frmD\u0065sig\u006eer \u0045val\u0075ati\u006fn", javax. swing. border
+                . TitledBorder. CENTER, javax. swing. border. TitledBorder. BOTTOM, new java .awt .Font ("Dia\u006cog"
                 ,java .awt .Font .BOLD ,12 ), java. awt. Color. red) ,this.panel6. getBorder
                 ( )) ); this.panel6. addPropertyChangeListener (new java. beans. PropertyChangeListener( ){ @Override public void propertyChange (java
-                .beans .PropertyChangeEvent e) {if ("\u0062order" .equals (e .getPropertyName () )) throw new RuntimeException
+                .beans .PropertyChangeEvent e) {if ("\u0062ord\u0065r" .equals (e .getPropertyName () )) throw new RuntimeException
                 ( ); }} );
                 this.panel6.setLayout(new MigLayout(
                     "fill,hidemode 3",

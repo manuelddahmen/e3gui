@@ -21,6 +21,7 @@
 package one.empty3.gui;
 
 import one.empty3.library.*;
+import one.empty3.library.core.nurbs.ParametricSurface;
 
 import javax.swing.*;
 import java.awt.*;
@@ -38,6 +39,10 @@ public class UpdateViewMain extends JPanel implements RepresentableEditor {
     private boolean graphicalEditing;
     private FunctionView view;
     private ZRunnerMain zRunner;
+    private boolean psMode;
+    private ParametricSurface ps;
+    private double u;
+    private double v;
 
 
     public UpdateViewMain() {
@@ -234,5 +239,12 @@ public class UpdateViewMain extends JPanel implements RepresentableEditor {
     public void setGraphicalEditing(boolean graphicalEditing) {
         this.graphicalEditing = graphicalEditing;
 
+    }
+
+    public void setRuv(ParametricSurface ps, double u, double v) {
+        this.psMode = true;
+        this.ps = ps;
+        this.u = u;
+        this.v = v;
     }
 }
