@@ -50,7 +50,7 @@ public class FunctionView {
     private ITexture texture = new TextureCol(Colors.random());
     private boolean refresh = true;
     private Scene scene = new Scene();
-
+    private MeshEditorBean meshEditorBean = new MeshEditorBean();
     public FunctionView()
     {
         camera.calculerMatrice(Point3D.Y);
@@ -241,4 +241,11 @@ public class FunctionView {
         this.dataModel = dataModel;
     }
 
+    public MeshEditorBean getMeshEditorBean() {
+        return meshEditorBean;
+    }
+
+    public void setMeshEditorBean(MeshEditorBean meshEditorBean) {
+        this.meshEditorBean = meshEditorBean;
+    }
 }

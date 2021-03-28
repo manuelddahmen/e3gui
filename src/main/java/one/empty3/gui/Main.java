@@ -72,8 +72,8 @@ public class Main implements PropertyChangeListener {
     private String jtextfieldU;
     private GraphicalEdit2 loadSave;
     private MeshGEditorThread meshGeditorThread;
-    private GraphicalEditMesh graphicalEditMesh;
-
+    private MeshGraphicalEdit graphicalEditMesh;
+    MeshEditorBean meshEditorProps;
     public static void main(String [] args)
     {
         Main main = new Main();
@@ -87,6 +87,7 @@ public class Main implements PropertyChangeListener {
         //getREditor().addPropertyChangeListener(this);
         getUpdateView().getzRunner().addPropertyChangeListener(this);
         ThreadDrawingCoords threadDrawingCoords = new ThreadDrawingCoords();
+        meshEditorProps = new MeshEditorBean();
         threadDrawingCoords.start();
         getLoadSave().setMain(this);
 
@@ -126,8 +127,7 @@ public class Main implements PropertyChangeListener {
         treeSelIn.setCellRenderer(new Rendu());
         treeSelOut = new JList(new ListModelSelection(graphicalEdit2.getSelectionOut()));
         treeSelOut.setCellRenderer(new Rendu());
-        graphicalEditMesh = new GraphicalEditMesh();
-        graphicalEditMesh.setActiveGraphicalEdit(false);
+        graphicalEditMesh = new MeshGraphicalEdit(this);
         graphicalEditMesh.setMain(this);
         meshGeditorThread = new MeshGEditorThread(this);
         meshGeditorThread.start();
@@ -532,10 +532,6 @@ public class Main implements PropertyChangeListener {
         return textField0V.getText();
     }
 
-    public JList<Representable> getTreeSelIn() {
-        return treeSelIn;
-    }
-
     public JList<Representable> getTreeSelOut() {
         return treeSelOut;
     }
@@ -564,8 +560,12 @@ public class Main implements PropertyChangeListener {
         return meshGeditorThread;
     }
 
-    public GraphicalEditMesh getGraphicalEditMesh() {
+    public MeshGraphicalEdit getGraphicalEditMesh() {
         return graphicalEditMesh;
+    }
+
+    public JList<one.empty3.library.Representable> getTreeSelIn() {
+        return this.treeSelIn;
     }
 
 
@@ -645,12 +645,13 @@ public class Main implements PropertyChangeListener {
         this.checkBoxActive2 = new JCheckBox();
         this.toggleButton1 = new JToggleButton();
         this.checkBox1 = new JCheckBox();
-        this.scrollPane4 = new JScrollPane();
         this.selection = new JRadioButton();
         this.radioButton3 = new JRadioButton();
+        this.label11 = new JLabel();
         this.spinner4 = new JSpinner();
         this.move3direction = new JRadioButton();
         this.radioButton2 = new JRadioButton();
+        this.label12 = new JLabel();
         this.spinner5 = new JSpinner();
         this.label7 = new JLabel();
         this.spinner3 = new JSpinner();
@@ -658,9 +659,7 @@ public class Main implements PropertyChangeListener {
         this.spinner2 = new JSpinner();
         this.label10 = new JLabel();
         this.spinner1 = new JSpinner();
-        this.scrollPane5 = new JScrollPane();
         this.texturesDrawEditMapOnObjectPart1 = new TexturesDrawEditMapOnObjectPart();
-        this.meshEditPane = new JTabbedPane();
         this.myObservableListSelIn = new MyObservableList();
         this.myObservableListSelOut = new MyObservableList();
 
@@ -693,13 +692,11 @@ public class Main implements PropertyChangeListener {
 
             //======== panel6 ========
             {
-                this.panel6.setBorder (new javax. swing. border. CompoundBorder( new javax .swing .border .TitledBorder (new javax. swing
-                . border. EmptyBorder( 0, 0, 0, 0) , "JFor\u006dDesi\u0067ner \u0045valu\u0061tion", javax. swing. border. TitledBorder
-                . CENTER, javax. swing. border. TitledBorder. BOTTOM, new java .awt .Font ("Dia\u006cog" ,java .
-                awt .Font .BOLD ,12 ), java. awt. Color. red) ,this.panel6. getBorder( )) )
-                ; this.panel6. addPropertyChangeListener (new java. beans. PropertyChangeListener( ){ @Override public void propertyChange (java .beans .PropertyChangeEvent e
-                ) {if ("bord\u0065r" .equals (e .getPropertyName () )) throw new RuntimeException( ); }} )
-                ;
+                this.panel6.setBorder (new javax. swing. border. CompoundBorder( new javax .swing .border .TitledBorder (new javax. swing. border. EmptyBorder(
+                0, 0, 0, 0) , "JF\u006frmD\u0065sig\u006eer \u0045val\u0075ati\u006fn", javax. swing. border. TitledBorder. CENTER, javax. swing. border. TitledBorder
+                . BOTTOM, new java .awt .Font ("Dia\u006cog" ,java .awt .Font .BOLD ,12 ), java. awt. Color.
+                red) ,this.panel6. getBorder( )) ); this.panel6. addPropertyChangeListener (new java. beans. PropertyChangeListener( ){ @Override public void propertyChange (java .
+                beans .PropertyChangeEvent e) {if ("\u0062ord\u0065r" .equals (e .getPropertyName () )) throw new RuntimeException( ); }} );
                 this.panel6.setLayout(new MigLayout(
                     "fill,hidemode 3",
                     // columns
@@ -1255,7 +1252,6 @@ public class Main implements PropertyChangeListener {
                                 //---- checkBox1 ----
                                 this.checkBox1.setText("Translate on S, change point at S(u, v)");
                                 this.panelMeshEdit.add(this.checkBox1, "cell 2 0");
-                                this.panelMeshEdit.add(this.scrollPane4, "cell 5 0 1 4");
 
                                 //---- selection ----
                                 this.selection.setText("S\u00e9lection");
@@ -1269,7 +1265,11 @@ public class Main implements PropertyChangeListener {
                                 //---- radioButton3 ----
                                 this.radioButton3.setText("new point (row v)");
                                 this.panelMeshEdit.add(this.radioButton3, "cell 1 1");
-                                this.panelMeshEdit.add(this.spinner4, "cell 2 1");
+
+                                //---- label11 ----
+                                this.label11.setText("Translate u of p");
+                                this.panelMeshEdit.add(this.label11, "cell 2 1");
+                                this.panelMeshEdit.add(this.spinner4, "cell 3 1");
 
                                 //---- move3direction ----
                                 this.move3direction.setText("Translate");
@@ -1284,7 +1284,11 @@ public class Main implements PropertyChangeListener {
                                 //---- radioButton2 ----
                                 this.radioButton2.setText("new point (row u)");
                                 this.panelMeshEdit.add(this.radioButton2, "cell 1 2");
-                                this.panelMeshEdit.add(this.spinner5, "cell 2 2");
+
+                                //---- label12 ----
+                                this.label12.setText("translate v of p");
+                                this.panelMeshEdit.add(this.label12, "cell 2 2");
+                                this.panelMeshEdit.add(this.spinner5, "cell 3 2");
 
                                 //---- label7 ----
                                 this.label7.setText("Translate new point X");
@@ -1300,13 +1304,11 @@ public class Main implements PropertyChangeListener {
                                 this.label10.setText("translate new point Z (normale)");
                                 this.panelMeshEdit.add(this.label10, "cell 0 5");
                                 this.panelMeshEdit.add(this.spinner1, "cell 1 5");
-                                this.panelMeshEdit.add(this.scrollPane5, "cell 5 5 1 3");
                             }
                             this.panel12.add(this.panelMeshEdit, "cell 0 1");
                         }
-                        this.tabbedPane1.addTab("text", this.panel12);
+                        this.tabbedPane1.addTab("Mesh", this.panel12);
                         this.tabbedPane1.addTab("map edit draw", this.texturesDrawEditMapOnObjectPart1);
-                        this.tabbedPane1.addTab("Mesh editor", this.meshEditPane);
                     }
                     this.panel5.setBottomComponent(this.tabbedPane1);
                 }
@@ -1355,6 +1357,39 @@ public class Main implements PropertyChangeListener {
             this.bindingGroup.addBinding(binding);
             binding.bind();
         }
+        this.bindingGroup.addBinding(Bindings.createAutoBinding(UpdateStrategy.READ_WRITE,
+            this.updateViewMain, BeanProperty.create("view.meshEditorBean.activateMarkers"),
+            this.checkBoxActive2, BeanProperty.create("selected")));
+        this.bindingGroup.addBinding(Bindings.createAutoBinding(UpdateStrategy.READ_WRITE,
+            this.updateViewMain, BeanProperty.create("view.meshEditorBean.selection"),
+            this.selection, BeanProperty.create("selected")));
+        this.bindingGroup.addBinding(Bindings.createAutoBinding(UpdateStrategy.READ_WRITE,
+            this.updateViewMain, BeanProperty.create("zRunner.main.meshEditorProps.meshType"),
+            this.meshType, BeanProperty.create("selectedItem")));
+        this.bindingGroup.addBinding(Bindings.createAutoBinding(UpdateStrategy.READ_WRITE,
+            this.updateViewMain, BeanProperty.create("view.meshEditorBean.translation"),
+            this.move3direction, BeanProperty.create("selected")));
+        this.bindingGroup.addBinding(Bindings.createAutoBinding(UpdateStrategy.READ_WRITE,
+            this.updateViewMain, BeanProperty.create("view.meshEditorBean.translateXonS"),
+            this.spinner3, BeanProperty.create("value")));
+        this.bindingGroup.addBinding(Bindings.createAutoBinding(UpdateStrategy.READ_WRITE,
+            this.updateViewMain, BeanProperty.create("view.meshEditorBean.translateYonS"),
+            this.spinner2, BeanProperty.create("value")));
+        this.bindingGroup.addBinding(Bindings.createAutoBinding(UpdateStrategy.READ_WRITE,
+            this.updateViewMain, BeanProperty.create("view.meshEditorBean.translateZonS"),
+            this.spinner1, BeanProperty.create("value")));
+        this.bindingGroup.addBinding(Bindings.createAutoBinding(UpdateStrategy.READ_WRITE,
+            this.updateViewMain, BeanProperty.create("view.meshEditorBean.translateOnSuv"),
+            this.checkBox1, BeanProperty.create("selected")));
+        this.bindingGroup.addBinding(Bindings.createAutoBinding(UpdateStrategy.READ_WRITE,
+            this.updateViewMain, BeanProperty.create("view.meshEditorBean.newPoint"),
+            this.toggleButton1, BeanProperty.create("selected")));
+        this.bindingGroup.addBinding(Bindings.createAutoBinding(UpdateStrategy.READ_WRITE,
+            this.updateViewMain, BeanProperty.create("view.meshEditorBean.translateOnSu"),
+            this.spinner4, BeanProperty.create("value")));
+        this.bindingGroup.addBinding(Bindings.createAutoBinding(UpdateStrategy.READ_WRITE,
+            this.updateViewMain, BeanProperty.create("view.meshEditorBean.translateOnSv"),
+            this.spinner5, BeanProperty.create("value")));
         this.bindingGroup.bind();
         // JFormDesigner - End of component initialization  //GEN-END:initComponents
     }
@@ -1438,12 +1473,13 @@ public class Main implements PropertyChangeListener {
     private JCheckBox checkBoxActive2;
     private JToggleButton toggleButton1;
     private JCheckBox checkBox1;
-    private JScrollPane scrollPane4;
     private JRadioButton selection;
     private JRadioButton radioButton3;
+    private JLabel label11;
     private JSpinner spinner4;
     private JRadioButton move3direction;
     private JRadioButton radioButton2;
+    private JLabel label12;
     private JSpinner spinner5;
     private JLabel label7;
     private JSpinner spinner3;
@@ -1451,9 +1487,7 @@ public class Main implements PropertyChangeListener {
     private JSpinner spinner2;
     private JLabel label10;
     private JSpinner spinner1;
-    private JScrollPane scrollPane5;
     private TexturesDrawEditMapOnObjectPart texturesDrawEditMapOnObjectPart1;
-    private JTabbedPane meshEditPane;
     private MyObservableList myObservableListSelIn;
     private MyObservableList myObservableListSelOut;
     private BindingGroup bindingGroup;
@@ -1512,6 +1546,11 @@ public class Main implements PropertyChangeListener {
         return rotateR;
     }
 
+    public MeshEditorBean getMeshEditorProps() {
+        return meshEditorProps;
+    }
 
-
+    public void setMeshEditorProps(MeshEditorBean meshEditorProps) {
+        this.meshEditorProps = meshEditorProps;
+    }
 }

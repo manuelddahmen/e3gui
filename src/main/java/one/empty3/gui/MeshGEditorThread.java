@@ -59,7 +59,7 @@ public class MeshGEditorThread extends Thread implements PropertyChangeListener 
                     @Override
                     public void mouseClicked(MouseEvent e) {
                         System.out.println("Mouse clicked in " + this.getClass());
-                        if (getMain().getGraphicalEditMesh().getActionToPerform().equals(GraphicalEdit2.Action.SELECT)) {
+                        if (getMain().getUpdateView().getView().getMeshEditorBean().isSelection()) {
                             if (main.getGraphicalEdit2().isSelectArbitraryPoints()) {
                                 Point3D selectedPoint = getMain().getUpdateView().getzRunner().getzBuffer().clickAt(e.getX(), e.getY());
                                 Representable selectedObject = getMain().getUpdateView().getzRunner().getzBuffer().getIme().getIME()
