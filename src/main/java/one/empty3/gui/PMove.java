@@ -1,5 +1,6 @@
 package one.empty3.gui;
 
+import one.empty3.library.LineSegment;
 import one.empty3.library.Point3D;
 import one.empty3.library.Representable;
 
@@ -8,6 +9,10 @@ public class PMove {
     private double [] mXyz;
     private Representable representable;
     private int row, col;
+    private Point3D pOut;
+    private LineSegment[] lsXyz;
+
+
     public Point3D getIn() {
         return in;
     }
@@ -46,5 +51,21 @@ public class PMove {
 
     public void setCol(int col) {
         this.col = col;
+    }
+
+    public Point3D getPout() {
+        Point3D p = getIn();
+        for(int i=0; i<3; i++)
+            p = p.plus( lsXyz[i].getExtremite().moins(lsXyz[i].getOrigine()).norme1().mult(getmXyz()[i]));
+
+        return p;
+    }
+
+    public LineSegment[] getLsXyz() {
+        return lsXyz;
+    }
+
+    public void setLsXyz(LineSegment[] lsXyz) {
+        this.lsXyz = lsXyz;
     }
 }

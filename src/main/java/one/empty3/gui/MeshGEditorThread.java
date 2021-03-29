@@ -248,7 +248,7 @@ public class MeshGEditorThread extends Thread implements PropertyChangeListener 
 
                             getMain().getMeshEditorProps().getInSelectionMoves().forEach((pMove, point3D) -> {
                                 drawPoint(pMove.getIn(), Color.YELLOW);
-//                                    drawPoint();
+                                drawPoint(pMove.getPout(), Color.BLUE);
                             });
 
                             if (p1 != null && p2 != null) {
