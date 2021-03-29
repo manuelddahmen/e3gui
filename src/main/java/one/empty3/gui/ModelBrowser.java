@@ -21,6 +21,8 @@
 package one.empty3.gui;
 
 import one.empty3.library.*;
+import one.empty3.library.core.nurbs.ParametricSurface;
+import one.empty3.library.core.nurbs.SurfaceParametriquePolynomialeBezier;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -78,7 +80,62 @@ public class ModelBrowser {
             this.o = o;
         }
 
+        public Point3D getpRot() {
+            return pRot;
         }
+
+        public void setpRot(Point3D pRot) {
+            this.pRot = pRot;
+        }
+
+        public StructureMatrix getStructureMatrix() {
+            return structureMatrix;
+        }
+
+        public void setStructureMatrix(StructureMatrix structureMatrix) {
+            this.structureMatrix = structureMatrix;
+        }
+
+        public Object getO() {
+            return o;
+        }
+
+        public void setO(Object o) {
+            this.o = o;
+        }
+
+        public int getDim() {
+            return dim;
+        }
+
+        public void setDim(int dim) {
+            this.dim = dim;
+        }
+
+        public int getRow() {
+            return row;
+        }
+
+        public void setRow(int row) {
+            this.row = row;
+        }
+
+        public int getCol() {
+            return col;
+        }
+
+        public void setCol(int col) {
+            this.col = col;
+        }
+
+        public Representable getRef() {
+            return ref;
+        }
+
+        public void setRef(Representable ref) {
+            this.ref = ref;
+        }
+    }
 
 
 
@@ -172,9 +229,6 @@ public class ModelBrowser {
             if(classes.equals(e.getClass())) {
                 if(e.getClass().equals(Point3D.class) && (ref!=null) && (ref.getRotation()!=null)) {
                     objects.add(new Cell(structureMatrix, dim, row, col, ref, e, zimpl.rotate((Point3D) e, ref)));
-                }
-                else
-                {
                     objects.add(new Cell(structureMatrix, dim, row, col, ref, e));
                 }
             }

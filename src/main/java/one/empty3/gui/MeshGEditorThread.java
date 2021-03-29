@@ -60,6 +60,7 @@ public class MeshGEditorThread extends Thread implements PropertyChangeListener 
                     @Override
                     public void mouseClicked(MouseEvent e) {
                         System.out.println("Mouse clicked in " + this.getClass());
+                        // Select point or mark ready to move.
                         if (getMain().getUpdateView().getView().getMeshEditorBean().isSelection()) {
                             if (main.getGraphicalEdit2().isSelectArbitraryPoints()) {
                                 Point3D selectedPoint = getMain().getUpdateView().getzRunner().getzBuffer().clickAt(e.getX(), e.getY());
@@ -207,16 +208,15 @@ public class MeshGEditorThread extends Thread implements PropertyChangeListener 
     private void browseScene() {
         drawPoints(new ModelBrowser(getMain().getUpdateView().getzRunner().getzBuffer(), main.getDataModel().getScene(), Point3D.class).getObjects());
         drawSelection();
-        if (getMain().getGraphicalEdit2().getActionToPerform().equals(GraphicalEdit2.Action.TRANSLATE)) {
+        if (getMain().getMeshEditorProps().isTranslation()) {
             showAxis();
         }
     }
 
     private void showAxis() {
 
-        pointsTranslate.clear();
         LineSegment[] lsXYZ = new LineSegment[3];
-        Point3D[] vects = new Point3D[3];
+        Point3D[] vects;
         Point3D p0;
         int i;
         for (Representable r : getMain().getMeshEditorProps().getInSelection()) {
@@ -246,11 +246,14 @@ public class MeshGEditorThread extends Thread implements PropertyChangeListener 
                             Point p1 = zBuffer.camera().coordonneesPoint2D(lsXYZ[i].getOrigine(), zBuffer);
                             Point p2 = zBuffer.camera().coordonneesPoint2D(lsXYZ[i].getExtremite(), zBuffer);
 
-                            getMain().getMeshEditorProps().getInSelectionMoves().forEach((pMove, point3D) -> {
-                                drawPoint(pMove.getIn(), Color.YELLOW);
-                                drawPoint(pMove.getPout(), Color.BLUE);
-                            });
-
+                            new ModelBrowser(getMain().getDataModel().getScene(), zBuffer).getObjects().forEach(
+                                    cell -> {
+                                        drawPoint(cell.getpRot(), Color.YELLOW);
+                                        Graphics g = getMain().getUpdateView().getGraphics();
+                                        Point point = zBuffer.camera().coordonneesPoint2D(cell.getpRot(), zBuffer);
+                                        g.drawString("(r:" + cell.getRow() + "; c" + cell.getRow() + ")", (int) point.getX(), (int) point.getY());
+                                    });
+                            getMain().getMeshEditorProps().getInSelectionMoves().forEach((pMove, point3D) -> drawPoint(pMove.getPout(), Color.BLUE));
                             if (p1 != null && p2 != null) {
                                 Graphics graphics = getMain().getUpdateView().getzRunner().getLastImage().getGraphics();
                                 graphics.setColor(Color.BLACK);
