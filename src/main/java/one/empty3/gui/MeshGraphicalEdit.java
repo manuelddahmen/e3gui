@@ -1,12 +1,9 @@
 package one.empty3.gui;
 
 import one.empty3.library.*;
-import one.empty3.library.core.nurbs.CourbeParametriquePolynomialeBezier;
 import one.empty3.library.core.nurbs.ParametricCurve;
 import one.empty3.library.core.nurbs.ParametricSurface;
-import one.empty3.library.core.nurbs.TubeExtrusion;
 
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.function.Consumer;
 
@@ -22,30 +19,18 @@ public class MeshGraphicalEdit {
     private static final int IN = 0;
     private Main main;
 
-    public boolean isStartSel1() {
-        return startSel1;
-    }
-
-    private boolean startSel1;
-
-    public void setMain(Main main) {
-        this.main = main;
-    }
-    public enum Action {duplicateOnPoints, duplicateOnCurve, duplicateOnSurface, TRANSLATE, ROTATE, extrude, SELECT}
-
-    ;
-    private boolean isSelectingIn;
-    private boolean isSelectingOut;
-    private boolean selectingMultipleObjects = false;
-    private boolean selectArbitraryPoints = false;
-    private one.empty3.gui.GraphicalEdit2.Action actionToPerform = one.empty3.gui.GraphicalEdit2.Action.SELECT;
-    private ArrayList<Representable> selectionIn;
-    private ArrayList<Representable> selectionOut;
 
     public Main getMain() {
         return main;
     }
 
+    private MeshGEditorThread getThread() {
+        return main.getMeshGEditorThread();
+    }
+
+    public MeshEditorBean getBean() {
+        return  main.getUpdateView().getView().getMeshEditorBean();
+    }
     public void copy(Representable representable, Point3D translate) {
         Representable clone;
         try {
@@ -55,17 +40,13 @@ public class MeshGraphicalEdit {
             modelBrowser.getObjects().forEach(new Consumer<ModelBrowser.Cell>() {
                 @Override
                 public void accept(ModelBrowser.Cell cell) {
-                    if (cell.pRot instanceof Point3D) {
+                    if (cell.pRot != null) {
                         cell.pRot.changeTo(cell.pRot.plus(translate));
                     }
                 }
             });
-        } catch (CopyRepresentableError copyRepresentableError) {
+        } catch (CopyRepresentableError | IllegalAccessException | InstantiationException copyRepresentableError) {
             copyRepresentableError.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
         }
     }
 
@@ -86,10 +67,10 @@ public class MeshGraphicalEdit {
     }
 
     private Rotation adaptToSurface(Representable representable, ParametricSurface surface, double u, double v, int rotate) {
-        Point3D tangenteU = surface.calculerTangenteU(u, v);
-        Point3D tangenteV = surface.calculerTangenteV(u, v);
-        Point3D z = tangenteU.prodVect(tangenteV).norme1();
-        Point3D[] point3DS = {tangenteU, tangenteV, z};
+        Point3D tangentU = surface.calculerTangenteU(u, v);
+        Point3D tangentV = surface.calculerTangenteV(u, v);
+        Point3D z = tangentU.prodVect(tangentV).norme1();
+        Point3D[] point3DS = {tangentU, tangentV, z};
         Point3D[] point3DS1 = rotateAxis(rotate, point3DS);
         return new Rotation(new Matrix33(point3DS1), surface.calculerPoint3D(u, v));
     }
@@ -103,19 +84,15 @@ public class MeshGraphicalEdit {
             modelBrowser.getObjects().forEach(new Consumer<ModelBrowser.Cell>() {
                 @Override
                 public void accept(ModelBrowser.Cell cell) {
-                    if (cell.pRot instanceof Point3D) {
+                    if (cell.pRot != null) {
                         cell.pRot.changeTo(cell.pRot.plus(pc.calculerPoint3D(u)));
                     }
                 }
             });
             adaptToCurve(clone, pc, u, rotate);
             // TODO ??? orientation Rotation / courbe / surface
-        } catch (CopyRepresentableError copyRepresentableError) {
+        } catch (CopyRepresentableError | IllegalAccessException | InstantiationException copyRepresentableError) {
             copyRepresentableError.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
         }
 
     }
@@ -129,19 +106,15 @@ public class MeshGraphicalEdit {
             modelBrowser.getObjects().forEach(new Consumer<ModelBrowser.Cell>() {
                 @Override
                 public void accept(ModelBrowser.Cell cell) {
-                    if (cell.pRot instanceof Point3D) {
+                    if (cell.pRot != null) {
                         cell.pRot.changeTo(cell.pRot.plus(surface.calculerPoint3D(u, v)));
                     }
                 }
             });
             adaptToSurface(clone, surface, u, v, rotate);
             // TODO ??? orientation Rotation / courbe / surface
-        } catch (CopyRepresentableError copyRepresentableError) {
+        } catch (CopyRepresentableError | IllegalAccessException | InstantiationException copyRepresentableError) {
             copyRepresentableError.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
         }
 
     }

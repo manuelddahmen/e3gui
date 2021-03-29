@@ -128,7 +128,6 @@ public class Main implements PropertyChangeListener {
         treeSelOut = new JList(new ListModelSelection(graphicalEdit2.getSelectionOut()));
         treeSelOut.setCellRenderer(new Rendu());
         graphicalEditMesh = new MeshGraphicalEdit(this);
-        graphicalEditMesh.setMain(this);
         meshGeditorThread = new MeshGEditorThread(this);
         meshGeditorThread.start();
     }

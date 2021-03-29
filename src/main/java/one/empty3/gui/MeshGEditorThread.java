@@ -13,6 +13,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 public class MeshGEditorThread extends Thread implements PropertyChangeListener {
@@ -64,7 +65,7 @@ public class MeshGEditorThread extends Thread implements PropertyChangeListener 
                                 Point3D selectedPoint = getMain().getUpdateView().getzRunner().getzBuffer().clickAt(e.getX(), e.getY());
                                 Representable selectedObject = getMain().getUpdateView().getzRunner().getzBuffer().getIme().getIME()
                                         .getrMap()[e.getX()][e.getY()];
-                                if(selectedObject instanceof ParametricSurface) {
+                                if (selectedObject instanceof ParametricSurface) {
                                     ParametricSurface ps = (ParametricSurface) selectedObject;
                                     double u = getMain().getUpdateView().getzRunner().getzBuffer().getIme().getIME()
                                             .getuMap()[e.getX()][e.getY()];
@@ -189,7 +190,7 @@ public class MeshGEditorThread extends Thread implements PropertyChangeListener 
             afterDraw();
 
             try {
-                Thread.sleep(100);
+                Thread.sleep(10);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -199,7 +200,7 @@ public class MeshGEditorThread extends Thread implements PropertyChangeListener 
 
 
     private void afterDraw() {
-        if (main.getGraphicalEdit2().isActiveGraphicalEdit())
+        if (main.getMeshEditorProps().getInSelection().size() > 0)
             browseScene();
     }
 
@@ -212,44 +213,59 @@ public class MeshGEditorThread extends Thread implements PropertyChangeListener 
     }
 
     private void showAxis() {
+
         pointsTranslate.clear();
         LineSegment[] lsXYZ = new LineSegment[3];
+        Point3D[] vects = new Point3D[3];
+        Point3D p0;
         int i;
-        for (Representable r : getMain().getGraphicalEdit2().getCurrentSelection()) {
-
-            Point3D[] vects;
-            Point3D centre;
+        for (Representable r : getMain().getMeshEditorProps().getInSelection()) {
+            ZBufferImpl zBuffer = getMain().getUpdateView().getzRunner().getzBuffer();
             if (r instanceof Point3D) {
-                centre = (Point3D) r;
-                vects = new Matrix33().getColVectors();
-                pointsTranslate.add(centre);
+                Point3D p = (Point3D) r;
+                Point p2d = zBuffer.camera().coordonneesPoint2D(p, zBuffer);
+                int x = (int) (p2d.getX());
+                int y = (int) (p2d.getY());
+                Representable r1 = zBuffer.getIme().getIME().getrMap()[x][y];
+                double u = zBuffer.getIme().getIME().getuMap()[x][y];
+                double v = zBuffer.getIme().getIME().getvMap()[x][y];
+                if (r1 instanceof ParametricSurface) {
+                    ParametricSurface r11 = (ParametricSurface) (r1);
+                    p0 = r11.calculerPoint3D(u, v);
+                    Point3D vx = r11.calculerTangenteU(u, v);
+                    Point3D vy = r11.calculerTangenteV(u, v);
+                    Point3D vz = r11.calculerNormale3D(u, v);
 
-            } else {
-                vects = r.getRotation().getElem().getRot().getElem().getColVectors();
-                centre = r.getRotation().getElem().getCentreRot().getElem();
-                pointsTranslate.add(centre);
-            }
-            i = 0;
-            if (vects != null && vects.length == 3)
-                for (Point3D p : vects) {
-                    try {
+                    vects = new Point3D[]{vx, vy, vz};
+                    i = 0;
+                    for (Point3D pv : vects) {
+                        try {
 
-                        lsXYZ[i] = new LineSegment(p.mult(-10.0).plus(centre),
-                                p.mult(10.0).plus(centre));
-                        Point p1 = getMain().getUpdateView().getzRunner().getzBuffer().camera().coordonneesPoint2D(lsXYZ[i].getOrigine(), getMain().getUpdateView().getzRunner().getzBuffer());
-                        Point p2 = getMain().getUpdateView().getzRunner().getzBuffer().camera().coordonneesPoint2D(lsXYZ[i].getExtremite(), getMain().getUpdateView().getzRunner().getzBuffer());
+                            lsXYZ[i] = new LineSegment(p0,
+                                    pv.mult(10.0).plus(p0));
+                            Point p1 = zBuffer.camera().coordonneesPoint2D(lsXYZ[i].getOrigine(), zBuffer);
+                            Point p2 = zBuffer.camera().coordonneesPoint2D(lsXYZ[i].getExtremite(), zBuffer);
 
+                            getMain().getMeshEditorProps().getInSelectionMoves().forEach((pMove, point3D) -> {
+                                drawPoint(pMove.getIn(), Color.YELLOW);
+//                                    drawPoint();
+                            });
 
-                        if (p1 != null && p2 != null) {
-                            Graphics graphics = getMain().getUpdateView().getzRunner().getLastImage().getGraphics();
-                            graphics.setColor(Color.BLACK);
-                            graphics.drawLine(p1.x, p1.y, p2.x, p2.y);
+                            if (p1 != null && p2 != null) {
+                                Graphics graphics = getMain().getUpdateView().getzRunner().getLastImage().getGraphics();
+                                graphics.setColor(Color.BLACK);
+                                graphics.drawLine(p1.x, p1.y, p2.x, p2.y);
+                            }
+                            i++;
+                        } catch (Exception ex) {
+                            ex.printStackTrace();
                         }
-                        i++;
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
                     }
                 }
+            } else {
+
+            }
+
         }
     }
 
@@ -265,12 +281,12 @@ public class MeshGEditorThread extends Thread implements PropertyChangeListener 
     }
 
     private void drawSelection() {
-        List<Representable> list;
-        list = main.getGraphicalEdit2().getCurrentSelection();
+        ArrayList<Point3D> list;
+        list = main.getMeshEditorProps().getInSelection();
         if (list != null) {
             list.forEach(cell -> {
                 try {
-                    if (cell instanceof Point3D) {
+                    if (cell != null) {
                         if (getMain().getUpdateView().getzRunner().getLastImage() != null)
                             drawPoint((Point3D) cell, Color.RED);
                     }

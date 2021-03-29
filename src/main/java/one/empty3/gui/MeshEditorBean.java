@@ -1,5 +1,10 @@
 package one.empty3.gui;
 
+import one.empty3.library.Point3D;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+
 public class MeshEditorBean {
     private int meshType;
     private boolean activateMarkers;
@@ -14,6 +19,8 @@ public class MeshEditorBean {
     private boolean translateOnSuv;
     private double translateOnSu;
     private double translateOnSv;
+    private ArrayList<Point3D> inSelection;
+    private HashMap<PMove, Point3D> inSelectionMoves;
 
     public int getMeshType() {
         return meshType;
@@ -117,5 +124,21 @@ public class MeshEditorBean {
 
     public void setTranslateOnSv(double translateOnSv) {
         this.translateOnSv = translateOnSv;
+    }
+
+    public void setInSelection(ArrayList<Point3D> inSelection) {
+        this.inSelection = inSelection;
+    }
+
+    public ArrayList<Point3D> getInSelection() {
+        return inSelection;
+    }
+
+    public HashMap<PMove,Point3D> getInSelectionMoves() {
+        return inSelectionMoves;
+    }
+
+    public void setInSelectionMoves(HashMap<PMove, Point3D> inSelectionMoves) {
+        this.inSelectionMoves = inSelectionMoves;
     }
 }
