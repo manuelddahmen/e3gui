@@ -62,69 +62,62 @@ public class MeshGEditorThread extends Thread implements PropertyChangeListener 
                         System.out.println("Mouse clicked in " + this.getClass());
                         // Select point or mark ready to move.
                         if (getMain().getUpdateView().getView().getMeshEditorBean().isSelection()) {
-                            if (main.getGraphicalEdit2().isSelectArbitraryPoints()) {
-                                Point3D selectedPoint = getMain().getUpdateView().getzRunner().getzBuffer().clickAt(e.getX(), e.getY());
-                                Representable selectedObject = getMain().getUpdateView().getzRunner().getzBuffer().getIme().getIME()
-                                        .getrMap()[e.getX()][e.getY()];
-                                if (selectedObject instanceof ParametricSurface) {
-                                    ParametricSurface ps = (ParametricSurface) selectedObject;
-                                    double u = getMain().getUpdateView().getzRunner().getzBuffer().getIme().getIME()
-                                            .getuMap()[e.getX()][e.getY()];
-                                    double v = getMain().getUpdateView().getzRunner().getzBuffer().getIme().getIME()
-                                            .getvMap()[e.getX()][e.getY()];
+                            Point3D selectedPoint = getMain().getUpdateView().getzRunner().getzBuffer().clickAt(e.getX(), e.getY());
+                            Representable selectedObject = getMain().getUpdateView().getzRunner().getzBuffer().getIme().getIME()
+                                    .getrMap()[e.getX()][e.getY()];
+                            if (selectedObject instanceof ParametricSurface) {
+                                ParametricSurface ps = (ParametricSurface) selectedObject;
+                                double u = getMain().getUpdateView().getzRunner().getzBuffer().getIme().getIME()
+                                        .getuMap()[e.getX()][e.getY()];
+                                double v = getMain().getUpdateView().getzRunner().getzBuffer().getIme().getIME()
+                                        .getvMap()[e.getX()][e.getY()];
 
-                                    getMain().getUpdateView().setRuv(ps, u, v);
-
-                                }
-                                main.getGraphicalEdit2().add(selectedPoint);
-                                System.out.println("point added" + selectedPoint);
-                            } else if (main.getGraphicalEdit2().isSelectingMultipleObjects()) {
-                                Representable multiple = getMain().getUpdateView().getzRunner().getzBuffer().representableAt(e.getX(), e.getY());
-                                main.getGraphicalEdit2().add(multiple);
-                                System.out.println("representable added" + multiple);
-                            } else {
-                                List<ModelBrowser.Cell> cellList;
-                                cellList = new ModelBrowser(getMain().getUpdateView().getzRunner().getzBuffer(), main.getDataModel().getScene(), Point3D.class).getObjects();
-                                System.out.println("Select point ADD/REMOVE from selected points list");
-
-                                if (cellList != null) {
-                                    cellList.forEach(cell -> {
-                                        Point point = getMain().getUpdateView().getzRunner().getzBuffer().camera().coordonneesPoint2D(cell.pRot
-                                                ,
-                                                getMain().getUpdateView().getzRunner().getzBuffer());
-                                        if (point != null &&
-                                                e.getX() - 2 < point.getX() && e.getX() + 2 > point.getX()
-                                                && e.getY() - 2 < point.getY() && e.getY() + 2 > point.getY()) {
-                                            if (cell.o instanceof Point3D) {
-                                                Point3D mousePoint3D = (Point3D) cell.o;
-                                                if (pointsTranslate.contains(mousePoint3D)) {
-                                                    pointsTranslate.remove(mousePoint3D);
-                                                    if (getMain().getGraphicalEdit2().getCurrentSelection().contains(mousePoint3D))
-                                                        getMain().getGraphicalEdit2().getCurrentSelection().remove(mousePoint3D);
-                                                } else {
-                                                    pointsTranslate.add(mousePoint3D);
-                                                    getMain().getGraphicalEdit2().getCurrentSelection().add(mousePoint3D);
-                                                }
-                                            }
-                                        }
-                                        main.getGraphicalEdit2().getCurrentSelection().forEach(new Consumer<Representable>() {
-                                            @Override
-                                            public void accept(Representable representable) {
-                                                System.out.println("[selection from GraphicalEdit]" + representable);
-                                            }
-
-                                        });
-                                    });
-
-                                } else {
-                                    System.out.println("cellList == null" + this.getClass());
-                                }
+                                getMain().getUpdateView().setRuv(ps, u, v);
 
                             }
+                            main.getGraphicalEdit2().add(selectedPoint);
+                            System.out.println("point added" + selectedPoint);
+                        } else if (main.getMeshEditorProps().isTranslation()) {
+                            Representable multiple = getMain().getUpdateView().getzRunner().getzBuffer().representableAt(e.getX(), e.getY());
+                            main.getGraphicalEdit2().add(multiple);
+                            System.out.println("representable added" + multiple);
+                        } else {
+                            List<ModelBrowser.Cell> cellList;
+                            cellList = new ModelBrowser(getMain().getUpdateView().getzRunner().getzBuffer(), main.getDataModel().getScene(), Point3D.class).getObjects();
+                            System.out.println("Select point ADD/REMOVE from selected points list");
 
+                            if (cellList != null) {
+                                cellList.forEach(cell -> {
+                                    Point point = getMain().getUpdateView().getzRunner().getzBuffer().camera().coordonneesPoint2D(cell.pRot
+                                            ,
+                                            getMain().getUpdateView().getzRunner().getzBuffer());
+                                    if (point != null &&
+                                            e.getX() - 2 < point.getX() && e.getX() + 2 > point.getX()
+                                            && e.getY() - 2 < point.getY() && e.getY() + 2 > point.getY()) {
+                                        if (cell.o instanceof Point3D) {
+                                            Point3D mousePoint3D = (Point3D) cell.o;
+                                            if (pointsTranslate.contains(mousePoint3D)) {
+                                                pointsTranslate.remove(mousePoint3D);
+                                                if (getMain().getGraphicalEdit2().getCurrentSelection().contains(mousePoint3D))
+                                                    getMain().getGraphicalEdit2().getCurrentSelection().remove(mousePoint3D);
+                                            } else {
+                                                pointsTranslate.add(mousePoint3D);
+                                                getMain().getGraphicalEdit2().getCurrentSelection().add(mousePoint3D);
+                                            }
+                                        }
+                                    }
+                                    main.getGraphicalEdit2().getCurrentSelection().forEach(representable -> System.out.println("[selection from GraphicalEdit]" + representable));
+                                });
+
+                            } else {
+                                System.out.println("cellList == null" + this.getClass());
+                            }
 
                         }
+
+
                     }
+
 
                     @Override
                     public void mousePressed(MouseEvent e) {
@@ -132,7 +125,7 @@ public class MeshGEditorThread extends Thread implements PropertyChangeListener 
 
                     @Override
                     public void mouseReleased(MouseEvent e) {
-                        if (getMain().getGraphicalEdit2().getActionToPerform().equals(GraphicalEdit2.Action.TRANSLATE)) {
+                        if (getMain().getMeshEditorProps().isTranslation()) {
                             ZBufferImpl zBuffer = main.getUpdateView().getzRunner().getzBuffer();
                             Point location = MouseInfo.getPointerInfo().getLocation();
                             SwingUtilities.convertPointFromScreen(location, main.getUpdateView());
@@ -152,10 +145,8 @@ public class MeshGEditorThread extends Thread implements PropertyChangeListener 
                             Point3D elem = invert;
                             System.out.println("Inverted location " + elem);
                             ModelBrowser modelBrowser = new ModelBrowser(getMain().getGraphicalEdit2().getSelectionIn(), zBuffer);
-                            if (getMain().getGraphicalEdit2().getActionToPerform().equals(GraphicalEdit2.Action.TRANSLATE)) {
-                                modelBrowser.translateSelection(elem);
-                                System.out.println(main.getGraphicalEdit2().getCurrentSelection());
-                            }
+                            modelBrowser.translateSelection(elem);
+                            System.out.println(main.getGraphicalEdit2().getCurrentSelection());
                         }
                     }
 
