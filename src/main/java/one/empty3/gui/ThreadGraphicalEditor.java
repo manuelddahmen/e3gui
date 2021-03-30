@@ -265,7 +265,8 @@ public class ThreadGraphicalEditor extends Thread implements PropertyChangeListe
     private void drawPoints(List<ModelBrowser.Cell> objects) {
         objects.forEach(cell -> {
             try {
-                drawPoint((Point3D) cell.pRot, Color.BLACK);
+                if(cell!=null && cell.pRot!=null)
+                    drawPoint((Point3D) cell.pRot, Color.BLACK);
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
@@ -280,7 +281,8 @@ public class ThreadGraphicalEditor extends Thread implements PropertyChangeListe
                 try {
                     if (cell instanceof Point3D) {
                         if (getMain().getUpdateView().getzRunner().getLastImage() != null)
-                            drawPoint((Point3D) cell, Color.RED);
+                            if(cell!=null)
+                                drawPoint((Point3D) cell, Color.RED);
                     }
                 } catch (Exception ex) {
                     ex.printStackTrace();
@@ -294,6 +296,11 @@ public class ThreadGraphicalEditor extends Thread implements PropertyChangeListe
     }
 
     private void drawPoint(Point3D p, Color color) {
+        if(p==null)
+        {
+            System.out.println("p parameter drawPoint ThreadGraphicalEditor is null");
+            System.exit(-1);
+        }
         ZBufferImpl zBuffer = getMain().getUpdateView().getzRunner()
                 .getzBuffer();
         if(zBuffer.camera()!=null) {

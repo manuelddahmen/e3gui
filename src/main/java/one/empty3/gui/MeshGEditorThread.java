@@ -1,7 +1,10 @@
 package one.empty3.gui;
 
 import one.empty3.library.*;
+import one.empty3.library.core.nurbs.CourbeParametriquePolynomiale;
 import one.empty3.library.core.nurbs.ParametricSurface;
+import one.empty3.library.core.nurbs.SurfaceParametriquePolynomialeBezier;
+import one.empty3.library.core.tribase.Plan3D;
 
 import javax.swing.*;
 import java.awt.*;
@@ -20,9 +23,10 @@ public class MeshGEditorThread extends Thread implements PropertyChangeListener 
 
 
     private Main main;
-    private ArrayList<Point3D> pointsTranslate = new ArrayList<Point3D>();
-
-    MeshGEditorThread(Main main) {
+    private final ArrayList<Point3D> pointsTranslate = new ArrayList<Point3D>();
+    private Point3D p;
+    private ParametricSurface surface;
+    public MeshGEditorThread(Main main) {
         this.main = main;
     }
 
@@ -74,8 +78,25 @@ public class MeshGEditorThread extends Thread implements PropertyChangeListener 
 
                                 getMain().getUpdateView().setRuv(ps, u, v);
 
+                            } else if(ZBufferImpl.INFINITY.equals(selectedPoint)) {
+                                int meshType = getMain().getMeshEditorProps().getMeshType();
+                                switch(meshType) {
+                                    case MeshEditorBean.MESH_EDITOR_ParametricSurface:
+                                        break;
+                                    case MeshEditorBean.MESH_EDITOR_Sphere:
+                                        surface = new Sphere();
+                                        break;
+                                    case MeshEditorBean.MESH_EDITOR_Cube:
+                                        //surface = new Cube();
+                                        break;
+                                    case MeshEditorBean.MESH_EDITOR_Plane:
+                                        surface = new SurfaceParametriquePolynomialeBezier();
+                                        break;
+                                }
+                                if(selectedObject!=null)
+                                    getMain().getMeshEditorProps().getInSelection().add(selectedPoint);//getMain().getDataModel().getScene().add(selectedObject);
                             }
-                            main.getGraphicalEdit2().add(selectedPoint);
+                            //main.getDataModel().getScene().add(selectedPoint);
                             System.out.println("point added" + selectedPoint);
                         } else if (main.getMeshEditorProps().isTranslation()) {
                             Representable multiple = getMain().getUpdateView().getzRunner().getzBuffer().representableAt(e.getX(), e.getY());
@@ -204,6 +225,45 @@ public class MeshGEditorThread extends Thread implements PropertyChangeListener 
         }
     }
 
+    public void insertRow(StructureMatrix<Point3D> structureMatrix, Point3D p) {
+        if (structureMatrix.getDim() == 1) {
+            structureMatrix.setElem(p, structureMatrix.getData1d().size());
+        }
+        if (structureMatrix.getDim() == 2) {
+            throw new UnsupportedOperationException("");
+
+        }
+    }
+    public void insertDefault(StructureMatrix<Point3D> structureMatrix, int row, int col,
+                              boolean isRow,
+                                      Point3D p) {
+        if(structureMatrix.getDim()==0)
+            structureMatrix.setElem(p);
+
+
+        if(structureMatrix.getDim()==1) {
+            structureMatrix.getData1d().add(col, p);
+        }
+
+        if(structureMatrix.getDim()==2) {
+            for(int i=0; i<structureMatrix.getData2d().size(); i++) {
+                for(int j=0; j<structureMatrix.getData2d().size(); j++) {
+                    if(j==row&&i==col) {
+                        structureMatrix.getData2d().add(new ArrayList<>());
+                    }
+                    if(isRow)
+                        if(i==col)
+                            structureMatrix.getData2d().get(j).add(col, p);
+                    else
+                        if(j==row)
+                            structureMatrix.getData2d().get(col).add(i, p);
+
+                }
+            }
+            throw new UnsupportedOperationException("");
+        }
+    }
+
     private void showAxis() {
 
         LineSegment[] lsXYZ = new LineSegment[3];
@@ -289,6 +349,7 @@ public class MeshGEditorThread extends Thread implements PropertyChangeListener 
                 }
             });
         }
+        drawPoint(getMain().getUpdateView().getRuv(), Color.YELLOW);
     }
 
     @Override

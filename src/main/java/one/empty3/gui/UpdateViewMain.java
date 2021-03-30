@@ -247,4 +247,7 @@ public class UpdateViewMain extends JPanel implements RepresentableEditor {
         this.u = u;
         this.v = v;
     }
+    public Point3D getRuv() {
+        return ps.calculerPoint3D(u, v);
+    }
 }

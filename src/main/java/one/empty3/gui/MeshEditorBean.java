@@ -6,6 +6,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class MeshEditorBean {
+    public static final int MESH_EDITOR_ParametricSurface = 0;
+    public static final int MESH_EDITOR_Sphere = 1;
+    public static final int MESH_EDITOR_Cube = 2;
+    public static final int MESH_EDITOR_Plane = 4;
+
+
     private int meshType;
     private boolean activateMarkers;
     private boolean selection;
@@ -19,7 +25,7 @@ public class MeshEditorBean {
     private boolean translateOnSuv;
     private double translateOnSu;
     private double translateOnSv;
-    private ArrayList<Point3D> inSelection;
+    private ArrayList<Point3D> inSelection = new ArrayList<>();
     private HashMap<PMove, Point3D> inSelectionMoves;
 
     public int getMeshType() {

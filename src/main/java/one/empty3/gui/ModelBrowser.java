@@ -37,6 +37,11 @@ public class ModelBrowser {
     private boolean clone = false;
     private Class classes;
     private List<Cell> objects = new ArrayList<>();
+    private Class clazz;
+    private int dim = -1;
+    private boolean isRow;
+    private int colNo;
+    private int rowNo;
 
     public ModelBrowser(Representable representable, ZBufferImpl zimpl) {
         this.zimpl = zimpl;
@@ -46,13 +51,38 @@ public class ModelBrowser {
     public ModelBrowser(List<Representable> representables, ZBufferImpl zimpl) {
         this.zimpl = zimpl;
         this.objects = new ArrayList<>();
-        if(representables!=null)
-         representables.forEach(representable -> objects.add(new Cell(null, 0, 0, 0, representable, representable)));
+        if(representables!=null ) {
+            for (Representable representable : representables) {
+                if(clazz.getClass().isAssignableFrom(representable.getClass()))
+                    objects.add(new Cell(null, 0,
+                            0, 0, representable, representable));
+            }
+        }
     }
 
 
     public List<Cell> getObjects() {
         return objects;
+    }
+
+    public List<Cell> getObjects(Class fromsClasses, int dim) {
+        clazz = fromsClasses;
+        throw new UnsupportedOperationException("");
+    }
+    public List<Cell> getObjects(Class fromsClasses, int dim, boolean isRow) {
+        clazz = fromsClasses;
+        this.dim = dim;
+        this.isRow = isRow;
+
+        throw new UnsupportedOperationException("");
+    }
+    public List<Cell> getObjects(Class fromsClasses, int dim, boolean isRow, int rowNo, int colNo) {
+        clazz = fromsClasses;
+        this.dim = dim;
+        this.isRow = isRow;
+        this.rowNo = rowNo;
+        this.colNo = colNo;
+        throw new UnsupportedOperationException("");
     }
 
     class Cell {
