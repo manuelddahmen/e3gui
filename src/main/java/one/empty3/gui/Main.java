@@ -88,6 +88,7 @@ public class Main implements PropertyChangeListener {
         getUpdateView().getzRunner().addPropertyChangeListener(this);
         ThreadDrawingCoords threadDrawingCoords = new ThreadDrawingCoords();
         meshEditorProps = new MeshEditorBean();
+        meshEditorProps.setMain(this);
         threadDrawingCoords.start();
         getLoadSave().setMain(this);
 
@@ -213,7 +214,7 @@ public class Main implements PropertyChangeListener {
             try {
                 System.out.println(e.getX());
                 System.out.println(e.getY());
-                Point3D point3D = getUpdateView().getzRunner().getzBuffer().clickAt(
+                Point3D point3D = getUpdateView().getzRunner().getzBuffer(). clickAt(
                         (int)e.getX(), (int)e.getY());
 
                 if(point3D==null && point3D.equals(ZBufferImpl.INFINITY)) {
@@ -430,7 +431,7 @@ public class Main implements PropertyChangeListener {
     }
 
     private void radioButtonTranslateActionPerformed(ActionEvent e) {
-        graphicalEdit2.setActionToPerform(GraphicalEdit2.Action.TRANSLATE);
+        getMeshEditorProps().setOpType(0);
     }
 
     private void radioButtonRotateActionPerformed(ActionEvent e) {
@@ -567,6 +568,18 @@ public class Main implements PropertyChangeListener {
         return this.treeSelIn;
     }
 
+    private void checkBoxActive2ActionPerformed(ActionEvent e) {
+        // TODO add your code here
+    }
+
+    private void radioButton5ActionPerformed(ActionEvent e) {
+        this.getMeshEditorProps().setOpType(1);
+    }
+
+    private void radioButton6ActionPerformed(ActionEvent e) {
+        this.getMeshEditorProps().setOpType(2);
+    }
+
 
     private class ThreadDrawingCoords  extends Thread {
     }
@@ -642,22 +655,29 @@ public class Main implements PropertyChangeListener {
         this.meshType = new JComboBox<>();
         this.panelMeshEdit = new JPanel();
         this.checkBoxActive2 = new JCheckBox();
-        this.toggleButton1 = new JToggleButton();
-        this.checkBox1 = new JCheckBox();
-        this.selection = new JRadioButton();
-        this.radioButton3 = new JRadioButton();
-        this.label11 = new JLabel();
-        this.spinner4 = new JSpinner();
-        this.move3direction = new JRadioButton();
-        this.radioButton2 = new JRadioButton();
-        this.label12 = new JLabel();
-        this.spinner5 = new JSpinner();
+        this.scrollPane6 = new JScrollPane();
+        this.list2 = new JList();
+        this.scrollPane4 = new JScrollPane();
+        this.list1 = new JList();
+        this.radioButton4 = new JRadioButton();
+        this.radioButton5 = new JRadioButton();
+        this.radioButton6 = new JRadioButton();
         this.label7 = new JLabel();
-        this.spinner3 = new JSpinner();
+        this.spinnerX = new JSpinner();
+        this.label13 = new JLabel();
+        this.textFieldRowI = new JTextField();
+        this.label11 = new JLabel();
+        this.spinnerU = new JSpinner();
         this.label9 = new JLabel();
-        this.spinner2 = new JSpinner();
+        this.spinnerY = new JSpinner();
+        this.label8 = new JLabel();
+        this.textFieldRowJ = new JTextField();
+        this.label12 = new JLabel();
+        this.spinnerV = new JSpinner();
         this.label10 = new JLabel();
-        this.spinner1 = new JSpinner();
+        this.spinnerZ = new JSpinner();
+        this.button2 = new JButton();
+        this.button3 = new JButton();
         this.texturesDrawEditMapOnObjectPart1 = new TexturesDrawEditMapOnObjectPart();
         this.myObservableListSelIn = new MyObservableList();
         this.myObservableListSelOut = new MyObservableList();
@@ -692,10 +712,10 @@ public class Main implements PropertyChangeListener {
             //======== panel6 ========
             {
                 this.panel6.setBorder (new javax. swing. border. CompoundBorder( new javax .swing .border .TitledBorder (new javax. swing. border. EmptyBorder(
-                0, 0, 0, 0) , "JF\u006frmD\u0065sig\u006eer \u0045val\u0075ati\u006fn", javax. swing. border. TitledBorder. CENTER, javax. swing. border. TitledBorder
+                0, 0, 0, 0) , "JFor\u006dDesi\u0067ner \u0045valu\u0061tion", javax. swing. border. TitledBorder. CENTER, javax. swing. border. TitledBorder
                 . BOTTOM, new java .awt .Font ("Dia\u006cog" ,java .awt .Font .BOLD ,12 ), java. awt. Color.
                 red) ,this.panel6. getBorder( )) ); this.panel6. addPropertyChangeListener (new java. beans. PropertyChangeListener( ){ @Override public void propertyChange (java .
-                beans .PropertyChangeEvent e) {if ("\u0062ord\u0065r" .equals (e .getPropertyName () )) throw new RuntimeException( ); }} );
+                beans .PropertyChangeEvent e) {if ("bord\u0065r" .equals (e .getPropertyName () )) throw new RuntimeException( ); }} );
                 this.panel6.setLayout(new MigLayout(
                     "fill,hidemode 3",
                     // columns
@@ -1229,6 +1249,7 @@ public class Main implements PropertyChangeListener {
                                     "[]" +
                                     "[]" +
                                     "[]" +
+                                    "[]" +
                                     "[]"));
 
                                 //---- checkBoxActive2 ----
@@ -1241,68 +1262,80 @@ public class Main implements PropertyChangeListener {
 			checkBoxActiveActionPerformed(e);
 			checkBoxActiveActionPerformed(e);
 			checkBoxActiveActionPerformed(e);
+			checkBoxActive2ActionPerformed(e);
 		});
                                 this.panelMeshEdit.add(this.checkBoxActive2, "cell 0 0");
 
-                                //---- toggleButton1 ----
-                                this.toggleButton1.setText("New point(?)");
-                                this.panelMeshEdit.add(this.toggleButton1, "cell 1 0");
+                                //======== scrollPane6 ========
+                                {
+                                    this.scrollPane6.setViewportView(this.list2);
+                                }
+                                this.panelMeshEdit.add(this.scrollPane6, "cell 1 0 1 3");
 
-                                //---- checkBox1 ----
-                                this.checkBox1.setText("Translate on S, change point at S(u, v)");
-                                this.panelMeshEdit.add(this.checkBox1, "cell 2 0");
+                                //======== scrollPane4 ========
+                                {
+                                    this.scrollPane4.setViewportView(this.list1);
+                                }
+                                this.panelMeshEdit.add(this.scrollPane4, "cell 2 0 1 3");
 
-                                //---- selection ----
-                                this.selection.setText("S\u00e9lection");
-                                this.selection.setSelected(true);
-                                this.selection.addActionListener(e -> {
-			radioButton1ActionPerformed(e);
-			radioButton1ActionPerformed(e);
-		});
-                                this.panelMeshEdit.add(this.selection, "cell 0 1");
+                                //---- radioButton4 ----
+                                this.radioButton4.setText("Translate selection");
+                                this.radioButton4.setSelected(true);
+                                this.radioButton4.addActionListener(e -> radioButtonTranslateActionPerformed(e));
+                                this.panelMeshEdit.add(this.radioButton4, "cell 0 3");
 
-                                //---- radioButton3 ----
-                                this.radioButton3.setText("new point (row v)");
-                                this.panelMeshEdit.add(this.radioButton3, "cell 1 1");
+                                //---- radioButton5 ----
+                                this.radioButton5.setText("Create new row");
+                                this.radioButton5.addActionListener(e -> radioButton5ActionPerformed(e));
+                                this.panelMeshEdit.add(this.radioButton5, "cell 1 3");
 
-                                //---- label11 ----
-                                this.label11.setText("Translate u of p");
-                                this.panelMeshEdit.add(this.label11, "cell 2 1");
-                                this.panelMeshEdit.add(this.spinner4, "cell 3 1");
-
-                                //---- move3direction ----
-                                this.move3direction.setText("Translate");
-                                this.move3direction.addActionListener(e -> {
-			radioButtonTranslateActionPerformed(e);
-			radioButtonTranslateActionPerformed(e);
-			radioButtonTranslateActionPerformed(e);
-			radioButtonTranslateActionPerformed(e);
-		});
-                                this.panelMeshEdit.add(this.move3direction, "cell 0 2");
-
-                                //---- radioButton2 ----
-                                this.radioButton2.setText("new point (row u)");
-                                this.panelMeshEdit.add(this.radioButton2, "cell 1 2");
-
-                                //---- label12 ----
-                                this.label12.setText("translate v of p");
-                                this.panelMeshEdit.add(this.label12, "cell 2 2");
-                                this.panelMeshEdit.add(this.spinner5, "cell 3 2");
+                                //---- radioButton6 ----
+                                this.radioButton6.setText("Translate p on S");
+                                this.radioButton6.addActionListener(e -> radioButton6ActionPerformed(e));
+                                this.panelMeshEdit.add(this.radioButton6, "cell 2 3");
 
                                 //---- label7 ----
                                 this.label7.setText("Translate new point X");
-                                this.panelMeshEdit.add(this.label7, "cell 0 3");
-                                this.panelMeshEdit.add(this.spinner3, "cell 1 3");
+                                this.panelMeshEdit.add(this.label7, "cell 0 5");
+                                this.panelMeshEdit.add(this.spinnerX, "cell 0 5");
+
+                                //---- label13 ----
+                                this.label13.setText("new point or row");
+                                this.panelMeshEdit.add(this.label13, "cell 1 5");
+                                this.panelMeshEdit.add(this.textFieldRowI, "cell 1 5");
+
+                                //---- label11 ----
+                                this.label11.setText("Translate u of p");
+                                this.panelMeshEdit.add(this.label11, "cell 2 5");
+                                this.panelMeshEdit.add(this.spinnerU, "cell 2 5");
 
                                 //---- label9 ----
                                 this.label9.setText("Translate new point Y");
-                                this.panelMeshEdit.add(this.label9, "cell 0 4");
-                                this.panelMeshEdit.add(this.spinner2, "cell 1 4");
+                                this.panelMeshEdit.add(this.label9, "cell 0 6");
+                                this.panelMeshEdit.add(this.spinnerY, "cell 0 6");
+
+                                //---- label8 ----
+                                this.label8.setText("new point or col");
+                                this.panelMeshEdit.add(this.label8, "cell 1 6");
+                                this.panelMeshEdit.add(this.textFieldRowJ, "cell 1 6");
+
+                                //---- label12 ----
+                                this.label12.setText("translate v of p");
+                                this.panelMeshEdit.add(this.label12, "cell 2 6");
+                                this.panelMeshEdit.add(this.spinnerV, "cell 2 6");
 
                                 //---- label10 ----
-                                this.label10.setText("translate new point Z (normale)");
-                                this.panelMeshEdit.add(this.label10, "cell 0 5");
-                                this.panelMeshEdit.add(this.spinner1, "cell 1 5");
+                                this.label10.setText("translate new point Z");
+                                this.panelMeshEdit.add(this.label10, "cell 0 7");
+                                this.panelMeshEdit.add(this.spinnerZ, "cell 0 7");
+
+                                //---- button2 ----
+                                this.button2.setText("Ok");
+                                this.panelMeshEdit.add(this.button2, "cell 0 8 3 1");
+
+                                //---- button3 ----
+                                this.button3.setText("Cancel");
+                                this.panelMeshEdit.add(this.button3, "cell 0 8 3 1");
                             }
                             this.panel12.add(this.panelMeshEdit, "cell 0 1");
                         }
@@ -1328,8 +1361,9 @@ public class Main implements PropertyChangeListener {
         buttonGroup1.add(this.radioButton1);
         buttonGroup1.add(this.radioButtonTranslate);
         buttonGroup1.add(this.radioButtonRotate);
-        buttonGroup1.add(this.selection);
-        buttonGroup1.add(this.move3direction);
+        buttonGroup1.add(this.radioButton4);
+        buttonGroup1.add(this.radioButton5);
+        buttonGroup1.add(this.radioButton6);
 
         //---- buttonGroup2 ----
         var buttonGroup2 = new ButtonGroup();
@@ -1360,35 +1394,26 @@ public class Main implements PropertyChangeListener {
             this.updateViewMain, BeanProperty.create("view.meshEditorBean.activateMarkers"),
             this.checkBoxActive2, BeanProperty.create("selected")));
         this.bindingGroup.addBinding(Bindings.createAutoBinding(UpdateStrategy.READ_WRITE,
-            this.updateViewMain, BeanProperty.create("view.meshEditorBean.selection"),
-            this.selection, BeanProperty.create("selected")));
-        this.bindingGroup.addBinding(Bindings.createAutoBinding(UpdateStrategy.READ_WRITE,
             this.updateViewMain, BeanProperty.create("zRunner.main.meshEditorProps.meshType"),
             this.meshType, BeanProperty.create("selectedItem")));
         this.bindingGroup.addBinding(Bindings.createAutoBinding(UpdateStrategy.READ_WRITE,
-            this.updateViewMain, BeanProperty.create("view.meshEditorBean.translation"),
-            this.move3direction, BeanProperty.create("selected")));
-        this.bindingGroup.addBinding(Bindings.createAutoBinding(UpdateStrategy.READ_WRITE,
-            this.updateViewMain, BeanProperty.create("view.meshEditorBean.translateXonS"),
-            this.spinner3, BeanProperty.create("value")));
-        this.bindingGroup.addBinding(Bindings.createAutoBinding(UpdateStrategy.READ_WRITE,
-            this.updateViewMain, BeanProperty.create("view.meshEditorBean.translateYonS"),
-            this.spinner2, BeanProperty.create("value")));
-        this.bindingGroup.addBinding(Bindings.createAutoBinding(UpdateStrategy.READ_WRITE,
-            this.updateViewMain, BeanProperty.create("view.meshEditorBean.translateZonS"),
-            this.spinner1, BeanProperty.create("value")));
-        this.bindingGroup.addBinding(Bindings.createAutoBinding(UpdateStrategy.READ_WRITE,
-            this.updateViewMain, BeanProperty.create("view.meshEditorBean.translateOnSuv"),
-            this.checkBox1, BeanProperty.create("selected")));
-        this.bindingGroup.addBinding(Bindings.createAutoBinding(UpdateStrategy.READ_WRITE,
-            this.updateViewMain, BeanProperty.create("view.meshEditorBean.newPoint"),
-            this.toggleButton1, BeanProperty.create("selected")));
-        this.bindingGroup.addBinding(Bindings.createAutoBinding(UpdateStrategy.READ_WRITE,
             this.updateViewMain, BeanProperty.create("view.meshEditorBean.translateOnSu"),
-            this.spinner4, BeanProperty.create("value")));
+            this.spinnerU, BeanProperty.create("value")));
         this.bindingGroup.addBinding(Bindings.createAutoBinding(UpdateStrategy.READ_WRITE,
             this.updateViewMain, BeanProperty.create("view.meshEditorBean.translateOnSv"),
-            this.spinner5, BeanProperty.create("value")));
+            this.spinnerV, BeanProperty.create("value")));
+        this.bindingGroup.addBinding(Bindings.createAutoBinding(UpdateStrategy.READ_WRITE,
+            this.updateViewMain, BeanProperty.create("view.meshEditorBean.inSelection"),
+            this.list1, BeanProperty.create("selectedElements")));
+        this.bindingGroup.addBinding(Bindings.createAutoBinding(UpdateStrategy.READ_WRITE,
+            this.updateViewMain, BeanProperty.create("view.meshEditorBean.actionOk"),
+            this.button2, BeanProperty.create("selected")));
+        this.bindingGroup.addBinding(Bindings.createAutoBinding(UpdateStrategy.READ_WRITE,
+            this.updateViewMain, BeanProperty.create("view.meshEditorBean.opType"),
+            this.radioButton5, BeanProperty.create("selected")));
+        this.bindingGroup.addBinding(Bindings.createAutoBinding(UpdateStrategy.READ_WRITE,
+            this.updateViewMain, BeanProperty.create("view.opType"),
+            this.radioButton4, BeanProperty.create("selected")));
         this.bindingGroup.bind();
         // JFormDesigner - End of component initialization  //GEN-END:initComponents
     }
@@ -1470,22 +1495,29 @@ public class Main implements PropertyChangeListener {
     private JComboBox<String> meshType;
     private JPanel panelMeshEdit;
     private JCheckBox checkBoxActive2;
-    private JToggleButton toggleButton1;
-    private JCheckBox checkBox1;
-    private JRadioButton selection;
-    private JRadioButton radioButton3;
-    private JLabel label11;
-    private JSpinner spinner4;
-    private JRadioButton move3direction;
-    private JRadioButton radioButton2;
-    private JLabel label12;
-    private JSpinner spinner5;
+    private JScrollPane scrollPane6;
+    private JList list2;
+    private JScrollPane scrollPane4;
+    private JList list1;
+    private JRadioButton radioButton4;
+    private JRadioButton radioButton5;
+    private JRadioButton radioButton6;
     private JLabel label7;
-    private JSpinner spinner3;
+    private JSpinner spinnerX;
+    private JLabel label13;
+    private JTextField textFieldRowI;
+    private JLabel label11;
+    private JSpinner spinnerU;
     private JLabel label9;
-    private JSpinner spinner2;
+    private JSpinner spinnerY;
+    private JLabel label8;
+    private JTextField textFieldRowJ;
+    private JLabel label12;
+    private JSpinner spinnerV;
     private JLabel label10;
-    private JSpinner spinner1;
+    private JSpinner spinnerZ;
+    private JButton button2;
+    private JButton button3;
     private TexturesDrawEditMapOnObjectPart texturesDrawEditMapOnObjectPart1;
     private MyObservableList myObservableListSelIn;
     private MyObservableList myObservableListSelOut;

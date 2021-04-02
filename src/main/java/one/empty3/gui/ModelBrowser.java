@@ -35,9 +35,9 @@ import java.util.function.Consumer;
 public class ModelBrowser {
     private final ZBufferImpl zimpl;
     private boolean clone = false;
-    private Class classes;
+    private Class classes = Representable.class;
     private List<Cell> objects = new ArrayList<>();
-    private Class clazz;
+    private Class clazz = Representable.class;
     private int dim = -1;
     private boolean isRow;
     private int colNo;

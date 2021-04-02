@@ -1,6 +1,10 @@
 package one.empty3.gui;
 
+import com.esotericsoftware.kryo.NotNull;
+import one.empty3.library.CopyRepresentableError;
 import one.empty3.library.Point3D;
+import one.empty3.library.Representable;
+import one.empty3.library.StructureMatrix;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,10 +14,13 @@ public class MeshEditorBean {
     public static final int MESH_EDITOR_Sphere = 1;
     public static final int MESH_EDITOR_Cube = 2;
     public static final int MESH_EDITOR_Plane = 4;
+    private static final int OP_SELECTION_TRANSLATION = 0;
+    private static final int OP_NEW_ROW_COL           = 1;
+    private static final int OP_TRANSLATE_SURFACE     = 2;
 
 
     private int meshType;
-    private boolean activateMarkers;
+    private boolean activateMarkers = false;
     private boolean selection;
     private boolean translation;
     private boolean newPoint;
@@ -27,6 +34,112 @@ public class MeshEditorBean {
     private double translateOnSv;
     private ArrayList<Point3D> inSelection = new ArrayList<>();
     private HashMap<PMove, Point3D> inSelectionMoves;
+    private int opType = 0;
+
+    public static class ReplaceMatrix {
+        private Representable representable;
+        protected StructureMatrix<Point3D> in;
+        protected StructureMatrix<Point3D> outs;
+
+        public ReplaceMatrix(StructureMatrix<Point3D> origin, Representable r) {
+            this.in = origin;
+            try {
+                this.outs = origin.copy();
+                this.representable = r;
+            } catch (IllegalAccessException | CopyRepresentableError | InstantiationException e) {
+                e.printStackTrace();
+            }
+        }
+
+        public boolean updateIjp(Point3D p, int i, int j) {
+            if (i >= 0 && j >= 0 && outs.getDim() == 2) {
+                outs.setElem(p, i, j);
+                return true;
+            }
+            if (i >= 0 && j < 0 && outs.getDim() == 1) {
+                outs.setElem(p, i);
+                return true;
+            }
+            if (i < 0 && j < 0 && outs.getDim() == 0) {
+                outs.setElem(p);
+                return true;
+            }
+            return false;
+        }
+
+        public Representable getRepresentable() {
+            return representable;
+        }
+
+        public void setRepresentable(Representable representable) {
+            this.representable = representable;
+        }
+
+        public StructureMatrix<Point3D> getIn() {
+            return in;
+        }
+
+        public void setIn(StructureMatrix<Point3D> in) {
+            this.in = in;
+        }
+
+        public StructureMatrix<Point3D> getOuts() {
+            return outs;
+        }
+
+        public void setOuts(StructureMatrix<Point3D> outs) {
+            this.outs = outs;
+        }
+
+        @Override
+        public String toString() {
+            return "ReplaceMatrix{" +
+                    "representable=" + representable +
+                    ", in=" + in +
+                    ", outs=" + outs +
+                    '}';
+        }
+    }
+    protected ArrayList<ReplaceMatrix> replaces = new ArrayList<>();
+
+
+    public ArrayList<ReplaceMatrix> getReplaces() {
+        return replaces;
+    }
+
+    public void setReplaces(ArrayList<ReplaceMatrix> replaces) {
+        this.replaces = replaces;
+    }
+
+    @NotNull
+    private Main main;
+
+    public void setMain(Main main) {
+        this.main = main;
+    }
+    public void actionOk() {
+       switch(getOperationType()) {
+           case OP_SELECTION_TRANSLATION:
+               break;
+           case OP_NEW_ROW_COL:
+               break;
+           case OP_TRANSLATE_SURFACE:
+               break;
+       }
+   }
+
+    private Main getMain() {
+        return main;
+    }
+
+    private int getOperationType() {
+        return opType;
+    }
+
+    private void setOperationType(int opType) {
+        this.opType = opType;
+    }
+
 
     public int getMeshType() {
         return meshType;
@@ -75,7 +188,6 @@ public class MeshEditorBean {
     public void setNewRow(boolean newRow) {
         this.newRow = newRow;
     }
-
     public boolean isNewCol() {
         return newCol;
     }
@@ -146,5 +258,9 @@ public class MeshEditorBean {
 
     public void setInSelectionMoves(HashMap<PMove, Point3D> inSelectionMoves) {
         this.inSelectionMoves = inSelectionMoves;
+    }
+
+    public void setOpType(int i) {
+        this.opType = i;
     }
 }

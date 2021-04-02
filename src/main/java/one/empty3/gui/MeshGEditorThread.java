@@ -1,10 +1,8 @@
 package one.empty3.gui;
 
 import one.empty3.library.*;
-import one.empty3.library.core.nurbs.CourbeParametriquePolynomiale;
 import one.empty3.library.core.nurbs.ParametricSurface;
 import one.empty3.library.core.nurbs.SurfaceParametriquePolynomialeBezier;
-import one.empty3.library.core.tribase.Plan3D;
 
 import javax.swing.*;
 import java.awt.*;
@@ -16,16 +14,19 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 
+/***
+ * main idea: replace structurematrix in representable objects after modifying it.
+ */
 public class MeshGEditorThread extends Thread implements PropertyChangeListener {
+
 
 
     private Main main;
     private final ArrayList<Point3D> pointsTranslate = new ArrayList<Point3D>();
     private Point3D p;
     private ParametricSurface surface;
+
     public MeshGEditorThread(Main main) {
         this.main = main;
     }
@@ -39,7 +40,7 @@ public class MeshGEditorThread extends Thread implements PropertyChangeListener 
         this.main = Main;
     }
 
-    private boolean init;
+    private boolean init = false;
 
     @Override
     public void run() {
@@ -65,40 +66,44 @@ public class MeshGEditorThread extends Thread implements PropertyChangeListener 
                     public void mouseClicked(MouseEvent e) {
                         System.out.println("Mouse clicked in " + this.getClass());
                         // Select point or mark ready to move.
-                        if (getMain().getUpdateView().getView().getMeshEditorBean().isSelection()) {
-                            Point3D selectedPoint = getMain().getUpdateView().getzRunner().getzBuffer().clickAt(e.getX(), e.getY());
-                            Representable selectedObject = getMain().getUpdateView().getzRunner().getzBuffer().getIme().getIME()
-                                    .getrMap()[e.getX()][e.getY()];
-                            if (selectedObject instanceof ParametricSurface) {
-                                ParametricSurface ps = (ParametricSurface) selectedObject;
-                                double u = getMain().getUpdateView().getzRunner().getzBuffer().getIme().getIME()
-                                        .getuMap()[e.getX()][e.getY()];
-                                double v = getMain().getUpdateView().getzRunner().getzBuffer().getIme().getIME()
-                                        .getvMap()[e.getX()][e.getY()];
+//                        if (getMain().getUpdateView().getView().getMeshEditorBean().isSelection()) {
+                        Point3D selectedPoint = getMain().getUpdateView().getzRunner().getzBuffer().clickAt(e.getX(), e.getY());
+                        Representable selectedObject = getMain().getUpdateView().getzRunner().getzBuffer().getIme().getIME()
+                                .getrMap()[e.getX()][e.getY()];
+                        if (selectedPoint != null) {
+                            //ParametricSurface ps = (ParametricSurface) selectedObject;
+                            double u = getMain().getUpdateView().getzRunner().getzBuffer().getIme().getIME()
+                                    .getuMap()[e.getX()][e.getY()];
+                            double v = getMain().getUpdateView().getzRunner().getzBuffer().getIme().getIME()
+                                    .getvMap()[e.getX()][e.getY()];
 
-                                getMain().getUpdateView().setRuv(ps, u, v);
+                            getMain().getUpdateView().setRuv(surface, u, v);
 
-                            } else if(ZBufferImpl.INFINITY.equals(selectedPoint)) {
-                                int meshType = getMain().getMeshEditorProps().getMeshType();
-                                switch(meshType) {
-                                    case MeshEditorBean.MESH_EDITOR_ParametricSurface:
-                                        break;
-                                    case MeshEditorBean.MESH_EDITOR_Sphere:
-                                        surface = new Sphere();
-                                        break;
-                                    case MeshEditorBean.MESH_EDITOR_Cube:
-                                        //surface = new Cube();
-                                        break;
-                                    case MeshEditorBean.MESH_EDITOR_Plane:
-                                        surface = new SurfaceParametriquePolynomialeBezier();
-                                        break;
-                                }
-                                if(selectedObject!=null)
-                                    getMain().getMeshEditorProps().getInSelection().add(selectedPoint);//getMain().getDataModel().getScene().add(selectedObject);
+
+                            getMain().getMeshEditorProps().getInSelection().add(selectedPoint);
+                        }
+                        if (ZBufferImpl.INFINITY.equals(selectedPoint)) {
+                            int meshType = getMain().getMeshEditorProps().getMeshType();
+                            switch (meshType) {
+                                case MeshEditorBean.MESH_EDITOR_ParametricSurface:
+                                    break;
+                                case MeshEditorBean.MESH_EDITOR_Sphere:
+                                    surface = new Sphere();
+                                    break;
+                                case MeshEditorBean.MESH_EDITOR_Cube:
+                                    //surface = new Cube();
+                                    break;
+                                case MeshEditorBean.MESH_EDITOR_Plane:
+                                    surface = new SurfaceParametriquePolynomialeBezier();
+                                    break;
                             }
-                            //main.getDataModel().getScene().add(selectedPoint);
-                            System.out.println("point added" + selectedPoint);
-                        } else if (main.getMeshEditorProps().isTranslation()) {
+                            if (selectedObject != null)
+                                getMain().getMeshEditorProps().getInSelection().add(selectedPoint);//getMain().getDataModel().getScene().add(selectedObject);
+                        }
+                        //main.getDataModel().getScene().add(selectedPoint);
+                        System.out.println("point added" + selectedPoint);
+                        //}
+                        if (main.getMeshEditorProps().isTranslation()) {
                             Representable multiple = getMain().getUpdateView().getzRunner().getzBuffer().representableAt(e.getX(), e.getY());
                             main.getGraphicalEdit2().add(multiple);
                             System.out.println("representable added" + multiple);
@@ -108,26 +113,40 @@ public class MeshGEditorThread extends Thread implements PropertyChangeListener 
                             System.out.println("Select point ADD/REMOVE from selected points list");
 
                             if (cellList != null) {
+                                System.out.println("Surface : " + surface);
                                 cellList.forEach(cell -> {
-                                    Point point = getMain().getUpdateView().getzRunner().getzBuffer().camera().coordonneesPoint2D(cell.pRot
-                                            ,
-                                            getMain().getUpdateView().getzRunner().getzBuffer());
-                                    if (point != null &&
-                                            e.getX() - 2 < point.getX() && e.getX() + 2 > point.getX()
-                                            && e.getY() - 2 < point.getY() && e.getY() + 2 > point.getY()) {
-                                        if (cell.o instanceof Point3D) {
-                                            Point3D mousePoint3D = (Point3D) cell.o;
-                                            if (pointsTranslate.contains(mousePoint3D)) {
-                                                pointsTranslate.remove(mousePoint3D);
-                                                if (getMain().getGraphicalEdit2().getCurrentSelection().contains(mousePoint3D))
-                                                    getMain().getGraphicalEdit2().getCurrentSelection().remove(mousePoint3D);
-                                            } else {
-                                                pointsTranslate.add(mousePoint3D);
-                                                getMain().getGraphicalEdit2().getCurrentSelection().add(mousePoint3D);
+                                    if (cell.pRot != null) {
+                                        Point point = getMain().getUpdateView().getzRunner().getzBuffer().camera().coordonneesPoint2D(cell.pRot,
+                                                getMain().getUpdateView().getzRunner().getzBuffer());
+                                        if (point != null &&
+                                                e.getX() - 2 < point.getX() && e.getX() + 2 > point.getX()
+                                                && e.getY() - 2 < point.getY() && e.getY() + 2 > point.getY()) {
+                                            if (cell.o instanceof Point3D) {
+                                                Point3D mousePoint3D = (Point3D) cell.o;
+                                                if (pointsTranslate.contains(mousePoint3D)) {
+                                                    pointsTranslate.remove(mousePoint3D);
+                                                    getMain().getMeshEditorProps().getInSelection().remove(mousePoint3D);
+                                                } else {
+                                                    pointsTranslate.add(mousePoint3D);
+                                                    getMain().getMeshEditorProps().getInSelection().add(mousePoint3D);
+                                                    if(selectedObject instanceof ParametricSurface) {
+                                                        ParametricSurface ps = (ParametricSurface)selectedObject;
+                                                        if(ps instanceof SurfaceParametriquePolynomialeBezier) {
+                                                            getMain().getMeshEditorProps().getReplaces().add(
+                                                                    new MeshEditorBean.ReplaceMatrix(((SurfaceParametriquePolynomialeBezier)ps).getCoefficients(),
+                                                                    selectedObject));
+                                                        }
+                                                    }
+                                                }
                                             }
                                         }
+                                        main.getMeshEditorProps().getInSelection().forEach(representable -> System.out.println("[selection from MeshGraphicalEdit]"
+                                                + representable));
+                                        main.getMeshEditorProps().getReplaces().forEach(replaceMatrix -> System.out.println("[selection from MeshGraphicalEdit]"
+                                                + replaceMatrix));
+                                    } else {
+                                        System.out.println("cell.pRot in MeshGEditorThread is null");
                                     }
-                                    main.getGraphicalEdit2().getCurrentSelection().forEach(representable -> System.out.println("[selection from GraphicalEdit]" + representable));
                                 });
 
                             } else {
@@ -146,29 +165,29 @@ public class MeshGEditorThread extends Thread implements PropertyChangeListener 
 
                     @Override
                     public void mouseReleased(MouseEvent e) {
-                        if (getMain().getMeshEditorProps().isTranslation()) {
-                            ZBufferImpl zBuffer = main.getUpdateView().getzRunner().getzBuffer();
-                            Point location = MouseInfo.getPointerInfo().getLocation();
-                            SwingUtilities.convertPointFromScreen(location, main.getUpdateView());
-                            Camera camera = main.getUpdateView().getzRunner().getzBuffer().camera();
+                        //if (getMain().getMeshEditorProps().isTranslation()) {
+                        ZBufferImpl zBuffer = main.getUpdateView().getzRunner().getzBuffer();
+                        Point location = MouseInfo.getPointerInfo().getLocation();
+                        SwingUtilities.convertPointFromScreen(location, main.getUpdateView());
+                        Camera camera = main.getUpdateView().getzRunner().getzBuffer().camera();
                             /*Point3D invert = zBuffer.invert(new Point3D(location.getX(), location.getY(), 0d),
                                     main.getUpdateView().getzRunner().getzBuffer().camera());//TODO
                             */
-                            Point2D point2D = new Point2D((int) location.getX(), (int) location.getY());
+                        Point2D point2D = new Point2D((int) location.getX(), (int) location.getY());
 
-                            Point3D invert = zBuffer.invert(point2D, camera,
-                                    camera.getLookat().moins(
-                                            zBuffer.clickAt(
-                                                    location.getX(), location.getY()
-                                            )).norme());//TODO
+                        Point3D invert = zBuffer.invert(point2D, camera,
+                                camera.getLookat().moins(
+                                        zBuffer.clickAt(
+                                                location.getX(), location.getY()
+                                        )).norme());//TODO
 
 
-                            Point3D elem = invert;
-                            System.out.println("Inverted location " + elem);
-                            ModelBrowser modelBrowser = new ModelBrowser(getMain().getGraphicalEdit2().getSelectionIn(), zBuffer);
-                            modelBrowser.translateSelection(elem);
-                            System.out.println(main.getGraphicalEdit2().getCurrentSelection());
-                        }
+                        Point3D elem = invert;
+                        System.out.println("Inverted location " + elem);
+                        ModelBrowser modelBrowser = new ModelBrowser(getMain().getGraphicalEdit2().getSelectionIn(), zBuffer);
+                        modelBrowser.translateSelection(elem);
+                        System.out.println(main.getGraphicalEdit2().getCurrentSelection());
+                        //}
                     }
 
                     @Override
@@ -215,6 +234,13 @@ public class MeshGEditorThread extends Thread implements PropertyChangeListener 
     private void afterDraw() {
         if (main.getMeshEditorProps().getInSelection().size() > 0)
             browseScene();
+
+        for (Point3D p : getMain().getMeshEditorProps().getInSelection()) {
+            drawPoint(new Point3D(Double.parseDouble("" + getMain().getMeshEditorProps().getTranslateXonS()),
+                    Double.parseDouble("" + getMain().getMeshEditorProps().getTranslateYonS()),
+                    Double.parseDouble("" + getMain().getMeshEditorProps().getTranslateZonS()))
+                    .plus(p), Color.CYAN);
+        }
     }
 
     private void browseScene() {
@@ -234,28 +260,28 @@ public class MeshGEditorThread extends Thread implements PropertyChangeListener 
 
         }
     }
+
     public void insertDefault(StructureMatrix<Point3D> structureMatrix, int row, int col,
                               boolean isRow,
-                                      Point3D p) {
-        if(structureMatrix.getDim()==0)
+                              Point3D p) {
+        if (structureMatrix.getDim() == 0)
             structureMatrix.setElem(p);
 
 
-        if(structureMatrix.getDim()==1) {
+        if (structureMatrix.getDim() == 1) {
             structureMatrix.getData1d().add(col, p);
         }
 
-        if(structureMatrix.getDim()==2) {
-            for(int i=0; i<structureMatrix.getData2d().size(); i++) {
-                for(int j=0; j<structureMatrix.getData2d().size(); j++) {
-                    if(j==row&&i==col) {
+        if (structureMatrix.getDim() == 2) {
+            for (int i = 0; i < structureMatrix.getData2d().size(); i++) {
+                for (int j = 0; j < structureMatrix.getData2d().size(); j++) {
+                    if (j == row && i == col) {
                         structureMatrix.getData2d().add(new ArrayList<>());
                     }
-                    if(isRow)
-                        if(i==col)
+                    if (isRow)
+                        if (i == col)
                             structureMatrix.getData2d().get(j).add(col, p);
-                    else
-                        if(j==row)
+                        else if (j == row)
                             structureMatrix.getData2d().get(col).add(i, p);
 
                 }
@@ -316,10 +342,7 @@ public class MeshGEditorThread extends Thread implements PropertyChangeListener 
                         }
                     }
                 }
-            } else {
-
             }
-
         }
     }
 

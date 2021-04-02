@@ -96,33 +96,30 @@ public class ThreadGraphicalEditor extends Thread implements PropertyChangeListe
 
                                 if (cellList != null) {
                                     cellList.forEach(cell -> {
-                                        Point point = getMain().getUpdateView().getzRunner().getzBuffer().camera().coordonneesPoint2D(cell.pRot
-                                                ,
-                                                getMain().getUpdateView().getzRunner().getzBuffer());
-                                        if (point != null &&
-                                                e.getX() - 2 < point.getX() && e.getX() + 2 > point.getX()
-                                                && e.getY() - 2 < point.getY() && e.getY() + 2 > point.getY()) {
-                                            if (cell.o instanceof Point3D) {
-                                                Point3D mousePoint3D = (Point3D) cell.o;
-                                                if (pointsTranslate.contains(mousePoint3D)) {
-                                                    pointsTranslate.remove(mousePoint3D);
-                                                    if (getMain().getGraphicalEdit2().getCurrentSelection().contains(mousePoint3D))
-                                                        getMain().getGraphicalEdit2().getCurrentSelection().remove(mousePoint3D);
-                                                } else {
-                                                    pointsTranslate.add(mousePoint3D);
-                                                    getMain().getGraphicalEdit2().getCurrentSelection().add(mousePoint3D);
+                                        if (cell.pRot != null) {
+                                            Point point = getMain().getUpdateView().getzRunner().getzBuffer().camera().coordonneesPoint2D(cell.pRot
+                                                    ,
+                                                    getMain().getUpdateView().getzRunner().getzBuffer());
+                                            if (point != null &&
+                                                    e.getX() - 2 < point.getX() && e.getX() + 2 > point.getX()
+                                                    && e.getY() - 2 < point.getY() && e.getY() + 2 > point.getY()) {
+                                                if (cell.o instanceof Point3D) {
+                                                    Point3D mousePoint3D = (Point3D) cell.o;
+                                                    if (pointsTranslate.contains(mousePoint3D)) {
+                                                        pointsTranslate.remove(mousePoint3D);
+                                                        if (getMain().getGraphicalEdit2().getCurrentSelection().contains(mousePoint3D))
+                                                            getMain().getGraphicalEdit2().getCurrentSelection().remove(mousePoint3D);
+                                                    } else {
+                                                        pointsTranslate.add(mousePoint3D);
+                                                        getMain().getGraphicalEdit2().getCurrentSelection().add(mousePoint3D);
+                                                    }
                                                 }
+
                                             }
+                                            main.getGraphicalEdit2().getCurrentSelection().forEach(representable
+                                                    -> System.out.println("[selection from GraphicalEdit]" + representable));
                                         }
-                                        main.getGraphicalEdit2().getCurrentSelection().forEach(new Consumer<Representable>() {
-                                            @Override
-                                            public void accept(Representable representable) {
-                                                System.out.println("[selection from GraphicalEdit]" + representable);
-                                            }
-
-                                        });
                                     });
-
                                 } else {
                                     System.out.println("cellList == null" + this.getClass());
                                 }
@@ -265,7 +262,7 @@ public class ThreadGraphicalEditor extends Thread implements PropertyChangeListe
     private void drawPoints(List<ModelBrowser.Cell> objects) {
         objects.forEach(cell -> {
             try {
-                if(cell!=null && cell.pRot!=null)
+                if (cell != null && cell.pRot != null)
                     drawPoint((Point3D) cell.pRot, Color.BLACK);
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -281,7 +278,7 @@ public class ThreadGraphicalEditor extends Thread implements PropertyChangeListe
                 try {
                     if (cell instanceof Point3D) {
                         if (getMain().getUpdateView().getzRunner().getLastImage() != null)
-                            if(cell!=null)
+                            if (cell != null)
                                 drawPoint((Point3D) cell, Color.RED);
                     }
                 } catch (Exception ex) {
@@ -296,14 +293,13 @@ public class ThreadGraphicalEditor extends Thread implements PropertyChangeListe
     }
 
     private void drawPoint(Point3D p, Color color) {
-        if(p==null)
-        {
+        if (p == null) {
             System.out.println("p parameter drawPoint ThreadGraphicalEditor is null");
             System.exit(-1);
         }
         ZBufferImpl zBuffer = getMain().getUpdateView().getzRunner()
                 .getzBuffer();
-        if(zBuffer.camera()!=null) {
+        if (zBuffer.camera() != null) {
             Point point = zBuffer.camera().coordonneesPoint2D(p, zBuffer);
             if (point != null)
                 for (int i = -2; i <= 2; i++)
@@ -316,6 +312,6 @@ public class ThreadGraphicalEditor extends Thread implements PropertyChangeListe
                         }
                     }
         } else
-                System.out.println("Cmaera Z");
+            System.out.println("Camera Z");
     }
 }

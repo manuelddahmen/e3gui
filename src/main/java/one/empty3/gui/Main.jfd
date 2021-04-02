@@ -289,7 +289,7 @@ new FormModel {
 								name: "radioButton1"
 								"text": "Sélection"
 								"selected": true
-								"$buttonGroup": &FormReference0 new FormReference( "buttonGroup1" )
+								"$buttonGroup": new FormReference( "buttonGroup1" )
 								addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "radioButton1ActionPerformed", true ) )
 								addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "radioButton1ActionPerformed", true ) )
 							}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
@@ -328,7 +328,7 @@ new FormModel {
 							add( new FormComponent( "javax.swing.JRadioButton" ) {
 								name: "radioButtonTranslate"
 								"text": "Translate"
-								"$buttonGroup": &FormReference1 new FormReference( "buttonGroup1" )
+								"$buttonGroup": new FormReference( "buttonGroup1" )
 								addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "radioButtonTranslateActionPerformed", true ) )
 								addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "radioButtonTranslateActionPerformed", true ) )
 								addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "radioButtonTranslateActionPerformed", true ) )
@@ -526,7 +526,7 @@ new FormModel {
 							add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class net.miginfocom.swing.MigLayout ) {
 								"$layoutConstraints": "fill,hidemode 3"
 								"$columnConstraints": "[fill][fill][fill][fill][fill][fill][fill][fill][fill][fill][fill][fill]"
-								"$rowConstraints": "[][][][][][][][][]"
+								"$rowConstraints": "[][][][][][][][][][]"
 							} ) {
 								name: "panelMeshEdit"
 								add( new FormComponent( "javax.swing.JCheckBox" ) {
@@ -539,108 +539,139 @@ new FormModel {
 									addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "checkBoxActiveActionPerformed", true ) )
 									addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "checkBoxActiveActionPerformed", true ) )
 									addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "checkBoxActiveActionPerformed", true ) )
+									addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "checkBoxActive2ActionPerformed", true ) )
 								}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
 									"value": "cell 0 0"
 								} )
-								add( new FormComponent( "javax.swing.JToggleButton" ) {
-									name: "toggleButton1"
-									"text": "New point(?)"
+								add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+									name: "scrollPane6"
+									add( new FormComponent( "javax.swing.JList" ) {
+										name: "list2"
+									} )
 								}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
-									"value": "cell 1 0"
+									"value": "cell 1 0 1 3"
 								} )
-								add( new FormComponent( "javax.swing.JCheckBox" ) {
-									name: "checkBox1"
-									"text": "Translate on S, change point at S(u, v)"
+								add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+									name: "scrollPane4"
+									add( new FormComponent( "javax.swing.JList" ) {
+										name: "list1"
+									} )
 								}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
-									"value": "cell 2 0"
+									"value": "cell 2 0 1 3"
 								} )
 								add( new FormComponent( "javax.swing.JRadioButton" ) {
-									name: "selection"
-									"text": "Sélection"
+									name: "radioButton4"
+									"text": "Translate selection"
+									"$buttonGroup": new FormReference( "buttonGroup1" )
 									"selected": true
-									"$buttonGroup": #FormReference0
-									addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "radioButton1ActionPerformed", true ) )
-									addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "radioButton1ActionPerformed", true ) )
+									addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "radioButtonTranslateActionPerformed", true ) )
 								}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
-									"value": "cell 0 1"
+									"value": "cell 0 3"
 								} )
 								add( new FormComponent( "javax.swing.JRadioButton" ) {
-									name: "radioButton3"
-									"text": "new point (row v)"
+									name: "radioButton5"
+									"text": "Create new row"
+									"$buttonGroup": new FormReference( "buttonGroup1" )
+									addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "radioButton5ActionPerformed", true ) )
 								}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
-									"value": "cell 1 1"
-								} )
-								add( new FormComponent( "javax.swing.JLabel" ) {
-									name: "label11"
-									"text": "Translate u of p"
-								}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
-									"value": "cell 2 1"
-								} )
-								add( new FormComponent( "javax.swing.JSpinner" ) {
-									name: "spinner4"
-								}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
-									"value": "cell 3 1"
+									"value": "cell 1 3"
 								} )
 								add( new FormComponent( "javax.swing.JRadioButton" ) {
-									name: "move3direction"
-									"text": "Translate"
-									"$buttonGroup": #FormReference1
-									addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "radioButtonTranslateActionPerformed", true ) )
-									addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "radioButtonTranslateActionPerformed", true ) )
-									addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "radioButtonTranslateActionPerformed", true ) )
-									addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "radioButtonTranslateActionPerformed", true ) )
+									name: "radioButton6"
+									"text": "Translate p on S"
+									"$buttonGroup": new FormReference( "buttonGroup1" )
+									addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "radioButton6ActionPerformed", true ) )
 								}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
-									"value": "cell 0 2"
-								} )
-								add( new FormComponent( "javax.swing.JRadioButton" ) {
-									name: "radioButton2"
-									"text": "new point (row u)"
-								}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
-									"value": "cell 1 2"
-								} )
-								add( new FormComponent( "javax.swing.JLabel" ) {
-									name: "label12"
-									"text": "translate v of p"
-								}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
-									"value": "cell 2 2"
-								} )
-								add( new FormComponent( "javax.swing.JSpinner" ) {
-									name: "spinner5"
-								}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
-									"value": "cell 3 2"
+									"value": "cell 2 3"
 								} )
 								add( new FormComponent( "javax.swing.JLabel" ) {
 									name: "label7"
 									"text": "Translate new point X"
 								}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
-									"value": "cell 0 3"
+									"value": "cell 0 5"
 								} )
 								add( new FormComponent( "javax.swing.JSpinner" ) {
-									name: "spinner3"
+									name: "spinnerX"
 								}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
-									"value": "cell 1 3"
+									"value": "cell 0 5"
+								} )
+								add( new FormComponent( "javax.swing.JLabel" ) {
+									name: "label13"
+									"text": "new point or row"
+								}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+									"value": "cell 1 5"
+								} )
+								add( new FormComponent( "javax.swing.JTextField" ) {
+									name: "textFieldRowI"
+								}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+									"value": "cell 1 5"
+								} )
+								add( new FormComponent( "javax.swing.JLabel" ) {
+									name: "label11"
+									"text": "Translate u of p"
+								}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+									"value": "cell 2 5"
+								} )
+								add( new FormComponent( "javax.swing.JSpinner" ) {
+									name: "spinnerU"
+								}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+									"value": "cell 2 5"
 								} )
 								add( new FormComponent( "javax.swing.JLabel" ) {
 									name: "label9"
 									"text": "Translate new point Y"
 								}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
-									"value": "cell 0 4"
+									"value": "cell 0 6"
 								} )
 								add( new FormComponent( "javax.swing.JSpinner" ) {
-									name: "spinner2"
+									name: "spinnerY"
 								}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
-									"value": "cell 1 4"
+									"value": "cell 0 6"
+								} )
+								add( new FormComponent( "javax.swing.JLabel" ) {
+									name: "label8"
+									"text": "new point or col"
+								}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+									"value": "cell 1 6"
+								} )
+								add( new FormComponent( "javax.swing.JTextField" ) {
+									name: "textFieldRowJ"
+								}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+									"value": "cell 1 6"
+								} )
+								add( new FormComponent( "javax.swing.JLabel" ) {
+									name: "label12"
+									"text": "translate v of p"
+								}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+									"value": "cell 2 6"
+								} )
+								add( new FormComponent( "javax.swing.JSpinner" ) {
+									name: "spinnerV"
+								}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+									"value": "cell 2 6"
 								} )
 								add( new FormComponent( "javax.swing.JLabel" ) {
 									name: "label10"
-									"text": "translate new point Z (normale)"
+									"text": "translate new point Z"
 								}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
-									"value": "cell 0 5"
+									"value": "cell 0 7"
 								} )
 								add( new FormComponent( "javax.swing.JSpinner" ) {
-									name: "spinner1"
+									name: "spinnerZ"
 								}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
-									"value": "cell 1 5"
+									"value": "cell 0 7"
+								} )
+								add( new FormComponent( "javax.swing.JButton" ) {
+									name: "button2"
+									"text": "Ok"
+								}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+									"value": "cell 0 8 3 1"
+								} )
+								add( new FormComponent( "javax.swing.JButton" ) {
+									name: "button3"
+									"text": "Cancel"
+								}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+									"value": "cell 0 8 3 1"
 								} )
 							}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
 								"value": "cell 0 1"
@@ -709,16 +740,13 @@ new FormModel {
 				"updateStrategy": enum org.jdesktop.beansbinding.AutoBinding$UpdateStrategy READ
 			} )
 			addBinding( new FormBinding( "updateView", "view.meshEditorBean.activateMarkers", "checkBoxActive2", "selected" ) )
-			addBinding( new FormBinding( "updateView", "view.meshEditorBean.selection", "selection", "selected" ) )
 			addBinding( new FormBinding( "updateView", "zRunner.main.meshEditorProps.meshType", "meshType", "selectedItem" ) )
-			addBinding( new FormBinding( "updateView", "view.meshEditorBean.translation", "move3direction", "selected" ) )
-			addBinding( new FormBinding( "updateView", "view.meshEditorBean.translateXonS", "spinner3", "value" ) )
-			addBinding( new FormBinding( "updateView", "view.meshEditorBean.translateYonS", "spinner2", "value" ) )
-			addBinding( new FormBinding( "updateView", "view.meshEditorBean.translateZonS", "spinner1", "value" ) )
-			addBinding( new FormBinding( "updateView", "view.meshEditorBean.translateOnSuv", "checkBox1", "selected" ) )
-			addBinding( new FormBinding( "updateView", "view.meshEditorBean.newPoint", "toggleButton1", "selected" ) )
-			addBinding( new FormBinding( "updateView", "view.meshEditorBean.translateOnSu", "spinner4", "value" ) )
-			addBinding( new FormBinding( "updateView", "view.meshEditorBean.translateOnSv", "spinner5", "value" ) )
+			addBinding( new FormBinding( "updateView", "view.meshEditorBean.translateOnSu", "spinnerU", "value" ) )
+			addBinding( new FormBinding( "updateView", "view.meshEditorBean.translateOnSv", "spinnerV", "value" ) )
+			addBinding( new FormBinding( "updateView", "view.meshEditorBean.inSelection", "list1", "selectedElements" ) )
+			addBinding( new FormBinding( "updateView", "view.meshEditorBean.actionOk", "button2", "selected" ) )
+			addBinding( new FormBinding( "updateView", "view.meshEditorBean.opType", "radioButton5", "selected" ) )
+			addBinding( new FormBinding( "updateView", "view.opType", "radioButton4", "selected" ) )
 		} )
 	}
 }
