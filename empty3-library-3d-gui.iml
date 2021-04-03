@@ -18,7 +18,7 @@
     <orderEntry type="library" name="Maven: com.google.android.tools:dx:1.7" level="project" />
     <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.7.2" level="project" />
     <orderEntry type="library" name="Maven: com.google.code.gson:gson:2.8.5" level="project" />
-    <orderEntry type="library" name="Maven: one.empty3:empty3-library-3d:2021.2.3-SNAPSHOT" level="project" />
+    <orderEntry type="library" name="Maven: one.empty3:empty3-library-3d:2021.4.2" level="project" />
     <orderEntry type="library" name="Maven: org.slf4j:slf4j-simple:1.5.3" level="project" />
     <orderEntry type="library" name="Maven: org.jogamp.jogl:jogl-all-main:2.3.2" level="project" />
     <orderEntry type="library" name="Maven: org.jogamp.jogl:jogl-all:natives-android-aarch64:2.3.2" level="project" />

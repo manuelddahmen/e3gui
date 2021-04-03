@@ -11,7 +11,7 @@
 
     <groupId>one.empty3</groupId>
     <artifactId>empty3-library-3d-gui</artifactId>
-    <version>2021.1</version>
+    <version>2021.4.2-SNAPSHOT</version>
     <description>3D Graphical User Interface.
     
          </description>
@@ -204,7 +204,7 @@
                 </executions>
             </plugin>
             
-                
+              <!--
             <plugin>
                 <groupId>org.sonatype.plugins</groupId>
                 <artifactId>nexus-staging-maven-plugin</artifactId>
@@ -215,7 +215,7 @@
                     <nexusUrl>https://oss.sonatype.org/</nexusUrl>
                     <autoReleaseAfterClose>true</autoReleaseAfterClose>
                 </configuration>
-            </plugin>
+            </plugin>-->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
@@ -325,7 +325,7 @@
         <dependency>
             <groupId>one.empty3</groupId>
             <artifactId>empty3-library-3d</artifactId>
-            <version>2021.2.3-SNAPSHOT</version>
+            <version>2021.4.2</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/com.miglayout/miglayout -->
         <dependency>
