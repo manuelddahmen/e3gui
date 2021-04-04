@@ -5,9 +5,12 @@ import one.empty3.library.CopyRepresentableError;
 import one.empty3.library.Point3D;
 import one.empty3.library.Representable;
 import one.empty3.library.StructureMatrix;
+import one.empty3.library.core.nurbs.CourbeParametriquePolynomiale;
+import one.empty3.library.core.nurbs.SurfaceParametriquePolynomialeBezier;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.function.Consumer;
 
 public class MeshEditorBean {
     public static final int MESH_EDITOR_ParametricSurface = 0;
@@ -117,9 +120,25 @@ public class MeshEditorBean {
     public void setMain(Main main) {
         this.main = main;
     }
+
+
     public void actionOk() {
        switch(getOperationType()) {
            case OP_SELECTION_TRANSLATION:
+               getReplaces().forEach(replaceMatrix -> {
+                   if(replaceMatrix.representable instanceof SurfaceParametriquePolynomialeBezier) {
+                       SurfaceParametriquePolynomialeBezier surface = (SurfaceParametriquePolynomialeBezier) replaceMatrix.representable;
+                       for(int i=0; i<surface.getCoefficients().getData2d().size(); i++)
+                           for(int j=0; j<surface.getCoefficients().getData2d().get(i).size(); j++)
+                               surface.getCoefficients().setElem(replaceMatrix.outs.getElem(i, j), i, j);
+                   } else if(replaceMatrix.representable instanceof CourbeParametriquePolynomiale) {
+                       CourbeParametriquePolynomiale surface = (CourbeParametriquePolynomiale) replaceMatrix.representable;
+                       for(int i=0; i<surface.getCoefficients().getData1d().size(); i++)
+                           surface.getCoefficients().setElem(replaceMatrix.outs.getElem(i));
+                   } else {
+
+                   }
+               });
                break;
            case OP_NEW_ROW_COL:
                break;

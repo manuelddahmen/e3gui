@@ -2,6 +2,7 @@ package one.empty3.gui;
 
 import one.empty3.library.*;
 import one.empty3.library.core.nurbs.ParametricSurface;
+import one.empty3.library.core.nurbs.SurfaceParametriquePolynomiale;
 import one.empty3.library.core.nurbs.SurfaceParametriquePolynomialeBezier;
 
 import javax.swing.*;
@@ -105,7 +106,8 @@ public class MeshGEditorThread extends Thread implements PropertyChangeListener 
                         //}
                         if (main.getMeshEditorProps().isTranslation()) {
                             Representable multiple = getMain().getUpdateView().getzRunner().getzBuffer().representableAt(e.getX(), e.getY());
-                            main.getGraphicalEdit2().add(multiple);
+
+                            main.getGraphicalEditMesh().getBean().getInSelection().add(selectedPoint);
                             System.out.println("representable added" + multiple);
                         } else {
                             List<ModelBrowser.Cell> cellList;
@@ -131,10 +133,9 @@ public class MeshGEditorThread extends Thread implements PropertyChangeListener 
                                                     getMain().getMeshEditorProps().getInSelection().add(mousePoint3D);
                                                     if(selectedObject instanceof ParametricSurface) {
                                                         ParametricSurface ps = (ParametricSurface)selectedObject;
-                                                        if(ps instanceof SurfaceParametriquePolynomialeBezier) {
+                                                        if(ps instanceof SurfaceParametriquePolynomiale) {
                                                             getMain().getMeshEditorProps().getReplaces().add(
-                                                                    new MeshEditorBean.ReplaceMatrix(((SurfaceParametriquePolynomialeBezier)ps).getCoefficients(),
-                                                                    selectedObject));
+                                                                    new MeshEditorBean.ReplaceMatrix(((SurfaceParametriquePolynomiale)ps).getCoefficients(), ps));
                                                         }
                                                     }
                                                 }

@@ -35,7 +35,7 @@ import java.util.function.Consumer;
  */
 public class GraphicalEdit2  {
 
-    private boolean selecting;
+    private boolean selecting = false;
 
     public GraphicalEdit2()
     {
@@ -48,7 +48,7 @@ public class GraphicalEdit2  {
     private static final int OUT = 1;
     private static final int IN = 0;
     private Main main;
-    private boolean activeGraphicalEdit = true;
+    private boolean activeGraphicalEdit = false;
     private boolean endSel1;
     private UpdateViewMain panel;
     private int activeSelection = 0;
