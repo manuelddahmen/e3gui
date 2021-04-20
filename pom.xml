@@ -97,17 +97,16 @@
    </plugins>
   </pluginManagement>
   <plugins>
-   <plugin>
+<!--   <plugin>
     <groupId>com.jayway.maven.plugins.android.generation2</groupId>
     <artifactId>android-maven-plugin</artifactId>
     <configuration>
      <sdk>
-      <!-- platform or api level (api level 4 = platform 1.6) -->
       <platform>8</platform>
      </sdk>
     </configuration>
    </plugin>
-        
+    -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
@@ -132,8 +131,6 @@
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>3.2.0</version>
                      <goals>
-                              <goal>site</goal>
-                     
                               <goal>jar</goal>
                      </goals>
             </plugin>
@@ -389,5 +386,10 @@
    <version>2.2.1</version>
    <scope>provided</scope>
   </dependency>
+        <dependency>
+            <groupId>com.formdev</groupId>
+            <artifactId>flatlaf</artifactId>
+            <version>1.1.2</version>
+        </dependency>
     </dependencies>
 </project>

@@ -126,6 +126,7 @@ public class MeshEditorBean {
        switch(getOperationType()) {
            case OP_SELECTION_TRANSLATION:
                getReplaces().forEach(replaceMatrix -> {
+                   System.out.println("Replace points from ("+replaceMatrix.representable.getClass()+") of string {\n"+replaceMatrix.representable.toString()+"+\n}");
                    if(replaceMatrix.representable instanceof SurfaceParametriquePolynomialeBezier) {
                        SurfaceParametriquePolynomialeBezier surface = (SurfaceParametriquePolynomialeBezier) replaceMatrix.representable;
                        for(int i=0; i<surface.getCoefficients().getData2d().size(); i++)

@@ -95,7 +95,7 @@ public class Main implements PropertyChangeListener {
         JDialog licence = new JDialog(MainWindow, "Licence");
         JTextArea area = null;
         licence.add(area = new JTextArea("Création d'objets simples\n" +
-                "    Copyright (C) 2019  Manuel Dahmen\n" +
+                "    Copyright (C) 2019-2021  Manuel Dahmen\n" +
                 "\n" +
                 "    This program is free software: you can redistribute it and/or modify\n" +
                 "    it under the terms of the GNU General Public License as published by\n" +
@@ -568,10 +568,6 @@ public class Main implements PropertyChangeListener {
         return this.treeSelIn;
     }
 
-    private void checkBoxActive2ActionPerformed(ActionEvent e) {
-        // TODO add your code here
-    }
-
     private void radioButton5ActionPerformed(ActionEvent e) {
         this.getMeshEditorProps().setOpType(1);
     }
@@ -579,6 +575,15 @@ public class Main implements PropertyChangeListener {
     private void radioButton6ActionPerformed(ActionEvent e) {
         this.getMeshEditorProps().setOpType(2);
     }
+
+    private void checkBoxActive2ActionPerformed(ActionEvent e) {
+        // TODO add your code here
+    }
+
+    private void checkBoxActive2ActionPerformed() {
+        // TODO add your code here
+    }
+
 
 
     private class ThreadDrawingCoords  extends Thread {
@@ -711,11 +716,11 @@ public class Main implements PropertyChangeListener {
 
             //======== panel6 ========
             {
-                this.panel6.setBorder ( new javax . swing. border .CompoundBorder ( new javax . swing. border .TitledBorder ( new javax . swing. border .EmptyBorder (
-                0, 0 ,0 , 0) ,  "JF\u006frmD\u0065sig\u006eer \u0045val\u0075ati\u006fn" , javax. swing .border . TitledBorder. CENTER ,javax . swing. border .TitledBorder
-                . BOTTOM, new java. awt .Font ( "Dia\u006cog", java .awt . Font. BOLD ,12 ) ,java . awt. Color .
-                red ) ,this.panel6. getBorder () ) ); this.panel6. addPropertyChangeListener( new java. beans .PropertyChangeListener ( ){ @Override public void propertyChange (java .
-                beans. PropertyChangeEvent e) { if( "\u0062ord\u0065r" .equals ( e. getPropertyName () ) )throw new RuntimeException( ) ;} } );
+                this.panel6.setBorder (new javax. swing. border. CompoundBorder( new javax .swing .border .TitledBorder (new javax. swing. border. EmptyBorder(
+                0, 0, 0, 0) , "JF\u006frmDesi\u0067ner Ev\u0061luatio\u006e", javax. swing. border. TitledBorder. CENTER, javax. swing. border. TitledBorder
+                . BOTTOM, new java .awt .Font ("Dialo\u0067" ,java .awt .Font .BOLD ,12 ), java. awt. Color.
+                red) ,this.panel6. getBorder( )) ); this.panel6. addPropertyChangeListener (new java. beans. PropertyChangeListener( ){ @Override public void propertyChange (java .
+                beans .PropertyChangeEvent e) {if ("borde\u0072" .equals (e .getPropertyName () )) throw new RuntimeException( ); }} );
                 this.panel6.setLayout(new MigLayout(
                     "fill,hidemode 3",
                     // columns
@@ -1263,6 +1268,9 @@ public class Main implements PropertyChangeListener {
 			checkBoxActiveActionPerformed(e);
 			checkBoxActiveActionPerformed(e);
 			checkBoxActive2ActionPerformed(e);
+			checkBoxActive2ActionPerformed(e);
+			checkBoxActive2ActionPerformed();
+			checkBoxActive2ActionPerformed(e);
 		});
                                 this.panelMeshEdit.add(this.checkBoxActive2, "cell 0 0");
 
@@ -1496,7 +1504,7 @@ public class Main implements PropertyChangeListener {
     private JPanel panelMeshEdit;
     private JCheckBox checkBoxActive2;
     private JScrollPane scrollPane6;
-    private JList list2;
+    JList list2;
     private JScrollPane scrollPane4;
     private JList list1;
     private JRadioButton radioButton4;

@@ -259,7 +259,7 @@ public class ModelBrowser {
             if(classes.equals(e.getClass())) {
                 if(e.getClass().equals(Point3D.class) && (ref!=null) && (ref.getRotation()!=null)) {
                     objects.add(new Cell(structureMatrix, dim, row, col, ref, e, zimpl.rotate((Point3D) e, ref)));
-                    objects.add(new Cell(structureMatrix, dim, row, col, ref, e));
+                    //objects.add(new Cell(structureMatrix, dim, row, col, ref, e));
                 }
             }
             browser((Representable) e, ref);

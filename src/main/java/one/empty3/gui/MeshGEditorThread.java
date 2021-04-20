@@ -108,6 +108,7 @@ public class MeshGEditorThread extends Thread implements PropertyChangeListener 
                             Representable multiple = getMain().getUpdateView().getzRunner().getzBuffer().representableAt(e.getX(), e.getY());
 
                             main.getGraphicalEditMesh().getBean().getInSelection().add(selectedPoint);
+                            main.list2.setListData(getMain().getMeshEditorProps().getInSelection().toArray(new Point3D[0]));
                             System.out.println("representable added" + multiple);
                         } else {
                             List<ModelBrowser.Cell> cellList;
