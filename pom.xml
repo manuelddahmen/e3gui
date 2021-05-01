@@ -13,13 +13,13 @@
     <artifactId>empty3-library-3d-gui</artifactId>
     <version>2021.4.3-SNAPSHOT</version>
     <description>3D Graphical User Interface.
-    
-         </description>
+
+    </description>
     <packaging>jar</packaging>
-<properties>
-    <maven.compiler.target>14</maven.compiler.target>
-    <maven.compiler.source>14</maven.compiler.source>
-</properties>
+    <properties>
+        <maven.compiler.target>14</maven.compiler.target>
+        <maven.compiler.source>14</maven.compiler.source>
+    </properties>
     <url>https://github.com/manuelddahmen/e3gui</url>
 
     <distributionManagement>
@@ -86,27 +86,27 @@
         </resources>-->
         <outputDirectory>${basedir}/target/classes</outputDirectory>
         <testOutputDirectory>${basedir}/target/test-classes</testOutputDirectory>
-  <pluginManagement>
-   <plugins>
-    <plugin>
-     <groupId>com.jayway.maven.plugins.android.generation2</groupId>
-     <artifactId>android-maven-plugin</artifactId>
-     <version>3.1.1</version>
-     <extensions>true</extensions>
-    </plugin>
-   </plugins>
-  </pluginManagement>
-  <plugins>
-<!--   <plugin>
-    <groupId>com.jayway.maven.plugins.android.generation2</groupId>
-    <artifactId>android-maven-plugin</artifactId>
-    <configuration>
-     <sdk>
-      <platform>8</platform>
-     </sdk>
-    </configuration>
-   </plugin>
-    -->
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>com.jayway.maven.plugins.android.generation2</groupId>
+                    <artifactId>android-maven-plugin</artifactId>
+                    <version>3.1.1</version>
+                    <extensions>true</extensions>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+        <plugins>
+            <!--   <plugin>
+                <groupId>com.jayway.maven.plugins.android.generation2</groupId>
+                <artifactId>android-maven-plugin</artifactId>
+                <configuration>
+                 <sdk>
+                  <platform>8</platform>
+                 </sdk>
+                </configuration>
+               </plugin>
+                -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
@@ -130,9 +130,9 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>3.2.0</version>
-                     <goals>
-                              <goal>jar</goal>
-                     </goals>
+                <goals>
+                    <goal>jar</goal>
+                </goals>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -181,7 +181,7 @@
                 </executions>
                 <configuration>
                     <showDeprecation>true</showDeprecation>
-                    
+
                     <encoding>UTF-8</encoding>
 
                 </configuration>
@@ -201,19 +201,19 @@
                     </execution>
                 </executions>
             </plugin>
-            
-              <!--
-            <plugin>
-                <groupId>org.sonatype.plugins</groupId>
-                <artifactId>nexus-staging-maven-plugin</artifactId>
-                <version>1.6.7</version>
-                <extensions>true</extensions>
-                <configuration>
-                    <serverId>ossrh</serverId>
-                    <nexusUrl>https://oss.sonatype.org/</nexusUrl>
-                    <autoReleaseAfterClose>true</autoReleaseAfterClose>
-                </configuration>
-            </plugin>-->
+
+            <!--
+          <plugin>
+              <groupId>org.sonatype.plugins</groupId>
+              <artifactId>nexus-staging-maven-plugin</artifactId>
+              <version>1.6.7</version>
+              <extensions>true</extensions>
+              <configuration>
+                  <serverId>ossrh</serverId>
+                  <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                  <autoReleaseAfterClose>true</autoReleaseAfterClose>
+              </configuration>
+          </plugin>-->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
@@ -342,31 +342,31 @@
             <type>pom</type>
         </dependency>-->
         <!-- https://mvnrepository.com/artifact/org.openjfx/javafx-media -->
-<!--        <dependency>
-            <groupId>org.openjfx</groupId>
-            <artifactId>javafx-media</artifactId>
-            <version>15-ea+4</version>
-        </dependency>
-    -->    <!-- https://mvnrepository.com/artifact/org.openjfx/javafx-swing -->
+        <!--        <dependency>
+                    <groupId>org.openjfx</groupId>
+                    <artifactId>javafx-media</artifactId>
+                    <version>15-ea+4</version>
+                </dependency>
+            -->    <!-- https://mvnrepository.com/artifact/org.openjfx/javafx-swing -->
         <!--<dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-swing</artifactId>
             <version>15-ea+4</version>
         </dependency>-->
         <!-- https://mvnrepository.com/artifact/org.openjfx/javafx-fxml -->
-   <!--     <dependency>
-            <groupId>org.openjfx</groupId>
-            <artifactId>javafx-fxml</artifactId>
-            <version>15-ea+4</version>
-        </dependency>
-       --> <!-- https://mvnrepository.com/artifact/org.jdesktop/beansbinding -->
+        <!--     <dependency>
+                 <groupId>org.openjfx</groupId>
+                 <artifactId>javafx-fxml</artifactId>
+                 <version>15-ea+4</version>
+             </dependency>
+            --> <!-- https://mvnrepository.com/artifact/org.jdesktop/beansbinding -->
         <dependency>
             <groupId>org.jdesktop</groupId>
             <artifactId>beansbinding</artifactId>
             <version>1.2.1</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/com.thoughtworks.xstream/xstream -->
-        
+
         <!-- https://mvnrepository.com/artifact/xom/xom -->
         <dependency>
             <groupId>xom</groupId>
@@ -380,12 +380,12 @@
             <artifactId>jgoodies-common</artifactId>
             <version>1.8.1</version>
         </dependency>
-  <dependency>
-   <groupId>com.google.android</groupId>
-   <artifactId>android</artifactId>
-   <version>2.2.1</version>
-   <scope>provided</scope>
-  </dependency>
+        <dependency>
+            <groupId>com.google.android</groupId>
+            <artifactId>android</artifactId>
+            <version>2.2.1</version>
+            <scope>provided</scope>
+        </dependency>
         <dependency>
             <groupId>com.formdev</groupId>
             <artifactId>flatlaf</artifactId>
