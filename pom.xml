@@ -19,6 +19,7 @@
     <properties>
         <maven.compiler.target>14</maven.compiler.target>
         <maven.compiler.source>14</maven.compiler.source>
+        <empty3lib.path>c:/Users/manue/IdeaProjects/empty3-android/target/empty3-library-3d-android-2021.5-SNAPSHOT.jar</empty3lib.path>
     </properties>
     <url>https://github.com/manuelddahmen/e3gui</url>
 
@@ -323,7 +324,9 @@
         <dependency>
             <groupId>one.empty3</groupId>
             <artifactId>empty3-library-3d</artifactId>
-            <version>2021.4.3-SNAPSHOT</version>
+            <version>2021.5-SNAPSHOT</version>
+            <scope>system</scope>
+            <systemPath>${empty3lib.path}</systemPath>
         </dependency>
         <!-- https://mvnrepository.com/artifact/com.miglayout/miglayout -->
         <dependency>
@@ -390,6 +393,16 @@
             <groupId>com.formdev</groupId>
             <artifactId>flatlaf</artifactId>
             <version>1.1.2</version>
+        </dependency>
+        <dependency>
+            <groupId>com.scryetek</groupId>
+            <artifactId>vecmath_2.11</artifactId>
+            <version>0.3.1</version>
+        </dependency>
+        <dependency>
+<groupId>org.apache.commons</groupId>
+<artifactId>commons-numbers-quaternion</artifactId>
+<version>1.0-beta1</version>
         </dependency>
     </dependencies>
 </project>

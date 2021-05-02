@@ -1,6 +1,5 @@
 package one.empty3.gui;
 
-import com.esotericsoftware.kryo.NotNull;
 import one.empty3.library.CopyRepresentableError;
 import one.empty3.library.Point3D;
 import one.empty3.library.Representable;
@@ -114,7 +113,6 @@ public class MeshEditorBean {
         this.replaces = replaces;
     }
 
-    @NotNull
     private Main main;
 
     public void setMain(Main main) {

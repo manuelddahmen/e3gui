@@ -1,8 +1,8 @@
 package one.empty3.gui;
 
-import Jama.Matrix;
-import com.badlogic.gdx.math.Matrix4;
-import com.badlogic.gdx.math.Quaternion;
+import com.jhlabs.vecmath.AxisAngle4f;
+import com.jhlabs.vecmath.Quat4f;
+import com.jhlabs.vecmath.Tuple4f;
 import one.empty3.library.*;
 
 import javax.swing.*;
@@ -11,7 +11,9 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 
 public class PanelSphereMove extends JPanel {
+    private static final int RES = 200;
     private final Draw draw;
+    private boolean move = true;
 
     public class Draw extends Thread {
         private ZBufferImpl z;
@@ -19,25 +21,36 @@ public class PanelSphereMove extends JPanel {
         private boolean running;
 
         public Draw(Scene scene1) {
-            this.z = ZBufferFactory.instance(getWidth(), getHeight());
+            this.z = new ZBufferImpl(getWidth(), getHeight());
             running = true;
             scene = scene1;
-            setSize(new Dimension(200, 200));
+            z.scene(scene1);
+
+            setSize(new Dimension(RES, RES));
         }
         @Override
         public void run() {
             while(isRunning()) {
-                z.draw(scene);
+                z.scene(scene);
+                try {
+                    z.draw();
+                }catch (NullPointerException ex) {
+                    ex.printStackTrace();
+                }
+                z.idzpp();
                 if(z.largeur()!=getWidth()||z.hauteur()!=getHeight()) {
-                    z = ZBufferFactory.instance(getWidth(), getHeight());
+                    z  = new ZBufferImpl(getWidth(), getHeight());
+                    initComputeArea(RES, RES);
                     System.out.println("Reninit");
                 }
                 Graphics graphics = getGraphics();
-                graphics.drawImage(z.image2(), 0, 0, getWidth(), getHeight(), null);
-                try {
-                    Thread.sleep(100);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                while(!move) {
+                    graphics.drawImage(z.image2(), 0, 0, getWidth(), getHeight(), null);
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         }
@@ -52,7 +65,7 @@ public class PanelSphereMove extends JPanel {
         }
     }
     Matrix33 matrix33 = Matrix33.I;
-    private Quaternion[][] q;
+    private Quat4f[][] q;
 
     public Matrix33 getMatrix33() {
         return matrix33;
@@ -66,12 +79,14 @@ public class PanelSphereMove extends JPanel {
         this.addMouseMotionListener(new MouseMotionListener() {
             @Override
             public void mouseDragged(MouseEvent e) {
+                move = true;
                 double x = e.getX();
                 double y = e.getY();
 
-                //
-                rotate(x, y);
+                Point3D point3D = cord3D(x, y);
+                rotate(point3D.getX(), point3D.getY());
                 computeArea();
+                move =false;
             }
 
             @Override
@@ -80,11 +95,14 @@ public class PanelSphereMove extends JPanel {
             }
         });
 
+
         Scene scene = new Scene();
         scene.add(new LineSegment(Point3D.O0, Point3D.X, new ColorTexture(Color.RED)));
         scene.add(new LineSegment(Point3D.O0, Point3D.Y, new ColorTexture(Color.GREEN)));
         scene.add(new LineSegment(Point3D.O0, Point3D.Z, new ColorTexture(Color.BLUE)));
+        scene.cameraActive(new Camera(Point3D.Z.mult(-4.), Point3D.O0, Point3D.Y));
         draw = new Draw(scene);
+        draw.start();
     }
 
     public Point3D cord3D(double i, double j) {
@@ -97,12 +115,12 @@ public class PanelSphereMove extends JPanel {
     }
 
     private void initComputeArea(int width, int height) {
-        q = new Quaternion[width][height];
+        q = new Quat4f[width][height];
 
         for(int i=0; i<width; i++)
             for(int j=0; j<height; j++) {
                 Point3D p = cord3D(i, j);
-                q[i][j] = new Quaternion((float)(double)(p.get(0)), (float)(double)(p.get(1)), (float)(double)(p.get(2)), (float)(double)(1.0));
+                q[i][j] = new Quat4f((float)(double)(p.get(0)), (float)(double)(p.get(1)), (float)(double)(p.get(2)), (float)(double)(1.0));
             }
 
     }
@@ -111,20 +129,19 @@ public class PanelSphereMove extends JPanel {
     }
 
     private void rotate(double x, double y) {
-        Quaternion q1 = q[(int)(x)] [(int)(y)];
+        Quat4f q1 = q[(int)(x)] [(int)(y)];
         Point3D p = cord3D(x, y);
         x = p.get(0);
         y = p.get(1);
         double z = p.get(2);
         double w = 1.0;
-        Quaternion quaternion = new Quaternion((float) x, (float) y, (float) z, (float) w);
-
+        Quat4f quaternion = new Quat4f((float) x, (float) y, (float) z, (float) w);
         // 1-2*y*y-2*z*z,2*x*y-2*y-2*z*w,2*x*z+2*y*w,2*x*y+2*zy+2*z*w,1-2*x*x-2*z*z,2*y*z-2*x*w,2*x*z-2*y*w,2*y*z+2*x*w,2*x*z-2*y*w,2*y*z+2*x*w,1-2*x*x-2*y*y)
-        quaternion = quaternion.mul(q1);
+        quaternion.set(new AxisAngle4f((float)x, (float)y, (float)1.0, (float) (Math.atan(y/x))));
 
         for(int i=0; i<getWidth(); i++)
             for(int j=0; j<getHeight(); j++) {
-                q[i][j] = q[(int)x][(int)y].mul(q1);
+                q[i][j].add(new Tuple4f(q1.x, q1.y, q1.z, q1.w));
             }
 
         System.out.println(""+quaternion.x+", "+ quaternion.y+", "+quaternion.z+", "+quaternion.w);
@@ -134,10 +151,11 @@ public class PanelSphereMove extends JPanel {
     public static void main(String [] args) {
         PanelSphereMove panelSphereMove = new PanelSphereMove();
         JFrame frame = new JFrame("EyeRoll");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setContentPane(panelSphereMove);
-        frame.setSize(new Dimension(200, 200));
-        panelSphereMove.q = new Quaternion[200][200];
-        panelSphereMove.initComputeArea(200, 200);
+        frame.setSize(new Dimension(RES, RES));
+        panelSphereMove.q = new Quat4f[RES][RES];
+        panelSphereMove.initComputeArea(RES, RES);
         frame.setVisible(true);
 
     }
