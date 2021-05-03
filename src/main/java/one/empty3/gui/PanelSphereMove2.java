@@ -7,6 +7,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
+import java.util.ArrayList;
+import java.util.function.Consumer;
 
 public class PanelSphereMove2 extends JPanel {
     private static int RES = 200;
@@ -18,15 +20,14 @@ public class PanelSphereMove2 extends JPanel {
     private double[][] angleB;
     private int i_current, j_current;
     private Point2D eZ = new Point2D(.2, 0.2);
-    private static int SIZE = 10;
-
+    private ArrayList<Point3D> ps =new ArrayList<Point3D>();
     public class Draw extends Thread {
         private ZBufferImpl z;
         private Scene scene;
         private boolean running;
 
         public Draw(Scene scene1) {
-            this.z = new ZBufferImpl(SIZE, SIZE);
+            this.z = new ZBufferImpl(RES, RES);
             running = true;
             scene = scene1;
             z.scene(scene1);
@@ -46,14 +47,14 @@ public class PanelSphereMove2 extends JPanel {
                 }
                 z.idzpp();
                 if (z.largeur() != getWidth() || z.hauteur() != getHeight()) {
-                    z = new ZBufferImpl(SIZE, SIZE);
+                    z = new ZBufferImpl(RES, RES);
                     initComputeArea();
                     System.out.println("Reninit");
                 }
                 Point3D[] colVectors = matrice.getColVectors();
-                Point ex = proj(Point3D.X);
-                Point ey = proj(Point3D.Y);
-                Point ez = proj(Point3D.Z);
+                Point ex = transform3D2D(Point3D.X);
+                Point ey = transform3D2D(Point3D.Y);
+                Point ez = transform3D2D(Point3D.Z);
                 Graphics graphics = getGraphics();
                 if (graphics != null) {
                     draw(p3[i_current][j_current]);
@@ -72,6 +73,8 @@ public class PanelSphereMove2 extends JPanel {
 
 
                     draw2(sphere(angleA[i_current][j_current], angleB[i_current][j_current], RES));
+
+                    ps.forEach(point3D -> draw2(point3D));
                 }
 
 
@@ -99,11 +102,13 @@ public class PanelSphereMove2 extends JPanel {
             Graphics graphics = getGraphics();
             if(p3_current.texture()!=null) {
                 graphics.setColor(new Color(p3_current.texture().getColorAt(0.5, 0.5)));
+                graphics.setColor(Color.BLACK);
             } else {
                 graphics.setColor(Color.BLACK);
             }
-            Point proj = proj(p3_current);
+            Point proj = transform3D2D(p3_current);
             graphics.drawLine((int) proj.getX(), (int) proj.getY(), 0, 0);
+        graphics.drawLine((int) (double)Math.abs(p3_current.getX()), (int)(double) Math.abs(p3_current.getY()), 0, 0);
         }
     private void draw(Point3D p3_current) {
         if(p3_current!=null) {
@@ -113,7 +118,7 @@ public class PanelSphereMove2 extends JPanel {
             } else {
                 graphics.setColor(Color.BLACK);
             }
-            Point proj = proj(p3_current);
+            Point proj = transform3D2D(p3_current);
             graphics.drawLine((int) proj.getX(), (int) proj.getY(), 0, 0);
         }
     }
@@ -124,14 +129,12 @@ public class PanelSphereMove2 extends JPanel {
             @Override
             public void mouseDragged(MouseEvent e) {
                 move = true;
-                double x = e.getX()*SIZE*1./RES;
-                double y = e.getY()*SIZE*1./RES;
-
+                Point3D p = transform2D3D(new Point(e.getX(), e.getY()));
                 initComputeArea();
 
                 computeArea();
 
-                store(x, y);
+                store(e.getX(), e.getY(), p);
 
                 //System.out.println("Current location on screen : " + p2_current);
                 System.out.println("Current location in space" + p3[i_current][j_current]);
@@ -149,31 +152,11 @@ public class PanelSphereMove2 extends JPanel {
 
     }
 
-    private Point3D unproj(int x, int y) {
-        double px = (x+0.5)/RES;
-        double py = (y+0.5)/RES;
-        double z = 0.0;
-        return new Point3D(px,py,z);
-
+    public Point3D transform2D3D(Point p) {
+        return new Point3D(p.getX()*RES/2+RES/2, -p.getY()*RES/2+RES/2, 0.0);
     }
-
-    /***
-     *
-     * @param colVector point centré dans le cube [-1;1][-1;1][-1;1]
-     * @return coordonnées écran
-     */
-    private Point proj(Point3D colVector) {
-
-        double ii =  RES/2.*colVector.getX()  / 4 ;//+ colVector.getZ() / 4 * RES*eZ.getX();
-        double ij =  RES/2.*(int) (colVector.getY() * SIZE / 4);// + colVector.getZ() / 4 *RES* eZ.getY());
-        double ik = (colVector.getZ()+1)*SIZE;
-        return new Point((int)ii, (int)ij);
-    }
-
-    public Point cord2D(Point3D p) {
-        return new Point((int) (getWidth() + p.get(0) / 2 * getWidth()),
-                (int) (getHeight() + p.get(0) / 2 * getHeight())
-        );
+    public Point transform3D2D(Point3D p) {
+        return new Point((int)(p.getX()/RES-0.5)*2, (int)(p.getY()/RES-0.5)*2);
     }
 
     private synchronized void initComputeArea() {
@@ -204,15 +187,18 @@ public class PanelSphereMove2 extends JPanel {
                     int ii = (int) ((i + 1) / 2);
                     int ij = (int) (j + 0.5);
                     Point3D p = matrice.mult(Trajectoires.sphere(i, j, 1.0));
-                    Point p2r = proj(p);
+                    Point p2r = transform3D2D(p);
                     graphics.setColor(Color.GRAY);
-                    graphics.drawRect((int) p2r.getX(), (int) p2r.getY(), RES/SIZE, RES/SIZE);
+                    graphics.drawRect((int) p2r.getX(), (int) p2r.getY(), 5, 5);
                 }
             }
     }
 
-    private void store(double x, double y) {
+    private void store(double x, double y, Point3D p) {
         Point3D p2 = sphere(angleA[(int)x][(int)y], angleB[(int)x][(int)y], RES);
+        if(p2!=null)
+            draw2(p2);
+        ps.add(p2);
             i_current = (int)x;
             j_current = (int)y;
             Point3D ex = p2.norme1().prodVect(sphere(angleA[RES/2][0],angleB[RES/2][0], RES)).prodVect(p2).mult(-1).norme1();
