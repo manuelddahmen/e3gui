@@ -2,11 +2,8 @@ package one.empty3.gui;
 
 import com.jhlabs.vecmath.AxisAngle4f;
 import com.jhlabs.vecmath.Quat4f;
-import com.jhlabs.vecmath.Tuple4f;
 import one.empty3.library.*;
-import one.empty3.library.core.lighting.Colors;
 import one.empty3.library.core.move.Trajectoires;
-import one.empty3.library.shader.Mat;
 
 import javax.swing.*;
 import java.awt.*;
@@ -18,8 +15,13 @@ public class PanelSphereMove extends JPanel {
     private final Draw draw;
     private boolean move = true;
     private Matrix33 matrice = Matrix33.I;
+    private Point[][] p;
+    private Point3D[][] p3;
     private Point3D p3_current;
     private Point p2_current;
+    private Matrix33[][] matriceIJ;
+    private Point2D eZ = new Point2D(.2, 0.2);
+    private static int SIZE = 10;
 
     public class Draw extends Thread {
         private ZBufferImpl z;
@@ -27,7 +29,7 @@ public class PanelSphereMove extends JPanel {
         private boolean running;
 
         public Draw(Scene scene1) {
-            this.z = new ZBufferImpl(getWidth(), getHeight());
+            this.z = new ZBufferImpl(SIZE, SIZE);
             running = true;
             scene = scene1;
             z.scene(scene1);
@@ -47,8 +49,8 @@ public class PanelSphereMove extends JPanel {
                 }
                 z.idzpp();
                 if (z.largeur() != getWidth() || z.hauteur() != getHeight()) {
-                    z = new ZBufferImpl(getWidth(), getHeight());
-                    initComputeArea(RES, RES);
+                    z = new ZBufferImpl(SIZE, SIZE);
+                    initComputeArea(SIZE, SIZE);
                     System.out.println("Reninit");
                 }
                 Point3D[] colVectors = matrice.getColVectors();
@@ -88,17 +90,13 @@ public class PanelSphereMove extends JPanel {
         }
     }
 
-    Matrix33 matrix33 = Matrix33.I;
-    private Quat4f[][] q;
-    private Point[][] p;
-    private Point3D[][] p3;
 
-    public Matrix33 getMatrix33() {
-        return matrix33;
+    public Matrix33 getMatrice() {
+        return matrice;
     }
 
-    public void setMatrix33(Matrix33 matrix33) {
-        this.matrix33 = matrix33;
+    public void setMatrice(Matrix33 matrice) {
+        this.matrice = matrice;
     }
 
     public PanelSphereMove() {
@@ -106,18 +104,23 @@ public class PanelSphereMove extends JPanel {
             @Override
             public void mouseDragged(MouseEvent e) {
                 move = true;
-                double x = e.getX();
-                double y = e.getY();
+                double x = e.getX()*SIZE/RES;
+                double y = e.getY()*SIZE/RES;
+
+                if(matriceIJ==null)
+                    initComputeArea(SIZE, SIZE);
 
                 Point3D point3D = cord3D(x, y);
-                rotate(point3D.getX(), point3D.getY());
                 computeArea((int) (double) (point3D.getX()), (int) (double) (point3D.getY()));
-                move = false;
 
-                initComputeArea(RES, RES);
+
+                store(x, y);
 
                 System.out.println("Current location on screen : " + p2_current);
                 System.out.println("Current location in space" + p3_current);
+
+
+                move = false;
             }
 
             @Override
@@ -138,7 +141,8 @@ public class PanelSphereMove extends JPanel {
 
     private Point proj(Point3D colVector) {
 
-        return new Point((int) (RES / 2 + colVector.getX() * RES / 4 + colVector.getZ() * RES / 4 / 5.), RES / 2 + (int) (colVector.getY() * RES / 4 + colVector.getZ() * RES / 4 / 5.));
+        return new Point((int) (RES / 2 + colVector.getX() * RES / 4 + colVector.getZ() * RES / 4 * eZ.getX()), RES / 2 +
+                (int) (colVector.getY() * RES / 4 + colVector.getZ() * RES / 4 * eZ.getY()));
 
     }
 
@@ -153,63 +157,49 @@ public class PanelSphereMove extends JPanel {
     }
 
     private void initComputeArea(int width, int height) {
-        q = new Quat4f[width][height];
-
-        for (int i = 0; i < width; i++)
-            for (int j = 0; j < height; j++) {
-                Point3D p = cord3D(i, j);
-                q[i][j] = new Quat4f((float) (double) (p.get(0)), (float) (double) (p.get(1)), (float) (double) (p.get(2)), (float) (double) (1.0));
-            }
-        p = new Point[RES][RES];
-        p3 = new Point3D[RES][RES];
-
-        for (int i = 0; i < RES; i++) {
-            for (int j = 0; j < RES; j++) {
-                p3[i][j] = Trajectoires.sphere(1.0 * (i - RES) / RES, 1.0 * (-j + RES) / RES, 1.0);
-
-                p[i][j] = proj(p3[i][j]);
-            }
-        }
+        p = new Point[SIZE][SIZE];
+        p3 = new Point3D[SIZE][SIZE];
+        matriceIJ = new Matrix33[SIZE][SIZE];
     }
 
     private void computeArea(int x, int y) {
-        p3_current = p3[x][y];
-        p2_current = p[x][y];
-    }
-
-    private void rotate(double x, double y) {
-        Quat4f q1 = q[(int) (x)][(int) (y)];
-        Point3D p = cord3D(x, y);
-        x = p.get(0);
-        y = p.get(1);
-        double z = p.get(2);
-        double w = 1.0;
-
-
-        if (p3_current == null) {
-            computeArea((int) x, (int) y);
-        }
-        Point3D Z = p3_current;
-        Point3D Y = p3[RES / 2][0];
-        Y = Z.prodVect(Z).norme1();
-        Point3D X = Z.prodVect(Y);
-
-        if (X.norme() > 0.8) {
-            Matrix33 m2 = new Matrix33(new Point3D[]{X, Y, Z}).tild();
-            matrice = matrice.mult(m2);
-            Point3D[] colVectors = matrice.getColVectors();
-            System.out.println("Vectors in matrix\n" + colVectors[0] + ", " + colVectors[1] + ", " + colVectors[2] + ")");
-        }
-    }
+        for (double i = -2.; i < 2.0; i += 1.0 / SIZE) {
+            for (double j = -1; j < 1; j += 1.0 / SIZE / 2.0) {
+                int ii = (int) ((i + 1) / 2);
+                int ij = (int) (j + 0.5);
+                Point3D p = matrice.mult(Trajectoires.sphere(i, j, 1.0));
+                Point3D[] colVectors = matrice.getColVectors();
+                Point3D ez = p;//.norme1();
+                Point3D ex = colVectors[1].norme1().prodVect(ez).mult(-1);
+                Point3D ey = ez.mult(ex).norme1();
+                matriceIJ[ii][ij] = new Matrix33(new Point3D[]{ex, ey, ez}).tild();
+                p3[ii][ij] = matriceIJ[ii][ij].mult(ez);
 
 
-    private void fill(Quat4f quaternion) {
-        for (int i = 0; i < getWidth(); i++)
-            for (int j = 0; j < getHeight(); j++) {
-                q[i][j].set(new AxisAngle4f(quaternion.x + q[i][j].y, quaternion.y + q[i][j].x, quaternion.z + q[i][j].x + q[i][j].y, quaternion.w + q[i][j].w));
             }
+        }
 
+        Graphics graphics = getGraphics();
+        if (graphics != null)
+            for (double i = -2.; i < 2.0; i += 1.0 / SIZE) {
+                for (double j = -1; j < 1; j += 1.0 / SIZE / 2.0) {
+                    int ii = (int) ((i + 1) / 2);
+                    int ij = (int) (j + 0.5);
+                    Point3D p = matrice.mult(Trajectoires.sphere(i, j, 1.0));
+                    Point p2r = proj(p);
+                    graphics.setColor(Color.GRAY);
+                    graphics.drawRect((int) p2r.getX(), (int) p2r.getY(), 1, 1);
+                }
+            }
     }
+
+    private void store(double x, double y) {
+        p3_current = p3[(int) x][(int) y];
+        p2_current = p[(int) x][(int) y];
+        if(matriceIJ[(int)x][(int)y]!=null)
+            matrice = matriceIJ[(int)x][(int)y];
+    }
+
 
     public static void main(String[] args) {
         PanelSphereMove panelSphereMove = new PanelSphereMove();
@@ -218,8 +208,8 @@ public class PanelSphereMove extends JPanel {
         frame.setContentPane(panelSphereMove);
         frame.setSize(new Dimension(RES, RES));
         frame.setResizable(false);
-        panelSphereMove.q = new Quat4f[RES][RES];
-        panelSphereMove.initComputeArea(RES, RES);
+        panelSphereMove.initComputeArea(SIZE, SIZE);
+        panelSphereMove.computeArea(0, 0);
         frame.setVisible(true);
 
     }
