@@ -1,7 +1,5 @@
 package one.empty3.gui;
 
-import com.jhlabs.vecmath.AxisAngle4f;
-import com.jhlabs.vecmath.Quat4f;
 import one.empty3.library.*;
 import one.empty3.library.core.move.Trajectoires;
 
@@ -10,16 +8,15 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 
-public class PanelSphereMove extends JPanel {
+public class PanelSphereMove2 extends JPanel {
     private static int RES = 200;
     private Draw draw;
     private boolean move = true;
     private Matrix33 matrice = Matrix33.I;
     private Point[][] p;
-    private Point3D[][] p3;
+    private Point3D[][][] p3;
     private Point3D p3_current;
     private Point p2_current;
-    private Matrix33[][] matriceIJ;
     private Point2D eZ = new Point2D(.2, 0.2);
     private static int SIZE = 10;
 
@@ -50,18 +47,19 @@ public class PanelSphereMove extends JPanel {
                 z.idzpp();
                 if (z.largeur() != getWidth() || z.hauteur() != getHeight()) {
                     z = new ZBufferImpl(SIZE, SIZE);
-                    initComputeArea(SIZE, SIZE);
+                    initComputeArea();
                     System.out.println("Reninit");
                 }
                 Point3D[] colVectors = matrice.getColVectors();
-                Point ex = proj(colVectors[0].norme1());
-                Point ey = proj(colVectors[1].norme1());
-                Point ez = proj(colVectors[2].norme1());
+                Point ex = proj(Point3D.X);
+                Point ey = proj(Point3D.Y);
+                Point ez = proj(Point3D.Z);
                 Graphics graphics = getGraphics();
                 if (graphics != null) {
+                    draw(p3_current);
                     //graphics.drawImage(z.image(), 0, 0, getWidth(), getHeight(), null);
                     graphics.setColor(Color.WHITE);
-                    graphics.fillRect(0, 0, RES, RES);
+                    //graphics.fillRect(0, 0, RES, RES);
                     graphics.setColor(Color.RED);
                     graphics.drawLine(RES / 2, RES / 2, (int) ex.getX(), (int) ex.getY());
                     graphics.drawRect((int) ex.getX() - 10, (int) ex.getY() - 10, 10, 10);
@@ -90,28 +88,35 @@ public class PanelSphereMove extends JPanel {
         }
     }
 
-
-    public Matrix33 getMatrice() {
-        return matrice;
+    private void draw(Point3D p3_current) {
+        if(p3_current!=null) {
+            Graphics graphics = getGraphics();
+            if(p3_current.texture()!=null) {
+                graphics.setColor(new Color(p3_current.texture().getColorAt(0.5, 0.5)));
+            } else {
+                graphics.setColor(Color.BLACK);
+            }
+            Point proj = proj(p3_current);
+            graphics.drawLine((int) proj.getX(), (int) proj.getY(), 0, 0);
+        }
     }
 
-    public void setMatrice(Matrix33 matrice) {
-        this.matrice = matrice;
-    }
 
-    public PanelSphereMove() {
+    public PanelSphereMove2() {
         this.addMouseMotionListener(new MouseMotionListener() {
             @Override
             public void mouseDragged(MouseEvent e) {
                 move = true;
-                double x = e.getX()*SIZE/RES;
-                double y = e.getY()*SIZE/RES;
+                double x = e.getX()*SIZE*1./RES;
+                double y = e.getY()*SIZE*1./RES;
 
-                if(matriceIJ==null)
-                    initComputeArea(SIZE, SIZE);
+                initComputeArea();
 
-                Point3D point3D = cord3D(x, y);
-                computeArea((int) (double) (point3D.getX()), (int) (double) (point3D.getY()));
+                Point3D unproj = unproj(e.getX(), e.getY());
+
+                //unproj = sphere(x, y, RES);
+
+                computeArea();
 
 
                 store(x, y);
@@ -132,15 +137,25 @@ public class PanelSphereMove extends JPanel {
 
     }
 
-    private Point proj(Point3D colVector) {
-
-        return new Point((int) (RES / 2 + colVector.getX() * RES / 4 + colVector.getZ() * RES / 4 * eZ.getX()), RES / 2 +
-                (int) (colVector.getY() * RES / 4 + colVector.getZ() * RES / 4 * eZ.getY()));
+    private Point3D unproj(int x, int y) {
+        double px = (x+0.5)/RES;
+        double py = (y+0.5)/RES;
+        double z = 0.0;
+        return new Point3D(px,py,z);
 
     }
 
-    public Point3D cord3D(double i, double j) {
-        return new Point3D(getWidth() / 2 + i / getWidth() * 2., (getHeight() / 2 - j) / getHeight() / 2., Math.sqrt(i * 2));
+    /***
+     *
+     * @param colVector point centré dans le cube [-1;1][-1;1][-1;1]
+     * @return coordonnées écran
+     */
+    private Point proj(Point3D colVector) {
+
+        double ii =  RES/2.*colVector.getX()  / 4 + colVector.getZ() / 4 * RES*eZ.getX();
+        double ij =  RES/2.*(int) (colVector.getY() * SIZE / 4 + colVector.getZ() / 4 *RES* eZ.getY());
+        double ik = (colVector.getZ()+1)*SIZE;
+        return new Point((int)ii, (int)ij);
     }
 
     public Point cord2D(Point3D p) {
@@ -149,32 +164,23 @@ public class PanelSphereMove extends JPanel {
         );
     }
 
-    private void initComputeArea(int width, int height) {
+    private void initComputeArea() {
         p = new Point[SIZE][SIZE];
-        p3 = new Point3D[SIZE][SIZE];
-        matriceIJ = new Matrix33[SIZE][SIZE];
-        for(int i = 0; i<SIZE; i++)
-            for(int j=0; j<SIZE; j++) {
-                p3[i][j] = new Point3D(0.0,0.0,0.);
-                p[i][j] = new Point(0,0);
-                matriceIJ[i][j] = Matrix33.I;
-            }
+        p3 = new Point3D[SIZE][SIZE][SIZE];
     }
 
-    private void computeArea(int x, int y) {
+    private void computeArea() {
         for (double i = -2.; i < 2.0; i += 4.0 /SIZE) {
             for (double j = -1; j < 1; j += 2.0 / SIZE) {
-                int ii = (int) ((i + 2) / 4);
-                int ij = (int) (j + 1)/2;
-                Point3D p = matrice.mult(Trajectoires.sphere(i, j, 1.0));
-                Point3D[] colVectors = matrice.getColVectors();
-                Point3D ez = p;//.norme1();
-                Point3D ex = colVectors[1].norme1().prodVect(ez).mult(-1);
-                Point3D ey = ez.mult(ex).norme1();
-                matriceIJ[ii][ij] = new Matrix33(new Point3D[]{ex, ey, ez}).tild();
-                p3[ii][ij] = matriceIJ[ii][ij].mult(ez);
+                for(double k=-1; k<1; k+= 1./SIZE) {
+                    int ii = (int) (((i + 2) / 4)*SIZE);
+                    int ij = (int) ((j + 1) / 2*SIZE);
+                    int ik = (int) ((k + 1) / 2*SIZE);
+                    if(ii>=0 && ii<SIZE && ij>=0&&ij<SIZE&&ik>=0&&ik<SIZE) {
+                        p3[ii][ij][ik] = new Point3D(i,j,k);
 
-
+                    }
+                }
             }
         }
 
@@ -193,17 +199,35 @@ public class PanelSphereMove extends JPanel {
     }
 
     private void store(double x, double y) {
-        p3_current = p3[(int) x][(int) y];
-        p2_current = p[(int) x][(int) y];
-        if(matriceIJ[(int)x][(int)y]!=null)
-            matrice = matriceIJ[(int)x][(int)y];
+        Point p2 = proj(new Point3D(x, y, 0.0));
+
+        if(p2.getX()>=0&&p2.getX()<SIZE&&p2.getY()>=0&&p2.getY()<SIZE) {
+            Point3D p = p3[(int) p2.getX()][(int) p2.getY()][0];
+            Point3D ex = p.norme1().prodVect(p3[SIZE/2][0][0]).prodVect(p).mult(-1).norme1();
+            Point3D ey = p.mult(ex).norme1();
+            matrice.set(0, ex);
+            matrice.set(0, ey);
+            matrice.set(0, p);
+
+            p2_current = p2;
+            p3_current = p;
+        }
     }
 
+    public Point3D sphere(double longitude, double latitude, double size) {
+        return new Point3D(Math.cos(longitude)*Math.sin(latitude), Math.cos(longitude)*Math.sin(latitude), Math.cos(latitude)).mult(size);
+    }
+    public Point unsphere(double x, double y, double size) {
+        x = x/size-0.5;
+        y = -y/size+0.5;
+
+        return new Point((int)(size*Math.atan(y/x)), (int)(size*Math.sqrt(1-x*x-y*y)));
+    }
 
     public static void main(String[] args) {
-        PanelSphereMove panelSphereMove = new PanelSphereMove();
-        panelSphereMove.initComputeArea(SIZE, SIZE);
-        panelSphereMove.computeArea(0, 0);
+        PanelSphereMove2 panelSphereMove = new PanelSphereMove2();
+        panelSphereMove.initComputeArea();
+        panelSphereMove.computeArea();
         JFrame frame = new JFrame("EyeRoll");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setContentPane(panelSphereMove);
