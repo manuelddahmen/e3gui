@@ -51,9 +51,9 @@ public class EyeBallRoll extends JPanel {
                     System.out.println("Reninit");
                 }
                 Point3D[] colVectors = matrice.getRowVectors();
-                Point ex = transform3D2D1(colVectors[0]);
-                Point ey = transform3D2D1(colVectors[1]);
-                Point ez = transform3D2D1(colVectors[2]);
+                Point2D ex = transform3D2D1(colVectors[0]);
+                Point2D ey = transform3D2D1(colVectors[1]);
+                Point2D ez = transform3D2D1(colVectors[2]);
                 Graphics graphics = getGraphics();
                 if (graphics != null) {
                     draw(pInitial);
@@ -122,7 +122,7 @@ public class EyeBallRoll extends JPanel {
         } else {
             graphics.setColor(Color.BLACK);
         }
-        Point proj = transform3D2D(p3_current);
+        Point2D proj = transform3D2D(p3_current);
         //graphics.drawLine((int) proj.getX(), (int) proj.getY(), 0, 0);
         //graphics.drawLine((int) (double) Math.abs(p3_current.getX()), (int) (double) Math.abs(p3_current.getY()), 0, 0);
     }
@@ -136,7 +136,7 @@ public class EyeBallRoll extends JPanel {
             } else {
                 graphics.setColor(Color.BLACK);
             }
-            Point proj = transform3D2D1(p3_current);
+            Point2D proj = transform3D2D1(p3_current);
             graphics.drawLine((int) proj.getX(), (int) proj.getY(), 0, 0);
         }
     }
@@ -159,7 +159,7 @@ public class EyeBallRoll extends JPanel {
                 else {
                     pInitial = null;
                     pMoved = null;
-                    System.out.println("Error point out");
+                    System.out.println("Error Point2D out");
                 }
 
             }
@@ -183,7 +183,7 @@ public class EyeBallRoll extends JPanel {
             @Override
             public void mouseDragged(MouseEvent e) {
                 move = true;
-                Point3D p = transform2D3D(new Point(e.getX(), e.getY()));
+                Point3D p = transform2D3D(new Point2D(e.getX(), e.getY()));
 
                 initComputeArea();
 
@@ -210,18 +210,18 @@ public class EyeBallRoll extends JPanel {
 
     }
 
-    public Point3D transform2D3D(Point p) {
-        return matrice.tild().mult(new Point3D(p.getX() * RES / 2 + RES / 2, -p.getY() * RES / 2 + RES / 2, 0.0));
+    public Point3D transform2D3D(Point2D p) {
+        return (new Point3D(p.getX() * RES / 2 + RES / 2, -p.getY() * RES / 2 + RES / 2, 0.0));
     }
 
-    public Point transform3D2D(Point3D p) {
-        p = matrice.mult(p);
-        return new Point((int) (p.getX() / RES - 0.5) * 2, (int) (p.getY() / RES - 0.5) * 2);
+    public Point2D transform3D2D(Point3D p) {
+        //p = mult(p);
+        return new Point2D((int) (p.getX() / RES - 0.5) * 2, (int) (p.getY() / RES - 0.5) * 2);
     }
 
-    public Point transform3D2D1(Point3D p) {
-        p = matrice.mult(p);
-        return new Point((int) ((p.getX() + 1.)* RES  / 2), (int) ((1.-p.getY()  ) * RES / 2));
+    public Point2D transform3D2D1(Point3D p) {
+        //p = matrice.mult(p);
+        return new Point2D((int) ((p.getX() + 1.)* RES  / 2), (int) ((1.-p.getY()  ) * RES / 2));
     }
 
     private synchronized void initComputeArea() {
@@ -236,17 +236,17 @@ public class EyeBallRoll extends JPanel {
         if(i>=0 && i<RES&&j>=0&&j<RES) {
             i_current = i;
             j_current = j;
-            pMoved = transform2D3D(new Point(i, j));
+            pMoved = transform2D3D(new Point2D(i, j));
             if (pMoved != null && pInitial!=null) {
                 Point3D D = pMoved.moins(pInitial);
                 Point3D p3 = D.prodVect(pInitial);
-                Point3D eX = pInitial;
-                Point3D eY = p3;
-                Point3D eZ = eX.prodVect(eY);
+                Point3D eX = pInitial.norme1();
+                Point3D eY = p3.norme1();
+                Point3D eZ = eX.prodVect(eY).norme1();
 
 
 
-                matrice = new Matrix33(new Point3D[] {eX, eY, eZ}).tild().mult(matrice);
+                matrice = new Matrix33(new Point3D[] {eX, eY, eZ}).mult(matrice);
 
                 assert matrice!=null;
 
@@ -277,11 +277,11 @@ public class EyeBallRoll extends JPanel {
         return new Point3D(Math.cos(longitude) * Math.sin(latitude), Math.sin(longitude) * Math.sin(latitude), Math.cos(latitude)).mult(size);
     }
 
-    public Point unsphere(double x, double y, double size) {
+    public Point2D unsphere(double x, double y, double size) {
         x = x / size - 0.5;
         y = -y / size + 0.5;
 
-        return new Point((int) (size * Math.atan(y / x)), (int) (size * Math.sqrt(1 - x * x - y * y)));
+        return new Point2D((int) (size * Math.atan(y / x)), (int) (size * Math.sqrt(1 - x * x - y * y)));
     }
 
     public static void main(String[] args) {
