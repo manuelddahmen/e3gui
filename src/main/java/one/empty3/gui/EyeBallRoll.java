@@ -1,26 +1,24 @@
 package one.empty3.gui;
 
 import one.empty3.library.*;
-import one.empty3.library.core.move.Trajectoires;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
-import java.util.function.Consumer;
 
-public class PanelSphereMove2 extends JPanel {
+public class EyeBallRoll extends JPanel {
     private static int RES = 200;
     private Draw draw;
     private boolean move = true;
     private Matrix33 matrice = Matrix33.I;
-    private Point3D[][] p3;
-    private double[][] angleA;
-    private double[][] angleB;
     private int i_current, j_current;
     private Point2D eZ = new Point2D(.2, 0.2);
     private ArrayList<Point3D> ps = new ArrayList<Point3D>();
+    private Point3D pInitial;
+    private Point3D pMoved;
 
     public class Draw extends Thread {
         private ZBufferImpl z;
@@ -58,7 +56,8 @@ public class PanelSphereMove2 extends JPanel {
                 Point ez = transform3D2D1(colVectors[2]);
                 Graphics graphics = getGraphics();
                 if (graphics != null) {
-                    draw(p3[i_current][j_current]);
+                    draw(pInitial);
+                    draw(pMoved);
                     //graphics.drawImage(z.image(), 0, 0, getWidth(), getHeight(), null);
                     graphics.setColor(Color.WHITE);
                     graphics.fillRect(0, 0, RES, RES);
@@ -143,7 +142,43 @@ public class PanelSphereMove2 extends JPanel {
     }
 
 
-    public PanelSphereMove2() {
+    public EyeBallRoll() {
+        this.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                if(e.getX()>=0&&e.getY()<RES&&e.getX()>=0&&e.getY()<RES) {
+                    store(e.getX(), e.getY());
+                    pInitial = pMoved;
+                    pMoved = null;
+                }
+                else {
+                    pInitial = null;
+                    pMoved = null;
+                    System.out.println("Error point out");
+                }
+
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+
+            }
+        });
         this.addMouseMotionListener(new MouseMotionListener() {
             @Override
             public void mouseDragged(MouseEvent e) {
@@ -154,13 +189,14 @@ public class PanelSphereMove2 extends JPanel {
 
                 computeArea();
 
-                store(e.getX(), e.getY(), p);
+                store(e.getX(), e.getY());
 
                 //System.out.println("Current location on screen : " + p2_current);
-                System.out.println("Current location in space          " + p3[i_current][j_current]);
-                System.out.println("Current location in space i column " + i_current);
-                System.out.println("Current location in space j row    " + j_current);
-                System.out.println("Matrice                            " + matrice);
+                System.out.println("Current location in space (move from ) " + pInitial);
+                System.out.println("Current location in space (move to   ) " + pMoved);
+                System.out.println("Current location in space i column     " + i_current);
+                System.out.println("Current location in space j row        " + j_current);
+                System.out.println("Matrice                                " + matrice);
 
                 move = false;
             }
@@ -175,68 +211,45 @@ public class PanelSphereMove2 extends JPanel {
     }
 
     public Point3D transform2D3D(Point p) {
-        return new Point3D(p.getX() * RES / 2 + RES / 2, -p.getY() * RES / 2 + RES / 2, 0.0);
+        return matrice.tild().mult(new Point3D(p.getX() * RES / 2 + RES / 2, -p.getY() * RES / 2 + RES / 2, 0.0));
     }
 
     public Point transform3D2D(Point3D p) {
+        p = matrice.mult(p);
         return new Point((int) (p.getX() / RES - 0.5) * 2, (int) (p.getY() / RES - 0.5) * 2);
     }
 
     public Point transform3D2D1(Point3D p) {
+        p = matrice.mult(p);
         return new Point((int) ((p.getX() + 1.)* RES  / 2), (int) ((1.-p.getY()  ) * RES / 2));
     }
 
     private synchronized void initComputeArea() {
-        p3 = new Point3D[RES][RES];
-        angleA = new double[RES][RES];
-        angleB = new double[RES][RES];
     }
 
     private synchronized void computeArea() {
-        for (double i = -2.; i < 2.0; i += 4.0 / RES) {
-            for (double j = -1; j < 1; j += 2.0 / RES) {
-                int ii = (int) (((i + 2) / 4) * RES);
-                int ij = (int) ((j + 1) / 2 * RES);
-
-                if (ii >= 0 && ii < RES && ij >= 0 && ij < RES) {
-                    p3[ii][ij] = sphere(i * Math.PI, j * Math.PI, 1.0);
-                    angleA[ii][ij] = i * Math.PI;
-                    angleB[ii][ij] = j * Math.PI;
-                }
-            }
-        }
-
-
-        Graphics graphics = getGraphics();
-        if (graphics != null)
-            for (double i = -2.; i < 2.0; i += 1.0 / RES) {
-                for (double j = -1; j < 1; j += 1.0 / RES / 2.0) {
-                    int ii = (int) ((i + 1) / 2);
-                    int ij = (int) (j + 0.5);
-                    Point3D p = sphere(i, j, 1.0);
-                    Point p2r = transform3D2D(p);
-                    graphics.setColor(Color.GRAY);
-                    //graphics.drawRect((int) p2r.getX(), (int) p2r.getY(), 5, 5);
-                }
-            }
     }
 
-    private void store(double x, double y, Point3D p) {
+    private void store(double x, double y) {
         int i = (int) x;
         int j = (int) y;
         if(i>=0 && i<RES&&j>=0&&j<RES) {
-            i_current = (int) x;
-            j_current = (int) y;
-            Point3D p2 = p3[i_current][j_current].norme1();
-            if (p2 != null) {
-                ps.add(p2);
+            i_current = i;
+            j_current = j;
+            pMoved = transform2D3D(new Point(i, j));
+            if (pMoved != null && pInitial!=null) {
+                Point3D D = pMoved.moins(pInitial);
+                Point3D p3 = D.prodVect(pInitial);
+                Point3D eX = pInitial;
+                Point3D eY = p3;
+                Point3D eZ = eX.prodVect(eY);
 
-                Point3D ex = perp1(p2);
-                Point3D ey = ex.prodVect(p2).norme1();
-                Point3D ez = p2;
-                matrice.set(0, ex);
-                matrice.set(1, ey);
-                matrice.set(2, ez);
+
+
+                matrice = new Matrix33(new Point3D[] {eX, eY, eZ}).tild().mult(matrice);
+
+                assert matrice!=null;
+
             }
         }
     }
@@ -272,7 +285,7 @@ public class PanelSphereMove2 extends JPanel {
     }
 
     public static void main(String[] args) {
-        PanelSphereMove2 panelSphereMove = new PanelSphereMove2();
+        EyeBallRoll panelSphereMove = new EyeBallRoll();
         panelSphereMove.initComputeArea();
         panelSphereMove.computeArea();
         JFrame frame = new JFrame("EyeRoll");
