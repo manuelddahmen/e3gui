@@ -1,5 +1,6 @@
 package one.empty3.gui;
 
+import net.miginfocom.swing.MigLayout;
 import one.empty3.library.*;
 
 import javax.swing.*;
@@ -124,9 +125,6 @@ public class EyeBallRoll extends JPanel {
         } else {
             graphics.setColor(Color.BLACK);
         }
-        Point2D proj = transform3D2D(p3_current);
-        //graphics.drawLine((int) proj.getX(), (int) proj.getY(), 0, 0);
-        //graphics.drawLine((int) (double) Math.abs(p3_current.getX()), (int) (double) Math.abs(p3_current.getY()), 0, 0);
     }
 
 
@@ -215,13 +213,14 @@ public class EyeBallRoll extends JPanel {
         Point2D p2 = new Point2D(p);
         p2.x = (p.x / RES - 0.5)*2;
         p2.y = (-p.y / RES + 0.5)*2 ;
-        return (new Point3D(p2.x, p2.y, Math.sqrt(Math.abs(1. - p.x * p.x - p.y * p.y))));
+        double z = 1. - p.x * p.x - p.y * p.y;
+        return (new Point3D(p2.x, p2.y, Math.signum(z)*Math.sqrt(Math.abs(z))));
     }
 
-    public Point2D transform3D2D(Point3D p) {
-        //p = mult(p);
-        return new Point2D((int) (p.getX() / RES - 0.5) * 2, (int) (p.getY() / RES - 0.5) * 2);
-    }
+//    public Point2D transform3D2D(Point3D p) {
+//        //p = mult(p);
+//        return new Point2D((int) (p.getX() / RES - 0.5) * 2, (int) (p.getY() / RES - 0.5) * 2);
+//    }
 
     public Point2D transform3D2D1(Point3D p) {
         //p = matrice.mult(p);
@@ -301,6 +300,7 @@ public class EyeBallRoll extends JPanel {
         panelSphereMove.initComputeArea();
         panelSphereMove.computeArea();
         JFrame frame = new JFrame("EyeRoll");
+        frame.setLayout(new MigLayout());
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setContentPane(panelSphereMove);
         frame.setSize(new Dimension(RES, RES));
@@ -314,6 +314,8 @@ public class EyeBallRoll extends JPanel {
         scene.cameraActive(new Camera(Point3D.Z.mult(-4.), Point3D.O0, Point3D.Y));
         panelSphereMove.draw = panelSphereMove.new Draw(scene);
         panelSphereMove.draw.start();
+
+
     }
 
 }
