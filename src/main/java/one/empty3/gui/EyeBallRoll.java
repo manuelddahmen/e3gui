@@ -61,9 +61,9 @@ public class EyeBallRoll extends JPanel {
 
                     scene.rotation.setElem(new Rotation(matrice, Point3D.O0));
 
-                    Point3D[] rowVectors = matrice.getColVectors();
+                    Point3D[] rowVectors = matrice.getRowVectors();
 
-                    Point3D z1 = /*rowVectors[2]*/Point3D.Z ;
+                    Point3D z1 = Point3D.Z ;
                     Point3D x1 = rowVectors[0];
                     Point3D y1 = rowVectors[1];
 
@@ -71,8 +71,8 @@ public class EyeBallRoll extends JPanel {
                     Matrix33 matrice1 = matrice.I;
                     Polygon p1 = new Polygon(new Point3D[] {
                                     matrice1.mult(z1.mult(-8.).plus(x1.mult(-2.).plus(y1.mult(-2.)))),
-                                            matrice1.mult(z1.mult(8.).plus(x1.mult(2.).plus(y1.mult(-2.)))),
-                                                    matrice1.mult(z1.mult(8.).plus(x1.mult(2.).plus(y1.mult(2.)))),
+                                            matrice1.mult(z1.mult(-8.).plus(x1.mult(2.).plus(y1.mult(-2.)))),
+                                                    matrice1.mult(z1.mult(-8.).plus(x1.mult(2.).plus(y1.mult(2.)))),
                                                             matrice1.mult(z1.mult(-8.).plus(x1.mult(-2.).plus(y1.mult(2.)))),
                             }, new ColorTexture(Color.RED));
 
