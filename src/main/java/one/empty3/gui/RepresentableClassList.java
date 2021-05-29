@@ -171,9 +171,9 @@ public class RepresentableClassList {
             jTextFields[i].setText(""+String.valueOf(point3D.get(i)));
         for(int i=0; i<jTextFields1.length; i++)
             jTextFields1[i].setText(""+matrix33.get(i/3, i%3));
-        textFieldScaleX.setText(""+r.getScale().get(0));
-        textFieldScaleY.setText(""+r.getScale().get(1));
-        textFieldScaleZ.setText(""+r.getScale().get(2));
+        textFieldScaleX.setText(""+1.0);
+        textFieldScaleY.setText(""+1.0);
+        textFieldScaleZ.setText(""+1.0);
 
 
     }

@@ -590,7 +590,7 @@ public class Main implements PropertyChangeListener {
     }
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
-        // Generated using JFormDesigner Evaluation license - unknown
+        // Generated using JFormDesigner non-commercial license
         this.MainWindow = new JFrame();
         this.panel6 = new JPanel();
         this.menu1 = new JMenu();
@@ -716,11 +716,6 @@ public class Main implements PropertyChangeListener {
 
             //======== panel6 ========
             {
-                this.panel6.setBorder (new javax. swing. border. CompoundBorder( new javax .swing .border .TitledBorder (new javax. swing. border. EmptyBorder(
-                0, 0, 0, 0) , "JF\u006frmDesi\u0067ner Ev\u0061luatio\u006e", javax. swing. border. TitledBorder. CENTER, javax. swing. border. TitledBorder
-                . BOTTOM, new java .awt .Font ("Dialo\u0067" ,java .awt .Font .BOLD ,12 ), java. awt. Color.
-                red) ,this.panel6. getBorder( )) ); this.panel6. addPropertyChangeListener (new java. beans. PropertyChangeListener( ){ @Override public void propertyChange (java .
-                beans .PropertyChangeEvent e) {if ("borde\u0072" .equals (e .getPropertyName () )) throw new RuntimeException( ); }} );
                 this.panel6.setLayout(new MigLayout(
                     "fill,hidemode 3",
                     // columns
@@ -1424,16 +1419,17 @@ public class Main implements PropertyChangeListener {
             this.radioButton4, BeanProperty.create("selected")));
         this.bindingGroup.bind();
         // JFormDesigner - End of component initialization  //GEN-END:initComponents
+
     }
 
     private void initComponentBindings() {
         // JFormDesigner - Component bindings initialization - DO NOT MODIFY  //GEN-BEGIN:initBindings
-        // Generated using JFormDesigner Evaluation license - unknown
+        // Generated using JFormDesigner non-commercial license
         // JFormDesigner - End of component bindings initialization  //GEN-END:initBindings
     }
 
     // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
-    // Generated using JFormDesigner Evaluation license - unknown
+    // Generated using JFormDesigner non-commercial license
     private JFrame MainWindow;
     private JPanel panel6;
     private JMenu menu1;

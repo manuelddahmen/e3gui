@@ -175,9 +175,9 @@ public class MeshGEditorThread extends Thread implements PropertyChangeListener 
                             /*Point3D invert = zBuffer.invert(new Point3D(location.getX(), location.getY(), 0d),
                                     main.getUpdateView().getzRunner().getzBuffer().camera());//TODO
                             */
-                        Point2D point2D = new Point2D((int) location.getX(), (int) location.getY());
+                        Point3D point3D = new Point3D(location.getX(), location.getY(), 0.0);
 
-                        Point3D invert = zBuffer.invert(point2D, camera,
+                        Point3D invert = zBuffer.invert(point3D, camera,
                                 camera.getLookat().moins(
                                         zBuffer.clickAt(
                                                 location.getX(), location.getY()

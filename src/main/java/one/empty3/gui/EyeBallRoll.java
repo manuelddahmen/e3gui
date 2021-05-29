@@ -86,7 +86,7 @@ public class EyeBallRoll extends JPanel {
                                             matrice1.mult(z0.mult(2.).plus(x0.mult(4.).plus(y0.mult(4.)))),
                                                     matrice1.mult(z0.mult(-2.).plus(x0.mult(-2.).plus(y0.mult(2.)))),
                     }, new ColorTexture(Color.RED));
-                    scene.cameraActive(new Camera2Quad(z, p1, p0));//???
+                    //scene.cameraActive(new Camera2Quad(z, p1, p0));//???
                     scene.cameraActive().imposerMatrice(matrice.tild());
 
                     z.draw();
