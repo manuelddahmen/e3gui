@@ -17,9 +17,11 @@
     </description>
     <packaging>jar</packaging>
     <properties>
-        <maven.compiler.target>14</maven.compiler.target>
-        <maven.compiler.source>14</maven.compiler.source>
-        <empty3lib.path>c:/Users/manue/IdeaProjects/empty3-android/target/empty3-library-3d-android-2021.5-SNAPSHOT.jar</empty3lib.path>
+        <maven.compiler.target>11</maven.compiler.target>
+        <maven.compiler.source>11</maven.compiler.source>
+        <empty3lib.path>
+            c:/Users/manue/IdeaProjects/empty3-android/target/empty3-library-3d-android-2021.5-SNAPSHOT.jar
+        </empty3lib.path>
     </properties>
     <url>https://github.com/manuelddahmen/e3gui</url>
 
@@ -321,13 +323,6 @@
             <artifactId>gson</artifactId>
             <version>2.8.5</version>
         </dependency>
-        <dependency>
-            <groupId>one.empty3</groupId>
-            <artifactId>empty3-library-3d</artifactId>
-            <version>2021.5-SNAPSHOT</version>
-            <scope>system</scope>
-            <systemPath>${empty3lib.path}</systemPath>
-        </dependency>
         <!-- https://mvnrepository.com/artifact/com.miglayout/miglayout -->
         <dependency>
             <groupId>com.miglayout</groupId>
@@ -400,9 +395,14 @@
             <version>0.3.1</version>
         </dependency>
         <dependency>
-<groupId>org.apache.commons</groupId>
-<artifactId>commons-numbers-quaternion</artifactId>
-<version>1.0-beta1</version>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-numbers-quaternion</artifactId>
+            <version>1.0-beta1</version>
+        </dependency>
+        <dependency>
+            <groupId>one.empty3</groupId>
+            <artifactId>empty3-library-3d-android</artifactId>
+            <version>2021.5-2</version>
         </dependency>
     </dependencies>
 </project>
