@@ -50,22 +50,22 @@ public class ObjectEditorBase extends JPanel implements RepresentableEditor {
     public ObjectEditorBase(Representable r) {
         super();
         initComponents();
-        initValues =false;
+        initValues = false;
         initValues(r);
         setVisible(true);
 
     }
+
     public ObjectEditorBase() {
         super();
         initComponents();
-        initValues =false;
+        initValues = false;
         setVisible(true);
 
     }
 
-    public void initValues(Representable representable)
-    {
-        if(r!=representable || r==null ) {
+    public void initValues(Representable representable) {
+        if (r != representable || r == null) {
             this.r = representable;
             initValues(r,
 
@@ -90,14 +90,13 @@ public class ObjectEditorBase extends JPanel implements RepresentableEditor {
     private void initValues(Representable r, JTextField[] point3d, JTextField[] jTextFieldMatrix, JTextArea textAreaPoint3D,
                             JTextArea textAreaMatrix33,
                             JTextField[] jTextFieldsScale) {
-        if(r!=null)
-        {
+        if (r != null) {
             Rotation rotation = r.getRotation().getElem();
-            if(rotation!=null) {
+            if (rotation != null) {
                 Point3D centreRot = rotation.getCentreRot().getElem();
                 if (centreRot != null) {
                     Matrix33 rot = rotation.getRot().getElem();
-                    Point3D scale = r.getScale();
+                    Point3D scale = new Point3D(0., 0., 0.);
                     if (rot != null && scale != null) {
                         textAreaMatrix33.setText(rot.toString());
                         try {
@@ -118,25 +117,25 @@ public class ObjectEditorBase extends JPanel implements RepresentableEditor {
         }
 
     }
+
     private void saveValues(Representable r, JTextField[] point3d, JTextField[] jTextFieldMatrix, JTextArea textAreaPoint3D,
                             JTextArea textAreaMatrix33,
                             JTextField[] jTextFieldsScale) {
         Rotation rotation = new Rotation();
         Point3D centreRot = new Point3D();
         Matrix33 rot = new Matrix33();
-        Point3D scale =  new Point3D();
-        for(int i = 0; i<3; i++) {
+        Point3D scale = new Point3D();
+        for (int i = 0; i < 3; i++) {
             centreRot.set(i, Double.parseDouble(point3d[i].getText()));
         }
-        for(int i=0; i<9; i++)
-            rot.set((i/3), (i%3), Double.parseDouble(jTextFieldMatrix[i].getText()==""?"0.0":jTextFieldMatrix[i].getText()));
-        textAreaPoint3D.setText(""+centreRot.toString());
+        for (int i = 0; i < 9; i++)
+            rot.set((i / 3), (i % 3), Double.parseDouble(jTextFieldMatrix[i].getText() == "" ? "0.0" : jTextFieldMatrix[i].getText()));
+        textAreaPoint3D.setText("" + centreRot.toString());
         textAreaMatrix33.setText(rot.toString());
-        for(int i = 0; i<3; i++)
+        for (int i = 0; i < 3; i++)
             scale.set(i, Double.parseDouble(jTextFieldsScale[i].getText()));
 
         r.getRotation().setElem(new Rotation(rot, centreRot));
-        r.setScale(scale);
     }
 
     private void textFieldXYZActionPerformed(ActionEvent e) {
@@ -151,7 +150,7 @@ public class ObjectEditorBase extends JPanel implements RepresentableEditor {
     private void okButtonActionPerformed(ActionEvent e) {
         saveValues(r);
         initValues(r);
-        Logger.getAnonymousLogger().info("save then load "+r.getClass().getName());
+        Logger.getAnonymousLogger().info("save then load " + r.getClass().getName());
 
     }
 
@@ -167,12 +166,12 @@ public class ObjectEditorBase extends JPanel implements RepresentableEditor {
     }
 
     public Matrix33 loadMatrix(Matrix33 m, JTextField[] strings, JTextArea text) throws AlgebraicFormulaSyntaxException, TreeNodeEvalException {
-        for(int i=0; i<strings.length; i++) {
+        for (int i = 0; i < strings.length; i++) {
             //AlgebricTree treeI = new AlgebricTree(strings[i].getText());
             //treeI.construct();
-            m.set(i/3, i%3, ((double) Double.parseDouble(strings[i].getText())));
+            m.set(i / 3, i % 3, ((double) Double.parseDouble(strings[i].getText())));
 
-            changeText(strings[i], ""+m.get(i/3, i%3));
+            changeText(strings[i], "" + m.get(i / 3, i % 3));
             text.setText(m.toString());
         }
         return m;
@@ -183,22 +182,22 @@ public class ObjectEditorBase extends JPanel implements RepresentableEditor {
     }
 
     private void saveValues(Representable r) {
-        if(initValues) {
-                saveValues(r,
+        if (initValues) {
+            saveValues(r,
 
-                        new JTextField[]{
-                                textFieldX, textFieldY, textFieldZ
-                        },
-                        new JTextField[]{
-                                textField00, textField01, textField02,
-                                textField10,textField11,textField12,
-                                textField20,textField21,textField22},
-                        textAreaPoint3D,
-                        textAreaMatrix33,
-                        new JTextField[]{
-                                textFieldScaleX, textFieldScaleY, textFieldScaleZ
-                        }
-                );
+                    new JTextField[]{
+                            textFieldX, textFieldY, textFieldZ
+                    },
+                    new JTextField[]{
+                            textField00, textField01, textField02,
+                            textField10, textField11, textField12,
+                            textField20, textField21, textField22},
+                    textAreaPoint3D,
+                    textAreaMatrix33,
+                    new JTextField[]{
+                            textFieldScaleX, textFieldScaleY, textFieldScaleZ
+                    }
+            );
         }
 
     }
@@ -222,7 +221,6 @@ public class ObjectEditorBase extends JPanel implements RepresentableEditor {
         saveValues(r);
         initValues(r);
     }
-
 
 
     private void initComponents() {
@@ -271,27 +269,27 @@ public class ObjectEditorBase extends JPanel implements RepresentableEditor {
             {
                 this.contentPanel.setName("contentPanel"); //NON-NLS
                 this.contentPanel.setLayout(new MigLayout(
-                    "fillx,insets dialog,hidemode 3", //NON-NLS
-                    // columns
-                    "[fill]" + //NON-NLS
-                    "[fill]" + //NON-NLS
-                    "[fill]", //NON-NLS
-                    // rows
-                    "[]" + //NON-NLS
-                    "[]" + //NON-NLS
-                    "[]" + //NON-NLS
-                    "[]" + //NON-NLS
-                    "[]" + //NON-NLS
-                    "[]" + //NON-NLS
-                    "[]" + //NON-NLS
-                    "[]" + //NON-NLS
-                    "[]" + //NON-NLS
-                    "[]" + //NON-NLS
-                    "[]" + //NON-NLS
-                    "[]" + //NON-NLS
-                    "[]" + //NON-NLS
-                    "[]" + //NON-NLS
-                    "[]")); //NON-NLS
+                        "fillx,insets dialog,hidemode 3", //NON-NLS
+                        // columns
+                        "[fill]" + //NON-NLS
+                                "[fill]" + //NON-NLS
+                                "[fill]", //NON-NLS
+                        // rows
+                        "[]" + //NON-NLS
+                                "[]" + //NON-NLS
+                                "[]" + //NON-NLS
+                                "[]" + //NON-NLS
+                                "[]" + //NON-NLS
+                                "[]" + //NON-NLS
+                                "[]" + //NON-NLS
+                                "[]" + //NON-NLS
+                                "[]" + //NON-NLS
+                                "[]" + //NON-NLS
+                                "[]" + //NON-NLS
+                                "[]" + //NON-NLS
+                                "[]" + //NON-NLS
+                                "[]" + //NON-NLS
+                                "[]")); //NON-NLS
 
                 //======== layeredPane1 ========
                 {
@@ -454,9 +452,9 @@ public class ObjectEditorBase extends JPanel implements RepresentableEditor {
                 this.button1.setText("Ok"); //NON-NLS
                 this.button1.setName("button1"); //NON-NLS
                 this.button1.addActionListener(e -> {
-			button1ActionPerformed(e);
-			buttonOkActionPerformed(e);
-		});
+                    button1ActionPerformed(e);
+                    buttonOkActionPerformed(e);
+                });
                 this.contentPanel.add(this.button1, "cell 0 13"); //NON-NLS
             }
             this.dialogPane.add(this.contentPanel, BorderLayout.CENTER);

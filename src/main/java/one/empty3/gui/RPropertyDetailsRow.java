@@ -144,7 +144,7 @@ public class RPropertyDetailsRow implements TableModel {
                     }
                 }
                 if (structureMatrix.getDim() == 2) {
-                    if (structureMatrix.getData1d().size() == 0) {
+                    if (structureMatrix.getData2d().size() == 0) {
                         for (int ind = 0; ind < 1; ind++) {
                             for (int ind1 = 0; ind1 < 1; ind1++) {
 
@@ -169,17 +169,7 @@ public class RPropertyDetailsRow implements TableModel {
                 }
 
             });
-        /*
-        if (representable.getDeclaredLists().size() > 0)
-            representable.getDeclaredLists().forEach(new BiConsumer<String, Object>() {
-                @Override
-                public void accept(String s, Object o) {
-                    int ind = 0;
-                    objectDetailDescriptions.add(new ObjectDetailDescription(s.split("/")[0], s.split("/")[1], 1, "" + ind++,
-                            o.getClass(), o));
-                }
-            });
-*/
+
         }
         if (representable instanceof Scene || representable instanceof RepresentableConteneur) {
             MyObservableList<ObjectDescription> objectDescriptions = RepresentableClassList.myList();

@@ -69,13 +69,13 @@ public class MeshGEditorThread extends Thread implements PropertyChangeListener 
                         // Select point or mark ready to move.
 //                        if (getMain().getUpdateView().getView().getMeshEditorBean().isSelection()) {
                         Point3D selectedPoint = getMain().getUpdateView().getzRunner().getzBuffer().clickAt(e.getX(), e.getY());
-                        Representable selectedObject = getMain().getUpdateView().getzRunner().getzBuffer().getIme().getIME()
+                        Representable selectedObject = getMain().getUpdateView().getzRunner().getzBuffer().ime.getIME()
                                 .getrMap()[e.getX()][e.getY()];
                         if (selectedPoint != null) {
                             //ParametricSurface ps = (ParametricSurface) selectedObject;
-                            double u = getMain().getUpdateView().getzRunner().getzBuffer().getIme().getIME()
+                            double u = getMain().getUpdateView().getzRunner().getzBuffer().ime.getIME()
                                     .getuMap()[e.getX()][e.getY()];
-                            double v = getMain().getUpdateView().getzRunner().getzBuffer().getIme().getIME()
+                            double v = getMain().getUpdateView().getzRunner().getzBuffer().ime.getIME()
                                     .getvMap()[e.getX()][e.getY()];
 
                             getMain().getUpdateView().setRuv(surface, u, v);
@@ -305,9 +305,9 @@ public class MeshGEditorThread extends Thread implements PropertyChangeListener 
                 Point p2d = zBuffer.camera().coordonneesPoint2D(p, zBuffer);
                 int x = (int) (p2d.getX());
                 int y = (int) (p2d.getY());
-                Representable r1 = zBuffer.getIme().getIME().getrMap()[x][y];
-                double u = zBuffer.getIme().getIME().getuMap()[x][y];
-                double v = zBuffer.getIme().getIME().getvMap()[x][y];
+                Representable r1 = zBuffer.ime.getIME().getrMap()[x][y];
+                double u = zBuffer.ime.getIME().getuMap()[x][y];
+                double v = zBuffer.ime.getIME().getvMap()[x][y];
                 if (r1 instanceof ParametricSurface) {
                     ParametricSurface r11 = (ParametricSurface) (r1);
                     p0 = r11.calculerPoint3D(u, v);

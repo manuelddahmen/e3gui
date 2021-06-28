@@ -222,16 +222,18 @@
                 <artifactId>exec-maven-plugin</artifactId>
                 <version>1.6.0</version>
                 <configuration>
-                    <mainClass>one.empty3.gui.RunApp</mainClass>
+                    <mainClass>one.empty3.gui.Main</mainClass>
+<!--
 
                     <arguments>
-                        <argument>class=one.empty3.gui.RunApp</argument>
+                        <argument>class=one.empty3.gui.Main</argument>
                         <argument>resx=640</argument>
                         <argument>resy=480</argument>
                         <argument>maxFrames=3000</argument>
                         <argument>-Xms4000m</argument>
                         <argument>-Xmx4000m</argument>
                     </arguments>
+-->
 
                 </configuration>
             </plugin>
@@ -329,35 +331,6 @@
             <artifactId>miglayout</artifactId>
             <version>3.7.4</version>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/org.netbeans.api/org-jdesktop-layout -->
-
-
-        <!-- https://mvnrepository.com/artifact/org.openjfx/javafx -->
-        <!--<dependency>
-            <groupId>org.openjfx</groupId>
-            <artifactId>javafx</artifactId>
-            <version>11</version>
-            <type>pom</type>
-        </dependency>-->
-        <!-- https://mvnrepository.com/artifact/org.openjfx/javafx-media -->
-        <!--        <dependency>
-                    <groupId>org.openjfx</groupId>
-                    <artifactId>javafx-media</artifactId>
-                    <version>15-ea+4</version>
-                </dependency>
-            -->    <!-- https://mvnrepository.com/artifact/org.openjfx/javafx-swing -->
-        <!--<dependency>
-            <groupId>org.openjfx</groupId>
-            <artifactId>javafx-swing</artifactId>
-            <version>15-ea+4</version>
-        </dependency>-->
-        <!-- https://mvnrepository.com/artifact/org.openjfx/javafx-fxml -->
-        <!--     <dependency>
-                 <groupId>org.openjfx</groupId>
-                 <artifactId>javafx-fxml</artifactId>
-                 <version>15-ea+4</version>
-             </dependency>
-            --> <!-- https://mvnrepository.com/artifact/org.jdesktop/beansbinding -->
         <dependency>
             <groupId>org.jdesktop</groupId>
             <artifactId>beansbinding</artifactId>
@@ -395,14 +368,9 @@
             <version>0.3.1</version>
         </dependency>
         <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-numbers-quaternion</artifactId>
-            <version>1.0-beta1</version>
-        </dependency>
-        <dependency>
             <groupId>one.empty3</groupId>
             <artifactId>empty3-library-3d-android</artifactId>
-            <version>2021.5-2</version>
+            <version>2021.6.2-SNAPSHOT</version>
         </dependency>
     </dependencies>
 </project>
