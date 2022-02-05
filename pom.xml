@@ -11,7 +11,7 @@
 
     <groupId>one.empty3</groupId>
     <artifactId>empty3-library-3d-gui</artifactId>
-    <version>2021.4.3-SNAPSHOT</version>
+    <version>2022.2.4</version>
     <description>3D Graphical User Interface.
 
     </description>
@@ -26,22 +26,15 @@
     <url>https://github.com/manuelddahmen/e3gui</url>
 
     <distributionManagement>
+
         <snapshotRepository>
-            <id>ossrh</id>
+            <id>empty3_ossrh</id>
             <url>https://oss.sonatype.org/content/repositories/snapshots</url>
         </snapshotRepository>
         <repository>
-            <id>ossrh</id>
+            <id>empty3_ossrh</id>
             <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
         </repository>
-        <!--
-        <repository>
-                    <id>if2</id>
-                    <name>empty3.one</name>
-                    <url>ftp://ftp.empty3.one/downloads/maven</url>
-        </repository>
-        -->
-
     </distributionManagement>
 
     <licenses>
