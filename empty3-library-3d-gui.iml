@@ -36,11 +36,15 @@
     <orderEntry type="library" scope="PROVIDED" name="Maven: xerces:xmlParserAPIs:2.6.2" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: xpp3:xpp3:1.1.4c" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.json:json:20080701" level="project" />
-    <orderEntry type="library" name="Maven: com.formdev:flatlaf:1.1.2" level="project" />
+    <orderEntry type="library" name="Maven: com.formdev:flatlaf:2.0.1" level="project" />
     <orderEntry type="library" name="Maven: com.scryetek:vecmath_2.11:0.3.1" level="project" />
     <orderEntry type="library" name="Maven: org.scala-lang:scala-library:2.11.7" level="project" />
-    <orderEntry type="library" name="Maven: one.empty3:empty3-library-3d-android:2021.6.2-SNAPSHOT" level="project" />
-    <orderEntry type="library" name="Maven: org.slf4j:slf4j-simple:1.5.3" level="project" />
+    <orderEntry type="library" name="Maven: one.empty3:empty3-library-3d-android:2021.10.1-SNAPSHOT" level="project" />
+    <orderEntry type="library" name="Maven: com.badlogicgames.gdx:gdx:1.9.10" level="project" />
+    <orderEntry type="library" name="Maven: org.jcodec:jcodec-javase:0.2.5" level="project" />
+    <orderEntry type="library" name="Maven: org.jcodec:jcodec:0.2.5" level="project" />
+    <orderEntry type="library" name="Maven: com.miglayout:miglayout-swing:5.0" level="project" />
+    <orderEntry type="library" name="Maven: com.miglayout:miglayout-core:5.0" level="project" />
     <orderEntry type="library" name="Maven: org.jogamp.jogl:jogl-all-main:2.3.2" level="project" />
     <orderEntry type="library" name="Maven: org.jogamp.jogl:jogl-all:natives-android-aarch64:2.3.2" level="project" />
     <orderEntry type="library" name="Maven: org.jogamp.jogl:jogl-all:natives-android-armv6:2.3.2" level="project" />
@@ -53,33 +57,6 @@
     <orderEntry type="library" name="Maven: org.jogamp.jogl:jogl-all:natives-solaris-i586:2.3.2" level="project" />
     <orderEntry type="library" name="Maven: org.jogamp.jogl:jogl-all:natives-windows-amd64:2.3.2" level="project" />
     <orderEntry type="library" name="Maven: org.jogamp.jogl:jogl-all:natives-windows-i586:2.3.2" level="project" />
-    <orderEntry type="library" name="Maven: org.jogamp.jocl:jocl-main:2.3.2" level="project" />
-    <orderEntry type="library" name="Maven: org.jogamp.jocl:jocl:2.3.2" level="project" />
-    <orderEntry type="library" name="Maven: org.jogamp.jocl:jocl:natives-android-aarch64:2.3.2" level="project" />
-    <orderEntry type="library" name="Maven: org.jogamp.jocl:jocl:natives-android-armv6:2.3.2" level="project" />
-    <orderEntry type="library" name="Maven: org.jogamp.jocl:jocl:natives-linux-amd64:2.3.2" level="project" />
-    <orderEntry type="library" name="Maven: org.jogamp.jocl:jocl:natives-linux-armv6:2.3.2" level="project" />
-    <orderEntry type="library" name="Maven: org.jogamp.jocl:jocl:natives-linux-armv6hf:2.3.2" level="project" />
-    <orderEntry type="library" name="Maven: org.jogamp.jocl:jocl:natives-linux-i586:2.3.2" level="project" />
-    <orderEntry type="library" name="Maven: org.jogamp.jocl:jocl:natives-macosx-universal:2.3.2" level="project" />
-    <orderEntry type="library" name="Maven: org.jogamp.jocl:jocl:natives-solaris-amd64:2.3.2" level="project" />
-    <orderEntry type="library" name="Maven: org.jogamp.jocl:jocl:natives-solaris-i586:2.3.2" level="project" />
-    <orderEntry type="library" name="Maven: org.jogamp.jocl:jocl:natives-windows-amd64:2.3.2" level="project" />
-    <orderEntry type="library" name="Maven: org.jogamp.jocl:jocl:natives-windows-i586:2.3.2" level="project" />
-    <orderEntry type="library" name="Maven: org.jogamp.joal:joal-main:2.3.2" level="project" />
-    <orderEntry type="library" name="Maven: org.jogamp.joal:joal:2.3.2" level="project" />
-    <orderEntry type="library" name="Maven: org.jogamp.joal:joal:natives-android-aarch64:2.3.2" level="project" />
-    <orderEntry type="library" name="Maven: org.jogamp.joal:joal:natives-android-armv6:2.3.2" level="project" />
-    <orderEntry type="library" name="Maven: org.jogamp.joal:joal:natives-linux-amd64:2.3.2" level="project" />
-    <orderEntry type="library" name="Maven: org.jogamp.joal:joal:natives-linux-armv6:2.3.2" level="project" />
-    <orderEntry type="library" name="Maven: org.jogamp.joal:joal:natives-linux-armv6hf:2.3.2" level="project" />
-    <orderEntry type="library" name="Maven: org.jogamp.joal:joal:natives-linux-i586:2.3.2" level="project" />
-    <orderEntry type="library" name="Maven: org.jogamp.joal:joal:natives-macosx-universal:2.3.2" level="project" />
-    <orderEntry type="library" name="Maven: org.jogamp.joal:joal:natives-solaris-amd64:2.3.2" level="project" />
-    <orderEntry type="library" name="Maven: org.jogamp.joal:joal:natives-solaris-i586:2.3.2" level="project" />
-    <orderEntry type="library" name="Maven: org.jogamp.joal:joal:natives-windows-i586:2.3.2" level="project" />
-    <orderEntry type="library" name="Maven: org.jogamp.gluegen:gluegen-rt:natives-windows-amd64:2.3.2" level="project" />
-    <orderEntry type="library" name="Maven: org.jogamp.joal:joal:natives-windows-amd64:2.3.2" level="project" />
     <orderEntry type="library" name="Maven: org.jogamp.gluegen:gluegen-rt-main:2.3.2" level="project" />
     <orderEntry type="library" name="Maven: org.jogamp.gluegen:gluegen-rt:2.3.2" level="project" />
     <orderEntry type="library" name="Maven: org.jogamp.gluegen:gluegen-rt:natives-android-aarch64:2.3.2" level="project" />
@@ -91,38 +68,8 @@
     <orderEntry type="library" name="Maven: org.jogamp.gluegen:gluegen-rt:natives-macosx-universal:2.3.2" level="project" />
     <orderEntry type="library" name="Maven: org.jogamp.gluegen:gluegen-rt:natives-solaris-amd64:2.3.2" level="project" />
     <orderEntry type="library" name="Maven: org.jogamp.gluegen:gluegen-rt:natives-solaris-i586:2.3.2" level="project" />
+    <orderEntry type="library" name="Maven: org.jogamp.gluegen:gluegen-rt:natives-windows-amd64:2.3.2" level="project" />
     <orderEntry type="library" name="Maven: org.jogamp.gluegen:gluegen-rt:natives-windows-i586:2.3.2" level="project" />
-    <orderEntry type="library" name="Maven: org.swinglabs:swing-layout:1.0.3" level="project" />
-    <orderEntry type="library" name="Maven: io.humble:humble-video-all:0.3.0" level="project" />
-    <orderEntry type="library" name="Maven: io.humble:humble-video-arch-x86_64-w64-mingw32:0.3.0" level="project" />
-    <orderEntry type="library" name="Maven: io.humble:humble-video-noarch:0.3.0" level="project" />
-    <orderEntry type="library" name="Maven: jep:jep:2.24" level="project" />
-    <orderEntry type="library" name="Maven: org.jogamp.jogl:jogl:2.3.2" level="project" />
     <orderEntry type="library" name="Maven: org.jogamp.jogl:jogl-all:2.3.2" level="project" />
-    <orderEntry type="library" name="Maven: commons-cli:commons-cli:1.4" level="project" />
-    <orderEntry type="library" name="Maven: com.badlogicgames.gdx:gdx:1.9.10" level="project" />
-    <orderEntry type="library" name="Maven: com.github.dexecutor:dexecutor-core:2.1.1" level="project" />
-    <orderEntry type="library" name="Maven: org.jcodec:jcodec:0.2.3" level="project" />
-    <orderEntry type="library" name="Maven: com.google.code.findbugs:jsr305:3.0.2" level="project" />
-    <orderEntry type="library" name="Maven: org.jcodec:jcodec-javase:0.2.3" level="project" />
-    <orderEntry type="library" name="Maven: commons-net:commons-net:3.5" level="project" />
-    <orderEntry type="library" name="Maven: com.github.zakgof:velvet-video:0.5.1" level="project" />
-    <orderEntry type="library" scope="RUNTIME" name="Maven: com.github.jnr:jnr-ffi:2.1.9" level="project" />
-    <orderEntry type="library" scope="RUNTIME" name="Maven: com.github.jnr:jffi:1.2.17" level="project" />
-    <orderEntry type="library" scope="RUNTIME" name="Maven: com.github.jnr:jffi:native:1.2.16" level="project" />
-    <orderEntry type="library" scope="RUNTIME" name="Maven: org.ow2.asm:asm:5.0.3" level="project" />
-    <orderEntry type="library" scope="RUNTIME" name="Maven: org.ow2.asm:asm-commons:5.0.3" level="project" />
-    <orderEntry type="library" scope="RUNTIME" name="Maven: org.ow2.asm:asm-analysis:5.0.3" level="project" />
-    <orderEntry type="library" scope="RUNTIME" name="Maven: org.ow2.asm:asm-tree:5.0.3" level="project" />
-    <orderEntry type="library" scope="RUNTIME" name="Maven: org.ow2.asm:asm-util:5.0.3" level="project" />
-    <orderEntry type="library" scope="RUNTIME" name="Maven: com.github.jnr:jnr-a64asm:1.0.0" level="project" />
-    <orderEntry type="library" scope="RUNTIME" name="Maven: com.github.jnr:jnr-x86asm:1.0.2" level="project" />
-    <orderEntry type="library" scope="RUNTIME" name="Maven: commons-io:commons-io:2.6" level="project" />
-    <orderEntry type="library" scope="RUNTIME" name="Maven: com.github.zakgof:tools:0.7.0" level="project" />
-    <orderEntry type="library" scope="RUNTIME" name="Maven: com.google.guava:guava:18.0" level="project" />
-    <orderEntry type="library" scope="RUNTIME" name="Maven: org.objenesis:objenesis:2.6" level="project" />
-    <orderEntry type="library" name="Maven: com.googlecode.netlib-java:netlib-java:1.1" level="project" />
-    <orderEntry type="library" name="Maven: com.github.fommil.netlib:core:1.1" level="project" />
-    <orderEntry type="library" name="Maven: net.sourceforge.f2j:arpack_combined_all:0.1" level="project" />
   </component>
 </module>
