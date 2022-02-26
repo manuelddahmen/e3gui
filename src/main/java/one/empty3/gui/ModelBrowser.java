@@ -26,6 +26,7 @@ import one.empty3.library.core.nurbs.SurfaceParametriquePolynomialeBezier;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -181,17 +182,16 @@ public class ModelBrowser {
     }
 
     private void browser(Representable representable, Representable ref) {
-        if(representable!=null)
-        {
-            representable.declareProperties();
-            representable.declarations().forEach((s, structureMatrix) -> {
-                    switch (structureMatrix.getDim())
-                    {
+        if(representable!=null) {
+            try {
+                representable.declareProperties();
+                representable.declarations().forEach((s, structureMatrix) -> {
+                    switch (structureMatrix.getDim()) {
                         case 0:
                             browser(structureMatrix, structureMatrix.getDim(), -1, -1, structureMatrix.getElem(), representable);
                             break;
                         case 1:
-                            int [] i = new int[ ] {0};
+                            int[] i = new int[]{0};
                             structureMatrix.data1d.forEach(new Consumer() {
                                 @Override
                                 public void accept(Object o) {
@@ -201,7 +201,7 @@ public class ModelBrowser {
                             });
                             break;
                         case 2:
-                            i = new int[ ] {0, 0};
+                            i = new int[]{0, 0};
                             structureMatrix.data2d.forEach(o -> {
                                 for (Object o1 : ((List) o)) {
                                     browser(structureMatrix, structureMatrix.getDim(), i[0], i[1], o1, representable);
@@ -212,9 +212,12 @@ public class ModelBrowser {
                             break;
 
                     }
-            });
+                });
+            } catch (ConcurrentModificationException ex) {
+                ex.printStackTrace();
+                System.out.println("ModelBrowser.browse() Continue...");
+            }
         }
-
     }
 
     private void browser(StructureMatrix structureMatrix, int dim, int row, int col, Object o, Representable ref) {
